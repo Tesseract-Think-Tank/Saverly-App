@@ -9,6 +9,9 @@ import SignUp from './app/screens/SignUp';
 import Details from './app/screens/Details';
 import Home from './app/screens/Home';
 import AddAccount from './app/screens/AddAccount';
+import Chat from './app/screens/Chat'; 
+
+
 // Import any other icons you want to use
 import { Ionicons } from '@expo/vector-icons';
 
@@ -69,6 +72,12 @@ export default function App() {
           component={MainAppTabs}
           options={{ headerShown: false }} // You can set this to true if you want a header
         />
+        <Stack.Screen
+          name="Chat"
+          component={Chat}
+          options={{ headerShown: true }} // Or false if you don't want a header
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -76,6 +76,15 @@ const Home = ({ navigation }: any) => {
       >
         <Ionicons name='add' size={24} color="white" />
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.chatButton} // Positioned above the existing add button
+        onPress={() => navigation.navigate('Chat')}
+        activeOpacity={0.7}
+      >
+        <Ionicons name='chatbubbles' size={24} color="white" />
+      </TouchableOpacity>
+      
     </SafeAreaView>
   );
 };
@@ -146,6 +155,22 @@ const styles = StyleSheet.create({
     shadowRadius: 5, // Shadow Radius
     shadowOffset: { height: 5, width: 5 }, // Shadow Offset
     elevation: 6, // This adds a shadow on Android
+  },
+  chatButton: {
+    position: 'absolute',
+    left: width - 60,
+    bottom: 60,
+    backgroundColor: '#7e57c2',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#9e9e9e',
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    shadowOffset: { height: 5, width: 5 },
+    elevation: 6,
   },
 });
 
