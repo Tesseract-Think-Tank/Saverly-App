@@ -23,12 +23,7 @@ async function create_respond(prompt1){
         frequency_penalty: 0,
         presence_penalty: 0,
     })
-<<<<<<< HEAD
     console.log("", response.choices[0].message.content);
-=======
-    // console.log("", response.choices[0].message.content);
-    return response.choices[0].message.content;
->>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
 }
 
 async function question_travel_1(userInput){
@@ -41,21 +36,13 @@ async function question_travel_1(userInput){
         where a,c,e,g,i are the places
         the answer you give should be in romanian and if these places have an enter fee say how much 
     `
-<<<<<<< HEAD
     await create_respond(prompt1);
-=======
-    return await create_respond(prompt1);
->>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
 }
 async function question_travel_2(){
     const prompt2 =  `What is the most cost-effective way to travel?
         the answer should be in romanian and maximum 100 words.
     `
-<<<<<<< HEAD
     await create_respond(prompt2);
-=======
-    return await create_respond(prompt2);
->>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
 }
 
 async function question_travel_3(userInput){
@@ -68,32 +55,20 @@ async function question_travel_3(userInput){
     5.
     Please provide an answer in romanian .Maximum 100 words
     `
-<<<<<<< HEAD
     await create_respond(prompt3);
-=======
-    return await create_respond(prompt3);
->>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
 }
 
 async function question_travel_4(userInput){
     const prompt2 =  `When is the perfect time to visit ${userInput}.
     Please provide an answer in romanian.Maximum 100 words
     `
-<<<<<<< HEAD
     await create_respond(prompt2);
-=======
-    return await create_respond(prompt2);
->>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
 }
 async function question_travel_5(){
     const prompt2 =  `What are some cheap cities in Europe that i can visit?.
     Please provide an answer in romanian.Maximum 100 words and give 3 examples
     `
-<<<<<<< HEAD
     await create_respond(prompt2);
-=======
-    return await create_respond(prompt2);
->>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
 }
 async function menu_Travel(){
     userInput = readlineSync.question("Enter a city: ");
@@ -126,14 +101,5 @@ async function menu_Travel(){
     }
 }
 module.exports = {
-<<<<<<< HEAD
     menu_Travel
-=======
-    menu_Travel,
-    question_travel_1,
-    question_travel_2,
-    question_travel_3,
-    question_travel_4,
-    question_travel_5
->>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
 };
