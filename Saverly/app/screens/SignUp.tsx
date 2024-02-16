@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity,
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import {signUp} from '../services/authService';
 
 
 
@@ -10,46 +11,24 @@ const SingUp = ({navigation}: any) => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-    const auth = FIREBASE_AUTH;
-    const signUp = async () => {
+    
+    const handleSignUp = async () => {
         setLoading(true);
-        
         try {
-          // Create the user with Firebase Authentication
-          const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-          const userId = userCredential.user.uid;
-          
-          // Create a user document in Firestore with the email field
-          await setDoc(doc(FIREBASE_DB, "users", userId), {
-            email: email,
-            income: 0,
-            expenses: 0,
-            currency: 'USD',
-        
-            // Add other user details if necessary
-          });
-        
-          // Add a default account to the 'accounts' subcollection for this user
-          await addDoc(collection(FIREBASE_DB, "users", userId, "accounts"), {
-            type: 'Cash',
-            balance: 0,
-            currency: 'USD',
-          });
-        
+          const { userId } = await signUp(email, password);
           // Navigate to 'Home' after successful sign-up and account creation
           navigation.navigate('MainAppTabs');
           navigation.reset({
             index: 0,
             routes: [{ name: 'MainAppTabs' }],
-        });
-
+          });
         } catch (error: any) {
-          console.error('Error signing up', error);
-          alert('Sign up failed: ' + error.message);
+          alert(error.message);
         } finally {
           setLoading(false);
         }
       };
+
 
     return (
         <View style={styles.container}>
@@ -76,7 +55,7 @@ const SingUp = ({navigation}: any) => {
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={signUp} style={[styles.button]}>
+                    <TouchableOpacity onPress={handleSignUp} style={[styles.button]}>
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
