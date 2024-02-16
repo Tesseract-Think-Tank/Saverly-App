@@ -1,2 +1,7 @@
 Saverly/node_modules
+<<<<<<< HEAD
 backend/node_modules
+=======
+backend/node_modules
+backend/.env
+>>>>>>> 076827a61f6dbde7581cac15074ee6ee52dce451
