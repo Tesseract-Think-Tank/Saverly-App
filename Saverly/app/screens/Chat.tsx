@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert, ScrollView } from 'react-native';
 
 const Chat = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -18,7 +18,7 @@ const Chat = () => {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userInput }), // Include userInput pentru opțiunile relevante
+        body: JSON.stringify({ userInput }),
       });
 
       if (!response.ok) {
@@ -26,12 +26,67 @@ const Chat = () => {
       }
 
       const data = await response.json();
-      setDisplayText(data.response); // Actualizează UI-ul cu răspunsul primit
+      setDisplayText(data.response);
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch response from the server.');
       console.error(error);
     }
   };
+
+  const handlePressRentOption = async (optionIndex: any) => {
+    if (!userInput.trim()) {
+      Alert.alert("Input Required", "Please provide some input for this option.");
+      return;
+    }
+
+    const url = `http://192.168.1.6:5000/rent-question-${optionIndex + 1}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userInput }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setDisplayText(data.response);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch response from the server.');
+      console.error(error);
+    }
+  };
+
+  const handlePressTravelOption = async (optionIndex: any) => {
+    if ((optionIndex === 0 || optionIndex === 2 || optionIndex === 3) && !userInput.trim()) {
+      Alert.alert("Input Required", "Please provide some input for this option.");
+      return;
+    }
+
+    const url = `http://192.168.1.6:5000/travel-question-${optionIndex + 1}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userInput }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setDisplayText(data.response);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch response from the server.');
+      console.error(error);
+    }
+  };
+  
 
   const renderCategoryButtons = () => (
     ['Rent', 'Food', 'Travel'].map(category => (
@@ -42,8 +97,24 @@ const Chat = () => {
   );
 
   const renderFoodOptionButtons = () => (
-    ['Easy to make dishes', 'Low budget meals', 'Food option 3', 'Food option 4', 'Food option 5'].map((option, index) => (
+    ['Easy to make dishes', 'Low budget meals', 'Food cheaper than X', 'Week plan to save time/money', 'Substitute for ingredient X'].map((option, index) => (
       <TouchableOpacity key={option} style={styles.button} onPress={() => handlePressFoodOption(index)}>
+        <Text>{option}</Text>
+      </TouchableOpacity>
+    ))
+  );
+
+  const renderRentOptionButtons = () => (
+    ['Average monthly rent', 'Average rent in city areas', 'Public transport', 'Average student living cost', 'Average living cost compared to other cities'].map((option, index) => (
+      <TouchableOpacity key={option} style={styles.button} onPress={() => handlePressRentOption(index)}>
+        <Text>{option}</Text>
+      </TouchableOpacity>
+    ))
+  );
+
+  const renderTravelOptionButtons = () => (
+    ['Must visit places', 'Cost-effective traveling', 'Affordable/free activities', 'Perfect time to vist', 'Cheap cities in Europe'].map((option, index) => (
+      <TouchableOpacity key={option} style={styles.button} onPress={() => handlePressTravelOption(index)}>
         <Text>{option}</Text>
       </TouchableOpacity>
     ))
@@ -53,7 +124,9 @@ const Chat = () => {
     <View style={styles.container}>
       {activeCategory ? (
         <>
-          {activeCategory === 'Food' ? renderFoodOptionButtons() : <Text>Select a category.</Text>}
+          {activeCategory === 'Food' && renderFoodOptionButtons()}
+          {activeCategory === 'Rent' && renderRentOptionButtons()}
+          {activeCategory === 'Travel' && renderTravelOptionButtons()}
           <TouchableOpacity style={styles.button} onPress={() => setActiveCategory(null)}>
             <Text>Back</Text>
           </TouchableOpacity>
@@ -68,9 +141,12 @@ const Chat = () => {
         placeholder="Enter your input here"
       />
 
-      <View style={styles.displayBox}>
-        <Text>{displayText}</Text>
-      </View>
+    <ScrollView 
+      style={styles.displayBox}
+      contentContainerStyle={styles.displayBoxContent}
+    >
+      <Text>{displayText}</Text>
+    </ScrollView>
     </View>
   );
 };
@@ -97,15 +173,18 @@ const styles = StyleSheet.create({
   },
   displayBox: {
     width: '80%',
-    height: 100,
+    height: 100, // You can adjust the height as needed
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
     marginTop: 20,
     borderWidth: 1,
     borderColor: '#DDDDDD',
+  },
+  displayBoxContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   input: {
     height: 40,
