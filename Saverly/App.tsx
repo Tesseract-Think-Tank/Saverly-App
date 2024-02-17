@@ -10,7 +10,7 @@ import Details from './app/screens/Details';
 import Home from './app/screens/Home';
 import AddAccount from './app/screens/AddAccount';
 import Chat from './app/screens/Chat'; 
-
+import AccountsScreen from './app/screens/Accounts';
 
 // Import any other icons you want to use
 import { Ionicons } from '@expo/vector-icons';
@@ -45,7 +45,7 @@ function MainAppTabs() {
       })}
     >
       <Tab.Screen name="Overview" component={Home} />
-      <Tab.Screen name="Accounts" component={AddAccount} />
+      <Tab.Screen name="Accounts" component={AccountsScreen} />
       <Tab.Screen name="Settings" component={Details} />
     </Tab.Navigator>
   );
@@ -76,6 +76,11 @@ export default function App() {
           name="Chat"
           component={Chat}
           options={{ headerShown: true }} // Or false if you don't want a header
+        />
+        <Stack.Screen
+          name="AddAccount"
+          component={AddAccount}
+          options={{ headerShown: false }} // Or false if you don't want a header
         />
 
       </Stack.Navigator>

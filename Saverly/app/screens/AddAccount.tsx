@@ -3,7 +3,7 @@ import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, Act
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 import { fetchDataForUser } from '../services/firebaseServices';
-import { addAccount } from '../services/accountService';
+import { addAccount, fetchUserAccounts } from '../services/accountService';
 
 const AddAccountScreen = ({ navigation }: any) => {
   const [type, setType] = useState('');
@@ -25,6 +25,8 @@ const AddAccountScreen = ({ navigation }: any) => {
       setType('');
       setBalance('');
       setCurrency('');
+      fetchUserAccounts();
+      
       navigation.goBack(); // Navigate back to the previous screen
     } catch (error: any) {
       console.error('Error adding account:', error);

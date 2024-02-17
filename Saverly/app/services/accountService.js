@@ -1,5 +1,6 @@
-import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, updateDoc, query, queryEqual, querySnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
+
 
 const addAccount = async (type, balance, currency) => {
   const userId = FIREBASE_AUTH.currentUser?.uid;
@@ -24,7 +25,23 @@ const addAccount = async (type, balance, currency) => {
     currency,
   });
 
+
   return true; // Indicate success
 };
 
-export { addAccount };
+const fetchUserAccounts = async () => {
+    const userId = FIREBASE_AUTH.currentUser?.uid;
+    if (!userId) throw new Error('No user is signed in.');
+  
+    const q = query(collection(FIREBASE_DB, 'users', userId, 'accounts'));
+    const querySnapshot = await getDocs(q);
+    const accounts = [];
+    querySnapshot.forEach((doc) => {
+      accounts.push({ id: doc.id, ...doc.data() });
+    });
+  
+    return accounts;
+};
+  
+
+export { addAccount, fetchUserAccounts };
