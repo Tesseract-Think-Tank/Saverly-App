@@ -7,6 +7,7 @@ import {firebaseConfig, FIREBASE_AUTH, FIREBASE_DB } from '../../firebaseConfig'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { setDoc, doc, addDoc, collection } from 'firebase/firestore';
+import { initializeUserDetails } from './initializeUser';
 
 
 
@@ -19,21 +20,9 @@ const signUp = async (email, password) => {
       const userId = userCredential.user.uid;
       
       // Create a user document in Firestore with the email field
-      await setDoc(doc(FIREBASE_DB, "users", userId), {
-        email: email,
-        income: 0,
-        expenses: 0,
-        currency: 'USD',
-        // ...other user details
-      });
-      
-      // Add a default account to the 'accounts' subcollection for this user
-      await addDoc(collection(FIREBASE_DB, "users", userId, "accounts"), {
-        type: 'Cash',
-        balance: 0,
-        currency: 'USD',
-      });
-      
+      // Initialize user details and accounts
+      await initializeUserDetails(userId, email);
+    
       return { userId };
     } catch (error) {
       // Handle errors
