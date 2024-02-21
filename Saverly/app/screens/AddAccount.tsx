@@ -3,6 +3,7 @@ import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, Act
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 import { fetchDataForUser } from '../services/firebaseServices';
+import { addAccount, fetchUserAccounts } from '../services/accountService';
 
 const AddAccountScreen = ({ navigation }: any) => {
   const [type, setType] = useState('');
@@ -19,32 +20,13 @@ const AddAccountScreen = ({ navigation }: any) => {
     setLoading(true);
 
     try {
-      const userId = FIREBASE_AUTH.currentUser?.uid;
-      if (!userId) throw new Error('No user is signed in.');
-
-      // First, get the current user's income
-      const userRef = doc(FIREBASE_DB, 'users', userId);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data() || {};
-      const currentIncome = userData.income || 0;
-      const newIncome = currentIncome + parseFloat(balance);
-
-      // Update the user's income
-      await updateDoc(userRef, {
-        income: newIncome,
-      });
-
-      // Then, add the new account
-      await addDoc(collection(FIREBASE_DB, 'users', userId, 'accounts'), {
-        type,
-        balance: parseFloat(balance),
-        currency,
-      });
-
+      await addAccount(type, balance, currency);
       Alert.alert('Success', 'Account added successfully.');
       setType('');
       setBalance('');
       setCurrency('');
+      fetchUserAccounts();
+      
       navigation.goBack(); // Navigate back to the previous screen
     } catch (error: any) {
       console.error('Error adding account:', error);
