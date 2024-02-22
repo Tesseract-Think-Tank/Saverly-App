@@ -1,6 +1,5 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet} from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,7 +9,6 @@ import Details from './app/screens/Details';
 import Home from './app/screens/Home';
 import AddAccount from './app/screens/AddAccount';
 import Chat from './app/screens/Chat'; 
-
 
 // Import any other icons you want to use
 import { Ionicons } from '@expo/vector-icons';
@@ -26,7 +24,7 @@ function MainAppTabs() {
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          
+        
           if (route.name === 'Overview') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Accounts') {
@@ -52,6 +50,7 @@ function MainAppTabs() {
 }
 
 
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -72,6 +71,7 @@ export default function App() {
           component={MainAppTabs}
           options={{ headerShown: false }} // You can set this to true if you want a header
         />
+    
         <Stack.Screen
           name="Chat"
           component={Chat}
@@ -129,3 +129,4 @@ const styles = StyleSheet.create({
     color: '#BEBEC5',
   },
 });
+
