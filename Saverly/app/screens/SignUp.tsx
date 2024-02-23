@@ -4,7 +4,7 @@ import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import {signUp} from '../services/authService';
-
+import Saverly_Logo from '../../assets/saverly_logo.svg';
 
 
 const SingUp = ({navigation}: any) => {
@@ -32,7 +32,8 @@ const SingUp = ({navigation}: any) => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../../assets/signup.png')} style={styles.logo} />
+            {/* <Image source={require('../../assets/signup.png')} style={styles.logo} /> */}
+            <Saverly_Logo width={300} height={300}/>
             <Text style={styles.title}>Create an account!</Text>
             <View style={styles.inputContainer}>
                 <TextInput

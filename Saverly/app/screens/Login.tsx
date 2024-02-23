@@ -4,6 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import Saverly_Logo from '../../assets/saverly_logo.svg';
+
 
 const Login = ({navigation}: any) => {
     const [email, setEmail] = React.useState('');
@@ -33,7 +35,8 @@ const Login = ({navigation}: any) => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../../assets/login.png')} style={styles.logo} />
+            {/* <Image source={require('../../assets/saverly_logo.svg')} style={styles.logo} /> */}
+            <Saverly_Logo width={300} height={300}/>
             <Text style={styles.title}>Welcome Back!</Text>
             <View style={styles.inputContainer}>
                 <TextInput
