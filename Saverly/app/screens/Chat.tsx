@@ -39,7 +39,7 @@ const Chat = () => {
       return;
     }
 
-    const url = `http://192.168.1.6:5000/rent-question-${optionIndex + 1}`;
+    const url = `http://localhost:5000/rent-question-${optionIndex + 1}`;
 
     try {
       const response = await fetch(url, {
@@ -66,7 +66,7 @@ const Chat = () => {
       return;
     }
 
-    const url = `http://192.168.1.6:5000/travel-question-${optionIndex + 1}`;
+    const url = `http://localhost:5000/travel-question-${optionIndex + 1}`;
 
     try {
       const response = await fetch(url, {
