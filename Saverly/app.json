@@ -26,6 +26,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d26dbd6f-05d3-4fcc-a070-e25fedd3476a"
+      }
+    },
+    "owner": "mihnea20"
   }
 }
