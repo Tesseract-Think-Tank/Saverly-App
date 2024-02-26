@@ -67,6 +67,19 @@ export async function SendNotification() {
     }
     return token;
 }
+async function schedulePushNotification() {
+  // Specify the date and time for the notification
+  const notificationDate = new Date(2024, 1, 26, 15, 0, 0); // Year, Month (0-indexed), Day, Hour, Minute, Second
+
+  await Notifications.scheduleNotificationAsync({
+      content: {
+          title: "Scheduled Notification",
+          body: 'This notification is scheduled for February 27, 2024',
+      },
+      trigger: { date: notificationDate },
+  });
+}
+
 const { width } = Dimensions.get('window');
 
 const screenWidth = Dimensions.get('window').width;
@@ -143,7 +156,7 @@ const Home = ({ navigation }: any) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.addButton}
-        onPress={SendNotification}
+        onPress={schedulePushNotification}
         activeOpacity={0.7}>
         <Text style={styles.addButton}>Send Notification</Text>
       </TouchableOpacity>
