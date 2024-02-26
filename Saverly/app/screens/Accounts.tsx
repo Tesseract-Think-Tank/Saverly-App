@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Dimensions } from 'react-native';
 import { fetchUserAccounts } from '../services/accountService'; // Adjust the import path as necessary
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const { width } = Dimensions.get('window');
@@ -18,7 +19,8 @@ const AccountsScreen = ({ navigation }: any) => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useFocusEffect( 
+    React.useCallback(() => {
     const loadAccounts = async () => {
         setLoading(true);
         try {
@@ -33,7 +35,11 @@ const AccountsScreen = ({ navigation }: any) => {
     };
 
     loadAccounts();
-  }, []);
+    return () => {
+      // Cleanup actions if required
+    };
+  }, [])
+  );
 
 return (
     <View style={styles.container}>

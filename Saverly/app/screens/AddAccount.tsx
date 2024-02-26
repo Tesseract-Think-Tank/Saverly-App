@@ -25,7 +25,8 @@ const AddAccountScreen = ({ navigation }: any) => {
       setType('');
       setBalance('');
       setCurrency('');
-      fetchUserAccounts();
+
+      await fetchUserAccounts();
       
       navigation.goBack(); // Navigate back to the previous screen
     } catch (error: any) {

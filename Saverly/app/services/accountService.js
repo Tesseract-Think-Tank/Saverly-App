@@ -6,7 +6,16 @@ const addAccount = async (type, balance, currency) => {
   const userId = FIREBASE_AUTH.currentUser?.uid;
   if (!userId) throw new Error('No user is signed in.');
 
-  // First, get the current user's income
+  // First, check if an account with the same type already exists
+  const accountsRef = collection(FIREBASE_DB, 'users', userId, 'accounts');
+  const q = query(accountsRef, where("type", "==", type));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    // An account with this type already exists
+    throw new Error('An account with this type already exists.');
+  }
+
+  // If no existing account with the same type, get the current user's income
   const userRef = doc(FIREBASE_DB, 'users', userId);
   const userSnap = await getDoc(userRef);
   const userData = userSnap.data() || {};
@@ -19,13 +28,13 @@ const addAccount = async (type, balance, currency) => {
   });
 
   // Then, add the new account
-  await addDoc(collection(FIREBASE_DB, 'users', userId, 'accounts'), {
+  await addDoc(accountsRef, {
     type,
     balance: parseFloat(balance),
     currency,
   });
 
-
+  
   return true; // Indicate success
 };
 
