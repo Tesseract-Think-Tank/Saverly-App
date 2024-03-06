@@ -1,42 +1,6 @@
 import { addDoc, collection, doc, getDoc, updateDoc, query, queryEqual, querySnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 
-const axios = require('axios');
-const xml2js = require('xml2js');
-
-class CursBNR {
-  constructor() {
-    this.date = '';
-    this.currency = {};
-  }
-}
-
-const fetchAndParseXMLDocument = async (url) =>{
-  try {
-    const response = await axios.get(url);
-    const parser = new xml2js.Parser({ explicitArray: false });
-    const result = await parser.parseStringPromise(response.data);
-
-    this.date = result.DataSet.Header.PublishingDate;
-
-    result.DataSet.Body.Cube.Rate.forEach((rate) => {
-      const currencyCode = rate.$.currency;
-      const multiplier = rate.$.multiplier ? parseInt(rate.$.multiplier, 10) : 1;
-      this.currency[currencyCode] = parseFloat(rate._) / multiplier;
-    });
-    this.currency['RON'] = 1;
-  } catch (error) {
-    console.error('Error fetching or parsing XML:', error);
-  }
-};
-
-const getExchangeRate = async(fromCurrency,toCurrency) =>{
-  if (this.currency[fromCurrency] && this.currency[toCurrency]) {
-    return this.currency[toCurrency] / this.currency[fromCurrency];
-  } else {
-    throw new Error('Incorrect or unsupported currency!');
-  }
-};
 
 const addExpense= async (category, amount,description,currencyOfExp) => {
     const userId = FIREBASE_AUTH.currentUser?.uid;
@@ -47,15 +11,54 @@ const addExpense= async (category, amount,description,currencyOfExp) => {
     const userData = userSnap.data() || {};
     const currentIncome = userData.income || 0;
     const currencyOfAccount = userData.currency;
+    const eurToRon = 5;
+    const ronToEur = 0.2;
 
-    const cursBNR = new CursBNR();
-    await cursBNR.fetchAndParseXMLDocument('https://www.bnr.ro/nbrfxrates.xml');
+    const ronToUsd = 0.22;
+    const usdToRon = 4.57;
+    
+    const ronToGbp = 0.17;
+    const gbpToRon = 5.82;
 
-    const exchangeRate = cursBNR.getExchangeRate(currencyOfExp, currencyOfAccount);
+    const eurToUsd = 1.09;
+    const usdToEur = 0.92;
+
+    const gbpToEur = 1.17;
+    const eurToGbp = 0.86;
+
+    const usdToGbp = 0.79;
+    const gbpToUsd = 1.27;
+
+    let exchangeRate;
+
+    if(currencyOfExp == "RON" && currencyOfAccount == "EUR")
+        exchangeRate =  ronToEur;
+    else if(currencyOfExp == "EUR" && currencyOfAccount == "RON")
+         exchangeRate = eurToRon;
+    else if(currencyOfExp == "USD" && currencyOfAccount == "RON")
+        exchangeRate = usdToRon;
+    else if(currencyOfExp == "RON" && currencyOfAccount == "USD")
+        exchangeRate = ronToUsd;
+    else if(currencyOfExp == "GBP" && currencyOfAccount == "RON")
+        exchangeRate = gbpToRon;
+    else if(currencyOfExp == "RON" && currencyOfAccount == "GBP")
+        exchangeRate = ronToGbp;
+    else if(currencyOfExp == "EUR" && currencyOfAccount == "GBP")
+        exchangeRate = eurToGbp;
+    else if(currencyOfExp == "GBP" && currencyOfAccount == "EUR")
+        exchangeRate = gbpToEur;
+    else if(currencyOfExp == "EUR" && currencyOfAccount == "USD")
+        exchangeRate = eurToUsd;
+    else if(currencyOfExp == "USD" && currencyOfAccount == "EUR")
+        exchangeRate = usdToEur;
+    else if(currencyOfExp == "USD" && currencyOfAccount == "GBP")
+        exchangeRate = usdToGbp;
+    else if(currencyOfExp == "GBP" && currencyOfAccount == "USD")
+        exchangeRate = gbpToUsd;
     const convertedAmount = amount * exchangeRate;
     
     if(convertedAmount > currentIncome)
-        throw new Error("Insufficient funds");
+       throw new Error("Insufficient funds");
 
     const newIncome = currentIncome-convertedAmount;
     const newExpensesValue = parseFloat(userData.expenses || 0) + convertedAmount;
