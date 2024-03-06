@@ -11,8 +11,6 @@ const TabIcon = ({ name, focused }) => {
           return focused ? 'card' : 'card-outline';
         case 'Settings':
           return focused ? 'settings' : 'settings-outline';
-        case 'AddAccount':
-          return focused ? 'add-circle' : 'add-circle-outline';``
         case 'Chat':
           return focused ? 'chatbubble-ellipses' : 'chatbubble-outline';
         default:
@@ -38,13 +36,6 @@ const TabIcon = ({ name, focused }) => {
           options={{
             headerShown: false,
             tabBarIcon: ({ focused }) => <TabIcon name="Accounts" focused={focused} />,
-          }}
-        />
-        <Tabs.Screen
-          name="AddAccount"
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ focused }) => <TabIcon name="AddAccount" focused={focused} />,
           }}
         />
         <Tabs.Screen
