@@ -1,51 +1,83 @@
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions,FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
-import { FIREBASE_DB } from '../../../firebaseConfig'; // Adjust the import path according to your project structure
+import { doc, getDoc, onSnapshot,getFirestore,collection,getDocs } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-
+import { initializeApp } from 'firebase/app';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
 
 const { width } = Dimensions.get('window');
-
 const screenWidth = Dimensions.get('window').width;
 
 const Home = () => {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
-  const [userId, setUserId] = useState(null);
-  const fetchData = async () => {
+  const [listData, setListData] = useState([]);
+  let userId;
+
+  const fetchUserData = async () => {
     const auth = getAuth();
-    const userId = auth.currentUser?.uid;
+    userId = auth.currentUser?.uid;
     if (!userId) {
-      // Handle the case where there is no user logged in
+      console.log('No user logged in');
       return;
     }
-    
     const userData = await fetchDataForUser(userId);
     setIncome(userData.income);
     setExpenses(userData.expenses);
   };
 
-  // Use useFocusEffect to fetch data when the screen gains focus
+  const fetchExpenses = async () => {
+    try {
+      const expensesCollectionRef = collection(FIREBASE_DB,'users',userId, 'expenses');
+      const expensesSnapshot = await getDocs(expensesCollectionRef);
+
+      if (expensesSnapshot.empty) {
+        console.log('No matching documents in expenses collection.');
+        return;
+      }
+
+      const newExpensesData = expensesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        amount: doc.data().amount || 0,
+        category: doc.data().category || "no category",
+        dateAndTime: doc.data().dateAndTime || null,
+        description: doc.data().description || " "
+      }));
+
+      setListData(newExpensesData);
+    } catch (error) {
+      console.error("Error fetching expenses: ", error);
+    }
+  };
+
   useFocusEffect(
-    React.useCallback(() => {
-      fetchData();
-      // Optionally return a cleanup function if needed
-      return () => {};
+    useCallback(() => {
+      fetchUserData();
+      fetchExpenses();
     }, [])
   );
 
   const balance = income - expenses;
-  
+
+  const renderItem = ({ item }) => {
+    const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
+    return (
+      <View style={styles.listItem}>
+        <Text style={styles.listItemText}>
+          Amount: ${item.amount} Category: {item.category} date: {date} description: {item.description}
+        </Text>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>Balance: ${balance.toFixed(2)}</Text>
+        <Text style={styles.balanceText}>Balance: currency{balance.toFixed(2)}</Text>
       </View>
 
       <View style={styles.boxContainer}>
@@ -86,6 +118,12 @@ const Home = () => {
         <Ionicons name='chatbubbles' size={24} color="white" />
       </TouchableOpacity> */}
       
+      <FlatList
+        data={listData}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+        style={styles.list}
+      />
     </SafeAreaView>
   );
 };
@@ -140,6 +178,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 4,
+  },
+  listItem: {
+    backgroundColor: '#f0f0f0',
+    padding: 20,
+    marginVertical: 8,
+    borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  listItemText: {
+    fontSize: 18,
+  },
+  list: {
+    marginTop: 20,
   },
   addButton: {
     position: 'absolute', // Position over your other content
