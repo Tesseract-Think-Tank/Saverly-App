@@ -19,7 +19,8 @@ const AddExpenseScreen = ({ navigation } : any)  => {
     setLoading(true);
 
     try {
-      await addExpense(category, amount, description,currency);
+      const convertedAmount = parseFloat(amount);
+      await addExpense(category, convertedAmount, description,currency);
       Alert.alert('Success', 'Expense added successfully.');
       setCategory('');
       setAmount('');

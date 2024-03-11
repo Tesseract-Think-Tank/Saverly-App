@@ -8,14 +8,14 @@ const initializeUserDetails = async (userId, email) => {
             email: email,
             income: 0,
             expenses: 0,
-            currency: 'USD',
+            currency: 'RON',
         });
 
         // Add a default account to the 'accounts' subcollection for this user
         await addDoc(collection(FIREBASE_DB, "users", userId, "accounts"), {
             type: 'Cash',
             balance: 0,
-            currency: 'USD',
+            currency: 'RON',
         });
     } catch (error) {
         throw new Error(`Error initializing user details: ${error.message}`);

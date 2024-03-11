@@ -6,29 +6,42 @@ const addAccount = async (type, balance, currency) => {
   const userId = FIREBASE_AUTH.currentUser?.uid;
   if (!userId) throw new Error('No user is signed in.');
 
-  // First, get the current user's income
+  if (isNaN(balance)) {
+    throw new Error('Balance must be a number');
+  }
+
   const userRef = doc(FIREBASE_DB, 'users', userId);
   const userSnap = await getDoc(userRef);
   const userData = userSnap.data() || {};
   const currentIncome = userData.income || 0;
-  const newIncome = currentIncome + parseFloat(balance);
 
-  // Update the user's income
+  const exchangeRates = {
+    "EUR": 5,
+    "USD": 4.57,
+    "GBP": 5.82,
+    "RON": 1
+  };
+
+  const exchangeRate = exchangeRates[currency];
+
+  if (!exchangeRate) {
+    throw Error("Currency not supported");
+  }
+
+  const newIncome = currentIncome + (exchangeRate * parseFloat(balance));
+
   await updateDoc(userRef, {
     income: newIncome,
   });
 
-  // Then, add the new account
   await addDoc(collection(FIREBASE_DB, 'users', userId, 'accounts'), {
     type,
     balance: parseFloat(balance),
     currency,
   });
 
-
   return true; // Indicate success
 };
-
 const fetchUserAccounts = async () => {
     const userId = FIREBASE_AUTH.currentUser?.uid;
     if (!userId) throw new Error('No user is signed in.');

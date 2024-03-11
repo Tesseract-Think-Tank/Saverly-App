@@ -60,11 +60,11 @@ const addExpense= async (category, amount,description,currencyOfExp) => {
     if(convertedAmount > currentIncome)
        throw new Error("Insufficient funds");
 
-    const newIncome = currentIncome-convertedAmount;
-    const newExpensesValue = parseFloat(userData.expenses || 0) + convertedAmount;
+    //const newIncome = parseFloat(currentIncome || 0) - parseFloat(convertedAmount || 0);
+    const newExpensesValue = parseFloat(userData.expenses || 0) + parseFloat(convertedAmount || 0);
 
     await updateDoc(userRef, {
-      income: newIncome,
+      //income: newIncome,
       expenses: newExpensesValue
     });
   
@@ -74,7 +74,7 @@ const addExpense= async (category, amount,description,currencyOfExp) => {
       amount: parseFloat(amount),
       dateAndTime: new Date(),
       description,
-      currency:currencyOfAccount
+      currency:currencyOfExp
     });
   
     return true; 

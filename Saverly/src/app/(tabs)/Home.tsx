@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useState, useEffect,useCallback } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
-import { doc, getDoc, onSnapshot,getFirestore,collection,getDocs } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot,getFirestore,collection,getDocs,deleteDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -30,6 +30,22 @@ const Home = () => {
     setIncome(userData.income);
     setExpenses(userData.expenses);
   };
+  
+  const deleteExpenseById = async (expenseId) => {
+    try {
+      const expenseRef = doc(FIREBASE_DB, 'users', userId, 'expenses', expenseId);
+      await deleteDoc(expenseRef);
+      console.log('Expense deleted successfully');
+      setListData(prevListData => {
+        const updatedListData = prevListData.filter(item => item.id !== expenseId);
+        console.log(updatedListData); // Check the updated state
+        return updatedListData;
+      });
+    } catch (error) {
+      console.error('Error deleting expense', error);
+    }
+  };
+  
 
   const fetchExpenses = async () => {
     try {
@@ -44,6 +60,7 @@ const Home = () => {
       const newExpensesData = expensesSnapshot.docs.map(doc => ({
         id: doc.id,
         amount: doc.data().amount || 0,
+        currency:doc.data().currency || "RON",
         category: doc.data().category || "no category",
         dateAndTime: doc.data().dateAndTime || null,
         description: doc.data().description || " "
@@ -66,18 +83,28 @@ const Home = () => {
 
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
+  
+    const handleDelete = () => {
+      deleteExpenseById(item.id);
+    };
+  
     return (
       <View style={styles.listItem}>
-        <Text style={styles.listItemText}>
-          Amount: ${item.amount} Category: {item.category} date: {date} description: {item.description}
-        </Text>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.listItemText}>
+            Amount: {item.amount} {item.currency} Category: {item.category} Date: {date} Description: {item.description}
+          </Text>
+        </View>
+        <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+          <Ionicons name="trash-outline" size={24} color="red" />
+        </TouchableOpacity>
       </View>
     );
   };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>Balance: currency{balance.toFixed(2)}</Text>
+        <Text style={styles.balanceText}>Balance: {balance.toFixed(2)} RON</Text>
       </View>
 
       <View style={styles.boxContainer}>
@@ -88,7 +115,7 @@ const Home = () => {
         >
           <Ionicons name="arrow-up" size={24} color="white" />
           <Text style={styles.boxTitle}>Income</Text>
-          <Text style={styles.boxValue}>${income.toFixed(2)}</Text>
+          <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
           </LinearGradient>
         
         <LinearGradient
@@ -97,7 +124,7 @@ const Home = () => {
           >
           <Ionicons name="arrow-down" size={24} color="white" />
           <Text style={styles.boxTitle}>Expenses</Text>
-          <Text style={styles.boxValue}>${expenses.toFixed(2)}</Text>
+          <Text style={styles.boxValue}>{expenses.toFixed(2)} RON </Text>
         </LinearGradient>
         
       </View>
@@ -137,6 +164,10 @@ const styles = StyleSheet.create({
   },
   balanceContainer: {
     marginBottom: 24,
+  },
+  deleteButton: {
+    marginLeft: 12,
+    padding: 8,
   },
   balanceText: {
     fontSize: 22,
