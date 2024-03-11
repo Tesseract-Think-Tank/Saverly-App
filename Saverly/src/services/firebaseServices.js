@@ -5,7 +5,7 @@ import { firebaseApp } from '../../firebaseConfig'; // Adjust the import path ac
 const db = getFirestore(firebaseApp);
 
 // Function to fetch income and expenses for the current user
-export const fetchDataForUser = async (userId) => {
+const fetchDataForUser = async (userId) => {
   try {
     // Reference to the user's document in the 'users' collection
     const userDocRef = doc(db, 'users', userId);
@@ -28,3 +28,5 @@ export const fetchDataForUser = async (userId) => {
     throw error; // Re-throw the error to be handled by the caller
   }
 };
+
+export { fetchDataForUser };
