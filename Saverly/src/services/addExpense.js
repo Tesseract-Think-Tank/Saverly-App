@@ -2,7 +2,7 @@ import { addDoc, collection, doc, getDoc, updateDoc, query, queryEqual, querySna
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 
 
-const addExpense= async (category, amount,description,currencyOfExp) => {
+const getAccounts = async() =>{
     const userId = FIREBASE_AUTH.currentUser?.uid;
     if (!userId) throw new Error('No user is signed in.');
     const userRef = doc(FIREBASE_DB, 'users', userId);
@@ -12,78 +12,56 @@ const addExpense= async (category, amount,description,currencyOfExp) => {
     querySnapshot.forEach((doc) => {
         accounts.push(doc.data());
     });
-    
-    const userSnap = await getDoc(userRef);
-    const userData = userSnap.data() || {};
-    const currentIncome = userData.income || 0;
-    const currencyOfAccount = userData.currency;
-    const eurToRon = 5;
-    const ronToEur = 0.2;
+    return accounts;
+};
 
-    const ronToUsd = 0.22;
-    const usdToRon = 4.57;
-    
-    const ronToGbp = 0.17;
-    const gbpToRon = 5.82;
+const addExpense = async (accountCurrency, accountType, category, amount, description, currencyOfExp) => {
+    const userId = FIREBASE_AUTH.currentUser?.uid;
+    if (!userId) throw new Error('No user is signed in.');
 
-    const eurToUsd = 1.09;
-    const usdToEur = 0.92;
+    // Create a query for the accounts with the given currency and type
+    const accountsRef = collection(FIREBASE_DB, 'users', userId, 'accounts');
+    const q = query(accountsRef, where("currency", "==", accountCurrency), where("type", "==", accountType));
+    const querySnapshot = await getDocs(q);
 
-    const gbpToEur = 1.17;
-    const eurToGbp = 0.86;
+    if (querySnapshot.empty) throw new Error('Account not found.');
+    // Assuming that the currency and type combination is unique, take the first document.
+    const accountSnap = querySnapshot.docs[0];
+    const accountId = accountSnap.id; // Now you have the account's ID.
+    const accountData = accountSnap.data();
+    const accountBalance = accountData.balance || 0;
+    // Define the exchange rates (ideally these should be updated dynamically or through a service)
+    const exchangeRates = {
+        'EUR:RON': 5, 'RON:EUR': 0.2,
+        'USD:RON': 4.57, 'RON:USD': 0.22,
+        'GBP:RON': 5.82, 'RON:GBP': 0.17,
+        'EUR:USD': 1.09, 'USD:EUR': 0.92,
+        'GBP:EUR': 1.17, 'EUR:GBP': 0.86,
+        'USD:GBP': 0.79, 'GBP:USD': 1.27
+    };
 
-    const usdToGbp = 0.79;
-    const gbpToUsd = 1.27;
+    const keyForExchangeRate = `${currencyOfExp}:${currencyOfAccount}`;
+    const exchangeRate = exchangeRates[keyForExchangeRate] || 1; // If no conversion is needed, the rate is 1
 
-    let exchangeRate;
-
-    if(currencyOfExp == "RON" && currencyOfAccount == "EUR")
-        exchangeRate =  ronToEur;
-    else if(currencyOfExp == "EUR" && currencyOfAccount == "RON")
-         exchangeRate = eurToRon;
-    else if(currencyOfExp == "USD" && currencyOfAccount == "RON")
-        exchangeRate = usdToRon;
-    else if(currencyOfExp == "RON" && currencyOfAccount == "USD")
-        exchangeRate = ronToUsd;
-    else if(currencyOfExp == "GBP" && currencyOfAccount == "RON")
-        exchangeRate = gbpToRon;
-    else if(currencyOfExp == "RON" && currencyOfAccount == "GBP")
-        exchangeRate = ronToGbp;
-    else if(currencyOfExp == "EUR" && currencyOfAccount == "GBP")
-        exchangeRate = eurToGbp;
-    else if(currencyOfExp == "GBP" && currencyOfAccount == "EUR")
-        exchangeRate = gbpToEur;
-    else if(currencyOfExp == "EUR" && currencyOfAccount == "USD")
-        exchangeRate = eurToUsd;
-    else if(currencyOfExp == "USD" && currencyOfAccount == "EUR")
-        exchangeRate = usdToEur;
-    else if(currencyOfExp == "USD" && currencyOfAccount == "GBP")
-        exchangeRate = usdToGbp;
-    else if(currencyOfExp == "GBP" && currencyOfAccount == "USD")
-        exchangeRate = gbpToUsd;
     const convertedAmount = amount * exchangeRate;
     
-    if(convertedAmount > currentIncome)
-       throw new Error("Insufficient funds");
+    if (convertedAmount > accountBalance) throw new Error("Insufficient funds in the selected account.");
 
-    //const newIncome = parseFloat(currentIncome || 0) - parseFloat(convertedAmount || 0);
-    const newExpensesValue = parseFloat(userData.expenses || 0) + parseFloat(convertedAmount || 0);
-
-    await updateDoc(userRef, {
-      //income: newIncome,
-      expenses: newExpensesValue
+    // Update the account balance
+    const newAccountBalance = accountBalance - convertedAmount;
+    await updateDoc(accountRef, {
+        balance: newAccountBalance
     });
-  
 
-    await addDoc(collection(FIREBASE_DB, 'users', userId, 'expenses'), { 
-      category,
-      amount: parseFloat(amount),
-      dateAndTime: new Date(),
-      description,
-      currency:currencyOfExp
+    // Add the expense document
+    await addDoc(collection(FIREBASE_DB, 'users', userId, 'accounts', accountId, 'expenses'), {
+        category,
+        amount: convertedAmount, // Store the converted amount in the account's currency
+        dateAndTime: new Date(),
+        description,
+        currency: currencyOfAccount // Store the account's currency
     });
-  
+
     return true; 
-  };
-  
-export{addExpense}
+};
+export{addExpense,getAccounts}

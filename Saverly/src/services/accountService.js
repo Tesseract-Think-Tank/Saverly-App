@@ -9,7 +9,7 @@ const addAccount = async (type, balance, currency) => {
   if (isNaN(balance)) {
     throw new Error('Balance must be a number');
   }
-
+  //let accountID = 0;
   const userRef = doc(FIREBASE_DB, 'users', userId);
   const userSnap = await getDoc(userRef);
   const userData = userSnap.data() || {};
@@ -33,13 +33,14 @@ const addAccount = async (type, balance, currency) => {
   await updateDoc(userRef, {
     income: newIncome,
   });
-
+  
   await addDoc(collection(FIREBASE_DB, 'users', userId, 'accounts'), {
     type,
     balance: parseFloat(balance),
     currency,
+    //accountId:accountID
   });
-
+    //accountID += 1;
   return true; // Indicate success
 };
 const fetchUserAccounts = async () => {
