@@ -9,11 +9,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-// No router import from 'expo-router' as this might be outdated or incorrect. Use navigation from props instead.
-import { addExpense,getAccounts } from '../../services/addExpense'; // Make sure to implement getAccounts method in your services.
+
+import { addExpense,getAccounts } from '../../services/addExpense'; 
 
 const AddExpenseScreen = ({ navigation }) => {
-  // Define state hooks for each input and selection
+  
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -22,7 +22,6 @@ const AddExpenseScreen = ({ navigation }) => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Categories remain the same
   const categories = [
     'Food',
     'Transport',
@@ -33,14 +32,13 @@ const AddExpenseScreen = ({ navigation }) => {
     'Other',
   ];
 
-  // Fetch accounts on component mount
   useEffect(() => {
     const loadAccounts = async () => {
       setLoading(true);
       try {
-        const fetchedAccounts = await getAccounts(); // You will need to implement this
+        const fetchedAccounts = await getAccounts(); 
         setAccounts(fetchedAccounts);
-        setSelectedAccount(fetchedAccounts[0]); // Optionally set the first account as selected by default
+        setSelectedAccount(fetchedAccounts[0]); 
       } catch (error) {
         Alert.alert('Error', 'Unable to fetch accounts');
       }
@@ -59,27 +57,26 @@ const AddExpenseScreen = ({ navigation }) => {
     setLoading(true);
   
     try {
-      // Convert amount to a number
       const convertedAmount = parseFloat(amount);
-  
-      // Find the account using the selected compound key
       const [selectedCurrency, selectedType] = selectedAccount.split('_');
+      console.log(selectedCurrency);
+      console.log(selectedType);
       const account = accounts.find(acc => acc.currency === selectedCurrency && acc.type === selectedType);
       if (!account) throw new Error('Selected account not found.');
   
-      await addExpense(account.id, category, convertedAmount, description, currency); // Assuming addExpense takes account ID
+      await addExpense(selectedCurrency,selectedType, category, convertedAmount, description, currency); 
       Alert.alert('Success', 'Expense added successfully.');
   
-      // Reload accounts to reflect changes
+     
       const refreshedAccounts = await getAccounts();
       setAccounts(refreshedAccounts);
   
-      // Reset the form
+      
       setCategory('');
       setAmount('');
       setDescription('');
       setCurrency('');
-      setSelectedAccount(null); // Reset selected account
+      setSelectedAccount(null); 
     } catch (error) {
       Alert.alert('Error', error.message || 'Could not add expense.');
     } finally {
@@ -91,18 +88,7 @@ const AddExpenseScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Add New Expense</Text>
       <View style={styles.inputContainer}>
-      <Picker
-          selectedValue={selectedAccount}
-          onValueChange={(itemValue) => setSelectedAccount(itemValue)}
-          style={styles.picker}>
-          {accounts.map((account) => (
-          <Picker.Item 
-            key={`${account.currency}_${account.type}`} 
-            label={`${account.type} - ${account.currency}`} 
-            value={`${account.currency}_${account.type}`} 
-          />
-        ))}
-      </Picker>
+
         <Picker
           selectedValue={category}
           onValueChange={(itemValue) => setCategory(itemValue)}
@@ -130,6 +116,18 @@ const AddExpenseScreen = ({ navigation }) => {
           placeholder='Currency Code (e.g., USD, EUR)'
           style={styles.input}
         />
+        <Picker
+          selectedValue={selectedAccount}
+          onValueChange={(itemValue) => setSelectedAccount(itemValue)}
+          style={styles.picker}>
+          {accounts.map((account) => (
+          <Picker.Item 
+            key={`${account.currency}_${account.type}`} 
+            label={`${account.type} - ${account.currency}`} 
+            value={`${account.currency}_${account.type}`} 
+          />
+        ))}
+      </Picker>
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
@@ -144,7 +142,7 @@ const AddExpenseScreen = ({ navigation }) => {
     </View>
   );
 };
-// You can reuse the styles from your AddAccountScreen or modify them as needed
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -173,7 +171,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
-    width: '100%', // Make sure the picker fills the container
+    width: '100%', 
   },
   button: {
     backgroundColor: '#6C63FF',
