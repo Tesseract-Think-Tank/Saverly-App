@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-picker/picker": "^2.6.1",
     "axios": "^1.6.7",
     "expo": "^50.0.1",
     "expo-constants": "~15.4.2",

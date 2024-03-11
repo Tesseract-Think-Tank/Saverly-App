@@ -5,8 +5,14 @@ import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 const addExpense= async (category, amount,description,currencyOfExp) => {
     const userId = FIREBASE_AUTH.currentUser?.uid;
     if (!userId) throw new Error('No user is signed in.');
-  
     const userRef = doc(FIREBASE_DB, 'users', userId);
+    const accountsRef = collection(FIREBASE_DB, 'users', userId, 'accounts');
+    const querySnapshot = await getDocs(accountsRef);
+    const accounts = [];
+    querySnapshot.forEach((doc) => {
+        accounts.push(doc.data());
+    });
+    
     const userSnap = await getDoc(userRef);
     const userData = userSnap.data() || {};
     const currentIncome = userData.income || 0;

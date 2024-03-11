@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { router } from 'expo-router';
-import { addExpense } from '../../services/addExpense'; // Ensure this path matches your project structure
+import { addExpense } from '../../services/addExpense';
+import { Picker } from '@react-native-picker/picker'; // Ensure this path matches your project structure
 
 const AddExpenseScreen = ({ navigation } : any)  => {
   const [category, setCategory] = useState('');
@@ -9,6 +10,18 @@ const AddExpenseScreen = ({ navigation } : any)  => {
   const [description, setDescription] = useState('');
   const [currency,setCurrency] = useState('');
   const [loading, setLoading] = useState(false);
+  //const [accounts,setAccounts] = useState([]);
+
+
+  const categories = [
+    'Food',
+    'Transport',
+    'Utilities',
+    'Entertainment',
+    'Shopping',
+    'Health',
+    'Other',
+  ];
 
   const handleAddExpense = async () => {
     if (!category || !amount || !description || !currency) {
@@ -26,6 +39,7 @@ const AddExpenseScreen = ({ navigation } : any)  => {
       setAmount('');
       setDescription('');
       setCurrency('');
+      setAccounts([]);
 
       router.back(); // Navigate back to the previous screen
     } catch (error : any) {
@@ -40,12 +54,15 @@ const AddExpenseScreen = ({ navigation } : any)  => {
     <View style={styles.container}>
       <Text style={styles.title}>Add New Expense</Text>
       <View style={styles.inputContainer}>
-        <TextInput
-          value={category}
-          onChangeText={setCategory}
-          placeholder='Expense Category (e.g., Food, Transport)'
-          style={styles.input}
-        />
+      <Picker
+          selectedValue={category}
+          onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+          style={styles.picker}>
+          <Picker.Item label="Select Category" value="" />
+          {categories.map((category, index) => (
+            <Picker.Item key={index} label={category} value={category} />
+          ))}
+      </Picker>
         <TextInput
           value={amount}
           onChangeText={setAmount}
@@ -65,6 +82,15 @@ const AddExpenseScreen = ({ navigation } : any)  => {
           placeholder='Currency code'
           style={styles.input}
         />
+        <Picker
+          selectedValue={category}
+          onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+          style={styles.picker}>
+          <Picker.Item label="Select Category" value="" />
+          {categories.map((category, index) => (
+            <Picker.Item key={index} label={category} value={category} />
+          ))}
+      </Picker>
       </View>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -103,6 +129,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+  },
+  picker: {
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 5,
+    width: '100%', // Make sure the picker fills the container
   },
   button: {
     backgroundColor: '#6C63FF',
