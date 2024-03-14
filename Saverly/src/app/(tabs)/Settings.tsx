@@ -4,13 +4,14 @@ import { router } from 'expo-router';
 
 const Settings = ({ navigation }: any) => {
   return (
-    <View className='flex-1 justify-center'>
+    <View className='flex-1'>
       <TouchableOpacity
       style={styles.button}
-      onPress={() => router.push('MonthlyRecap')}>
+      onPress={() => {
+        
+        router.push('MonthlyRecap')}}>
         <Text style={styles.buttonText}>MonthlyRecap</Text>
       </TouchableOpacity>
-      <Text className='text-red-600 bg-blue-400 text-3xl'>Test TailwindCSS</Text>
     </View>
   )
 }
