@@ -8,36 +8,35 @@ Notifications.setNotificationHandler({
         shouldSetBadge: false,
     }),
 });
-export async function SendNotification() {
+export async function SendNotification(notificationMessage) {
     console.log("Sending push Notification..");
     const expoPushToken = await getExpoPushToken();
     const message = {
         to: expoPushToken,
         sound: "default",
-        title: "test mesaj",
-        body: "test sa vad daca merge",
+        title: "Monthly payment in the next day",
+        body: "Don't forget that you have to pay for"+notificationMessage, 
     }
     await fetch("https://exp.host/--/api/v2/push/send", {
         method: "POST",
         headers: {
-        host: "exp.host",
-        accept: "application/json",
-        "accept-encoding": "gzip, deflate",
-        "content-type": "application/json",
+            host: "exp.host",
+            accept: "application/json",
+            "accept-encoding": "gzip, deflate",
+            "content-type": "application/json",
         },
         body: JSON.stringify(message),
     });
 }
-async function schedulePushNotification() {
-    // Specify the date and time for the notification
-    const notificationDate = new Date(2024, 1, 26, 15, 0, 0); // Year, Month (0-indexed), Day, Hour, Minute, Second
 
+
+export async function schedulePushNotification(ScheduleDate, notificationMessage) {
     await Notifications.scheduleNotificationAsync({
         content: {
             title: "Scheduled Notification",
-            body: 'This notification is scheduled for February 27, 2024',
+            body: "Don't forget that you have to pay for "+notificationMessage,
         },
-        trigger: { date: notificationDate },
+        trigger: { date: ScheduleDate },
     });
 }
 
@@ -69,4 +68,18 @@ async function schedulePushNotification() {
         alert('Must use physical device for Push Notifications');
     }
     return token;
+}
+//You can call clearInterval(intervalId) to stop scheduling notifications.
+export async function scheduleMonthlyNotifications(initialNotificationDate, notificationMessage) {
+    // Schedule the initial notification
+    await schedulePushNotification(notificationMessage, initialNotificationDate);
+
+    // Schedule subsequent notifications every 1 month
+    const intervalId = setInterval(async () => {
+        const nextNotificationDate = new Date(initialNotificationDate + 30 * 24 * 60 * 60 * 1000); // Calculate the date for the next notification (1 month from now)
+        await schedulePushNotification(notificationMessage, nextNotificationDate);
+    }, 30 * 24 * 60 * 60 * 1000); // Interval of 1 month
+
+    // Return the intervalId so it can be cleared if needed
+    return intervalId;
 }

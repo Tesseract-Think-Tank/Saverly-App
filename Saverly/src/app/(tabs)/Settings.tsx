@@ -5,6 +5,9 @@ import { router } from 'expo-router';
 const Settings = ({ navigation }: any) => {
   return (
     <View className='flex-1'>
+      <TouchableOpacity onPress={() => router.push('Month')} style={styles.button}>
+          <Text style={styles.buttonText}>Monthly Expenses</Text>
+      </TouchableOpacity>
       <TouchableOpacity
       style={styles.button}
       onPress={() => {
