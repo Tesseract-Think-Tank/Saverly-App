@@ -1,17 +1,19 @@
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions,FlatList } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState, useEffect,useCallback } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
-import { doc, getDoc, onSnapshot,getFirestore,collection,getDocs,deleteDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
+import { doc, getDoc, onSnapshot, getFirestore, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
+import { useNavigation } from 'expo-router';
+import { router } from 'expo-router';
+
 
 const { width } = Dimensions.get('window');
-const screenWidth = Dimensions.get('window').width;
+
 
 const Home = () => {
   const [income, setIncome] = useState(0);
@@ -30,42 +32,30 @@ const Home = () => {
     setIncome(userData.income);
     setExpenses(userData.expenses);
   };
-  
+
   const deleteExpenseById = async (expenseId) => {
     try {
       const expenseRef = doc(FIREBASE_DB, 'users', userId, 'expenses', expenseId);
       await deleteDoc(expenseRef);
       console.log('Expense deleted successfully');
-      setListData(prevListData => {
-        const updatedListData = prevListData.filter(item => item.id !== expenseId);
-        console.log(updatedListData); // Check the updated state
-        return updatedListData;
-      });
+      setListData((prevListData) => prevListData.filter((item) => item.id !== expenseId));
     } catch (error) {
       console.error('Error deleting expense', error);
     }
   };
-  
 
   const fetchExpenses = async () => {
     try {
-      const expensesCollectionRef = collection(FIREBASE_DB,'users',userId, 'expenses');
+      const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
       const expensesSnapshot = await getDocs(expensesCollectionRef);
-
       if (expensesSnapshot.empty) {
         console.log('No matching documents in expenses collection.');
         return;
       }
-
-      const newExpensesData = expensesSnapshot.docs.map(doc => ({
+      const newExpensesData = expensesSnapshot.docs.map((doc) => ({
         id: doc.id,
-        amount: doc.data().amount || 0,
-        currency:doc.data().currency || "RON",
-        category: doc.data().category || "no category",
-        dateAndTime: doc.data().dateAndTime || null,
-        description: doc.data().description || " "
+        ...doc.data(),
       }));
-
       setListData(newExpensesData);
     } catch (error) {
       console.error("Error fetching expenses: ", error);
@@ -83,24 +73,26 @@ const Home = () => {
 
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
-  
-    const handleDelete = () => {
-      deleteExpenseById(item.id);
-    };
+    const handleDelete = () => deleteExpenseById(item.id);
   
     return (
-      <View style={styles.listItem}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.listItemText}>
-            Amount: {item.amount} {item.currency} Category: {item.category} Date: {date} Description: {item.description}
-          </Text>
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <View style={styles.cardInfo}>
+            <Text style={styles.cardAmount}>${item.amount}</Text>
+            <Text style={styles.cardCategory}>{item.category}</Text>
+            <Text style={styles.cardDate}>{date}</Text>
+            <Text style={styles.cardDescription}>{item.description}</Text>
+          </View>
+          <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+            <Ionicons name="trash-bin-outline" size={22} color="#ff6961" />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-          <Ionicons name="trash-outline" size={24} color="red" />
-        </TouchableOpacity>
       </View>
     );
   };
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.balanceContainer}>
@@ -108,49 +100,35 @@ const Home = () => {
       </View>
 
       <View style={styles.boxContainer}>
-        
-        <LinearGradient
-        colors={['#34c3c7', '#c8edeb']} // Gradient for income box
-        style={styles.boxGradient}
-        >
+        <LinearGradient colors={['#34c3c7', '#c8edeb']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
           <Text style={styles.boxTitle}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
-          </LinearGradient>
-        
-        <LinearGradient
-            colors={['#8E8E93', '#c1c1c3']} // Gradient for expenses box
-            style={styles.boxGradient}
-          >
-          <Ionicons name="arrow-down" size={24} color="white" />
-          <Text style={styles.boxTitle}>Expenses</Text>
-          <Text style={styles.boxValue}>{expenses.toFixed(2)} RON </Text>
         </LinearGradient>
         
+        <LinearGradient colors={['#ff7e5f', '#feb47b']} style={styles.boxGradient}>
+          <Ionicons name="arrow-down" size={24} color="white" />
+          <Text style={styles.boxTitle}>Expenses</Text>
+          <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
+        </LinearGradient>
       </View>
-
-      {/* <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => router.push('Details')}
-        activeOpacity={0.7} // Optional: reduce the opacity on touch
-      >
-        <Ionicons name='add' size={24} color="white" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.chatButton} // Positioned above the existing add button
-        onPress={() => router.push('Chat')}
-        activeOpacity={0.7}
-      >
-        <Ionicons name='chatbubbles' size={24} color="white" />
-      </TouchableOpacity> */}
       
+      <View style={styles.divider} />
+
+
       <FlatList
         data={listData}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         style={styles.list}
       />
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('addExpense')}
+        activeOpacity={0.7}
+      >
+  <Ionicons name="add" size={30} color="#FFF" />
+</TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -159,44 +137,84 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 33,
-    padding: 16,
-    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    backgroundColor: '#f5f5f5',
   },
   balanceContainer: {
     marginBottom: 24,
   },
-  deleteButton: {
-    marginLeft: 12,
-    padding: 8,
+  divider: {
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent black for a subtle look
+    borderBottomWidth: 1, // Thickness of the divider line
+    marginTop: 16, // Spacing above the line
+    marginBottom: 10, // Spacing below the line
   },
   balanceText: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#333',
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cardInfo: {
+    flex: 1,
+  },
+  cardAmount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cardCategory: {
+    fontSize: 16,
+    color: '#555',
+    marginTop: 4,
+  },
+  cardDate: {
+    fontSize: 14,
+    color: '#777',
+    marginTop: 4,
+  },
+  cardDescription: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 4,
+  },
+  deleteButton: {
+    marginLeft: 12,
+    padding: 10,
   },
   boxContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  boxIncome: {
-    backgroundColor: '#34C759', // A green color
-    borderRadius: 20,
-    padding: 16,
-    width: '48%',
-    alignItems: 'center',
-  },
-  boxExpenses: {
-    backgroundColor: '#8E8E93', // A gray color
-    borderRadius: 20,
-    padding: 16,
-    width: '48%',
-    alignItems: 'center',
-  },
   boxGradient: {
     borderRadius: 20,
     padding: 16,
-    width: '48%',
+    width: width * 0.45, // adjusted for better responsiveness
     alignItems: 'center',
     justifyContent: 'center', // Center content vertically
+    shadowColor: '#000', // adding shadow for depth
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   boxTitle: {
     color: 'white',
@@ -211,51 +229,40 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   listItem: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#fff',
     padding: 20,
     marginVertical: 8,
     borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   listItemText: {
-    fontSize: 18,
+    fontSize: 16,
+    color: '#333',
   },
   list: {
-    marginTop: 20,
+    marginBottom: 170,
   },
-  addButton: {
-    position: 'absolute', // Position over your other content
-    right: (width - 56) / 2, // 30 units from the right
-    bottom: 60, // 30 units from the bottom
-    backgroundColor: '#7e57c2', // Replace with the color of your choice
-    width: 56, // Diameter of the FAB
-    height: 56, // Diameter of the FAB
-    borderRadius: 28, // Half the size of width & height to make it perfectly round
-    justifyContent: 'center', // Center the '+' icon vertically
-    alignItems: 'center', // Center the '+' icon horizontally
-    shadowColor: '#9e9e9e', // Shadow Color
-    shadowOpacity: 0.5, // Shadow Opacity
-    shadowRadius: 5, // Shadow Radius
-    shadowOffset: { height: 5, width: 5 }, // Shadow Offset
-    elevation: 6, // This adds a shadow on Android
-  },
-  chatButton: {
+  fab: {
     position: 'absolute',
-    left: width - 60,
-    bottom: 60,
-    backgroundColor: '#7e57c2',
+    right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
+    bottom: 20, // Adjust this value based on your tab bar height
+    backgroundColor: '#6C63FF', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#9e9e9e',
-    shadowOpacity: 0.5,
+    elevation: 8,
+    shadowColor: '#6C63FF',
+    shadowOpacity: 0.25,
     shadowRadius: 5,
-    shadowOffset: { height: 5, width: 5 },
-    elevation: 6,
+    shadowOffset: { width: 5, height: 5 },
   },
 });
 
