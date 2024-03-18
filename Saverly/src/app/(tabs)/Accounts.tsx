@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Dim
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchUserAccounts } from '../../services/accountService'; // Adjust as necessary
+import { router } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
@@ -56,7 +57,7 @@ const AccountsScreen = ({ navigation }) => {
       {/* Add Account Floating Action Button */}
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('AddAccount')}
+        onPress={() => router.push('AddAccount')}
         activeOpacity={0.7}
       >
         <Ionicons name='add' size={30} color="white" />
