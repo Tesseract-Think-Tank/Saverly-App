@@ -55,4 +55,4 @@ const TabIcon = ({ name, focused }) => {
     );
   };
 
-export default TabLayout
+export default TabLayout;
