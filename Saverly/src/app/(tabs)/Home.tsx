@@ -12,8 +12,10 @@ import { useNavigation } from 'expo-router';
 import { router } from 'expo-router';
 
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
+const cardHeight = height / 6.9; // Height of a single card
+const listHeight = cardHeight * 3; // Height of the list to display only 3 cards
 
 const Home = () => {
   const [income, setIncome] = useState(0);
@@ -48,6 +50,7 @@ const Home = () => {
     try {
       const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
       const expensesSnapshot = await getDocs(expensesCollectionRef);
+      console.log('Screen height: ' + height);
       if (expensesSnapshot.empty) {
         console.log('No matching documents in expenses collection.');
         return;
@@ -85,7 +88,7 @@ const Home = () => {
             <Text style={styles.cardDescription}>{item.description}</Text>
           </View>
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-            <Ionicons name="trash-bin-outline" size={22} color="#ff6961" />
+            <Ionicons name="trash-bin-outline" size={22} color="#ff7e5f" />
           </TouchableOpacity>
         </View>
       </View>
@@ -100,7 +103,7 @@ const Home = () => {
       </View>
 
       <View style={styles.boxContainer}>
-        <LinearGradient colors={['#34c3c7', '#c8edeb']} style={styles.boxGradient}>
+        <LinearGradient colors={['#34c3c7', '#34eee7']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
           <Text style={styles.boxTitle}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
@@ -120,7 +123,7 @@ const Home = () => {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        style={styles.list}
+        style={[styles.list, { height: listHeight }]}
       />
       <TouchableOpacity
         style={styles.fab}
@@ -141,13 +144,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   balanceContainer: {
-    marginBottom: 24,
+    marginBottom: height / 100,
+    height: height / 20,
   },
   divider: {
     borderBottomColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent black for a subtle look
     borderBottomWidth: 1, // Thickness of the divider line
-    marginTop: 16, // Spacing above the line
-    marginBottom: 10, // Spacing below the line
+    marginTop: height/50, // Spacing above the line
+    marginBottom: height/50 - 8, // Spacing below the line
+    width: '90%', // Take up the full width of the screen
+    alignSelf: 'center', // Center the line
   },
   balanceText: {
     fontSize: 22,
@@ -168,6 +174,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    height: height / 7, // Adjust the height of the card based on your screen size
   },
   cardContent: {
     flexDirection: 'row',
@@ -246,12 +253,13 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   list: {
-    marginBottom: 170,
+    marginTop: 0,
+    marginBottom: height/3.8,
   },
   fab: {
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
-    bottom: 20, // Adjust this value based on your tab bar height
+    bottom: 80, // Adjust this value based on your tab bar height
     backgroundColor: '#6C63FF', // Use your app's theme color
     width: 56,
     height: 56,
