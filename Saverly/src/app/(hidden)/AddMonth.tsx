@@ -37,6 +37,16 @@ const AddMonthlyPaymentScreen = () => {
 
       const notificationDate = new Date(date);
       notificationDate.setDate(notificationDate.getDate() - 1);
+
+      // Set hours to 12
+      notificationDate.setHours(12);
+
+      // Set minutes to 00
+      notificationDate.setMinutes(0);
+
+      // Set seconds to 00
+      notificationDate.setSeconds(0);
+
       scheduleMonthlyNotifications(notificationDate, monthlyPayment.getBusinessName());
 
       await fetchUserMonthlyPayments();
