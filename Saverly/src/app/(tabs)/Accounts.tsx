@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   addButton: {
     position: 'absolute',
     right: (width - 56) / 2, // center the button horizontally
-    bottom: 30,
+    bottom: 80,
     backgroundColor: '#6C63FF',
     width: 56,
     height: 56,
