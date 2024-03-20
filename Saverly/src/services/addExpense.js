@@ -1,83 +1,83 @@
-import { addDoc, collection, doc, getDoc, updateDoc, query, queryEqual, querySnapshot, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, updateDoc,where, query, queryEqual, querySnapshot, getDocs } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 
 
-const addExpense= async (category, amount,description,currencyOfExp) => {
+const getAccounts = async() =>{
     const userId = FIREBASE_AUTH.currentUser?.uid;
     if (!userId) throw new Error('No user is signed in.');
-  
-    const userRef = doc(FIREBASE_DB, 'users', userId);
-    const userSnap = await getDoc(userRef);
-    const userData = userSnap.data() || {};
-    const currentIncome = userData.income || 0;
-    const currencyOfAccount = userData.currency;
-    const eurToRon = 5;
-    const ronToEur = 0.2;
+    const accountsRef = collection(FIREBASE_DB, 'users', userId, 'accounts');
+    const querySnapshot = await getDocs(accountsRef);
+    const accounts = [];
+    querySnapshot.forEach((doc) => {
+        accounts.push(doc.data());
+    });
+    return accounts;
+};
 
-    const ronToUsd = 0.22;
-    const usdToRon = 4.57;
+const addExpense = async (accountCurrency, accountType, category, amount, description, currencyOfExp) => {
+    if (!accountCurrency || !accountType) {
+        throw new Error('Account currency or account type is undefined.');
+    }
+    const userId = FIREBASE_AUTH.currentUser?.uid;
+    if (!userId) throw new Error('No user is signed in.');
+
     
-    const ronToGbp = 0.17;
-    const gbpToRon = 5.82;
+    const accountsRef = collection(FIREBASE_DB, 'users', userId, 'accounts');
+    const q = query(accountsRef, where("currency", "==", accountCurrency), where("type", "==", accountType));
+    const querySnapshot = await getDocs(q);
 
-    const eurToUsd = 1.09;
-    const usdToEur = 0.92;
+    if (querySnapshot.empty) throw new Error('[1]Account not found.');
+    
+    const accountSnap = querySnapshot.docs[0];
+    const accountId = accountSnap.id; 
+    const accountData = accountSnap.data();
+    const accountBalance = accountData.balance || 0;
+    
+    const userDocRef = doc(FIREBASE_DB,'users',userId);
+    const userDocSnapshot = await getDoc(userDocRef);
+    if (!userDocSnapshot.exists()) {
+        throw new Error('User not found.');
+    }
 
-    const gbpToEur = 1.17;
-    const eurToGbp = 0.86;
+    const currentExpenses = userDocSnapshot.data().expenses;
 
-    const usdToGbp = 0.79;
-    const gbpToUsd = 1.27;
+    const exchangeRates = {
+        'EUR:RON': 5, 'RON:EUR': 0.2,
+        'USD:RON': 4.57, 'RON:USD': 0.22,
+        'GBP:RON': 5.82, 'RON:GBP': 0.17,
+        'EUR:USD': 1.09, 'USD:EUR': 0.92,
+        'GBP:EUR': 1.17, 'EUR:GBP': 0.86,
+        'USD:GBP': 0.79, 'GBP:USD': 1.27
+    };
 
-    let exchangeRate;
+    const keyForExchangeRate = `${currencyOfExp}:${accountCurrency}`;
+    const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
 
-    if(currencyOfExp == "RON" && currencyOfAccount == "EUR")
-        exchangeRate =  ronToEur;
-    else if(currencyOfExp == "EUR" && currencyOfAccount == "RON")
-         exchangeRate = eurToRon;
-    else if(currencyOfExp == "USD" && currencyOfAccount == "RON")
-        exchangeRate = usdToRon;
-    else if(currencyOfExp == "RON" && currencyOfAccount == "USD")
-        exchangeRate = ronToUsd;
-    else if(currencyOfExp == "GBP" && currencyOfAccount == "RON")
-        exchangeRate = gbpToRon;
-    else if(currencyOfExp == "RON" && currencyOfAccount == "GBP")
-        exchangeRate = ronToGbp;
-    else if(currencyOfExp == "EUR" && currencyOfAccount == "GBP")
-        exchangeRate = eurToGbp;
-    else if(currencyOfExp == "GBP" && currencyOfAccount == "EUR")
-        exchangeRate = gbpToEur;
-    else if(currencyOfExp == "EUR" && currencyOfAccount == "USD")
-        exchangeRate = eurToUsd;
-    else if(currencyOfExp == "USD" && currencyOfAccount == "EUR")
-        exchangeRate = usdToEur;
-    else if(currencyOfExp == "USD" && currencyOfAccount == "GBP")
-        exchangeRate = usdToGbp;
-    else if(currencyOfExp == "GBP" && currencyOfAccount == "USD")
-        exchangeRate = gbpToUsd;
     const convertedAmount = amount * exchangeRate;
     
-    if(convertedAmount > currentIncome)
-       throw new Error("Insufficient funds");
+    
+    if (convertedAmount > accountBalance) throw new Error("Insufficient funds in the selected account.");
 
-    //const newIncome = parseFloat(currentIncome || 0) - parseFloat(convertedAmount || 0);
-    const newExpensesValue = parseFloat(userData.expenses || 0) + parseFloat(convertedAmount || 0);
-
-    await updateDoc(userRef, {
-      //income: newIncome,
-      expenses: newExpensesValue
+    const newExpensesValue = currentExpenses+convertedAmount;
+   
+    const newAccountBalance = accountBalance - convertedAmount;
+    const accountRef = doc(FIREBASE_DB, 'users', userId, 'accounts', accountId);
+        await updateDoc(accountRef, {
+        balance: newAccountBalance
     });
-  
 
     await addDoc(collection(FIREBASE_DB, 'users', userId, 'expenses'), { 
-      category,
-      amount: parseFloat(amount),
-      dateAndTime: new Date(),
-      description,
-      currency:currencyOfExp
-    });
-  
+        category,
+        amount: parseFloat(amount),
+        dateAndTime: new Date(),
+        description,
+        currency:currencyOfExp
+      });
+    
+    await updateDoc(userDocRef,{
+        expenses:newExpensesValue
+    })
+      
     return true; 
-  };
-  
-export{addExpense}
+};
+export{addExpense,getAccounts}
