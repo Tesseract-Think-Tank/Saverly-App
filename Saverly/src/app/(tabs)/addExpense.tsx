@@ -32,6 +32,13 @@ const AddExpenseScreen = ({ navigation }) => {
     'Other',
   ];
 
+  const currencies = [
+    'RON',
+    'USD',
+    'EUR',
+    'GBP'
+  ];
+
   useEffect(() => {
     const loadAccounts = async () => {
       setLoading(true);
@@ -110,12 +117,14 @@ const AddExpenseScreen = ({ navigation }) => {
           placeholder='Description'
           style={styles.input}
         />
-        <TextInput
-          value={currency}
-          onChangeText={setCurrency}
-          placeholder='Currency Code (e.g., USD, EUR)'
-          style={styles.input}
-        />
+        <Picker
+          selectedValue={currency}
+          onValueChange={(itemValue) => setCurrency(itemValue)}
+          style={styles.picker}>
+          {currencies.map((cat, index) => (
+            <Picker.Item key={index} label={cat} value={cat} />
+          ))}
+        </Picker>
         <Picker
           selectedValue={selectedAccount}
           onValueChange={(itemValue) => setSelectedAccount(itemValue)}

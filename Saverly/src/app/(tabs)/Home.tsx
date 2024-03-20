@@ -128,23 +128,6 @@ const Home = () => {
         </LinearGradient>
         
       </View>
-
-      {/* <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => router.push('Details')}
-        activeOpacity={0.7} // Optional: reduce the opacity on touch
-      >
-        <Ionicons name='add' size={24} color="white" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.chatButton} // Positioned above the existing add button
-        onPress={() => router.push('Chat')}
-        activeOpacity={0.7}
-      >
-        <Ionicons name='chatbubbles' size={24} color="white" />
-      </TouchableOpacity> */}
-      
       <FlatList
         data={listData}
         renderItem={renderItem}
