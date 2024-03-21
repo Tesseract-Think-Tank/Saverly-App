@@ -36,7 +36,7 @@ const SingUp = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/signup.png')} style={styles.logo} />
+            <Image source={require('../assets/login.png')} style={styles.logo} />
             {/* <Saverly_Logo width={300} height={300}/> */}
             <Text style={styles.title}>Create an account!</Text>
             <View style={styles.inputContainer}>
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: 250,
-        height: 170,
+        height: 250,
         marginBottom: 20,
     },
     title: {

@@ -4,6 +4,7 @@ import { fetchUserMonthlyPayments, removeMonthlyPayment, MonthlyPayment } from '
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
+import TabLayout from '../(tabs)/_layout'
 
 const { width } = Dimensions.get('window');
 
@@ -11,7 +12,7 @@ const MonthlyPaymentCard = ({ monthlyPayment, removePayment }: { monthlyPayment:
   <View style={styles.card}>
     <Text style={styles.cardTitle}>{monthlyPayment.businessName}</Text>
     <Text>{`Amount: ${monthlyPayment.cost} ${monthlyPayment.currency}`}</Text>
-    <Text>{`Date: ${monthlyPayment.date}`}</Text>
+    <Text>{`Payment every month on ${monthlyPayment.date}`}</Text>
     <TouchableOpacity onPress={() => removePayment(monthlyPayment.businessName)} style={styles.removeButton}>
       <Ionicons name="trash-bin-outline" style={styles.icon}/>
     </TouchableOpacity>
@@ -70,7 +71,7 @@ const MonthlyPaymentsScreen = ({ }: any) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} contentContainerStyle={{ backgroundColor: '#33404F' }}>
         {loading ? <Text>Loading monthly payments...</Text> : monthlyPayments.map((payment: MonthlyPayment) => (
           <MonthlyPaymentCard key={payment.businessName} monthlyPayment={payment} removePayment={removePayment} />
         ))}

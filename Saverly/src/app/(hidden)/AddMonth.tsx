@@ -16,7 +16,7 @@ const AddMonthlyPaymentScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false); // State to control date picker visibility
 
   const handleAddMonthlyPayment = async () => {
-    const monthlyPayment = new MonthlyPayment(businessName, cost, currency, date, cardHolderName);
+    const monthlyPayment = new MonthlyPayment(businessName, cost, currency, date.getDate().toString(), cardHolderName);
 
     if (!monthlyPayment.getBusinessName() || !monthlyPayment.getCost() || !monthlyPayment.getCurrency() || !monthlyPayment.getDate()) {
       Alert.alert('Error', 'All fields are required.');
@@ -120,18 +120,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#33404F',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color:'#00DDA3'
   },
   inputContainer: {
     width: '80%',
   },
   input: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: '#6C63FF',
+    backgroundColor: '#00DDA3',
     width: '100%',
     padding: 15,
     borderRadius: 10,
