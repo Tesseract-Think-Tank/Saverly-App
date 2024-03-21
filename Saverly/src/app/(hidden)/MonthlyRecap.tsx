@@ -19,7 +19,7 @@ const fetchData = async (monthName) => {
 };
 
 const prepareChartData = (data) => {
-  const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#800000', '#008000', '#000080', '#808000', '#800080', '#008080'];
+  const colors = ['#9CA3AF','#008F75','#7E9AC8', '#5C6973', '#F2F2F2', '#A6D3E0', '#2E4C5A', '#D1D5DB'];
   const legends = Object.keys(data);
   const series = Object.values(data);
   const sliceColor = colors.slice(0, series.length);
@@ -81,6 +81,7 @@ const MonthlyRecap = () => {
   return (
     <View style={styles.container}>
       <PieChart
+        style={{ marginTop: 100 }}
         widthAndHeight={chart_wh}
         series={series as number[]}
         sliceColor={sliceColor}
@@ -112,13 +113,14 @@ const MonthlyRecap = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start', // Change this line
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#33404F', // Add this line or adjust the value as needed
+    position:'relative'
   },
   legendContainer: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 50,
   },
   legendItem: {
     flexDirection: 'row',
@@ -135,18 +137,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-
-const pickerSelectStyles = StyleSheet.create({
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-});
-
 export default MonthlyRecap;

@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
-    bottom: 80, // Adjust this value based on your tab bar height
+    bottom: 110, // Adjust this value based on your tab bar height
     backgroundColor: '#B5C5C3', // Use your app's theme color
     width: 56,
     height: 56,

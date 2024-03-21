@@ -34,23 +34,17 @@ const AddMonthlyPaymentScreen = () => {
       setCurrency('');
       setDate(new Date()); // Reset date to current date
       setCardHolderName('');
-
       const notificationDate = new Date(date);
       notificationDate.setDate(notificationDate.getDate() - 1);
-
       // Set hours to 12
       notificationDate.setHours(12);
-
       // Set minutes to 00
       notificationDate.setMinutes(0);
-
       // Set seconds to 00
       notificationDate.setSeconds(0);
-
+      monthlyPayment.setDate(date.toDateString);
       scheduleMonthlyNotifications(notificationDate, monthlyPayment.getBusinessName());
-
       await fetchUserMonthlyPayments();
-
       router.back(); // Navigate back to the previous screen
     } catch (error) {
       console.error('Error adding monthly payment:', error);
@@ -116,7 +110,7 @@ const AddMonthlyPaymentScreen = () => {
           <Text style={styles.buttonText}>Add Monthly Payment</Text>
         </TouchableOpacity>
       </View>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      {loading && <ActivityIndicator size="large" color="#00DDA3" />}
     </View>
   );
 };

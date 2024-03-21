@@ -13,7 +13,7 @@ const MonthlyPaymentCard = ({ monthlyPayment, removePayment }: { monthlyPayment:
     <Text>{`Amount: ${monthlyPayment.cost} ${monthlyPayment.currency}`}</Text>
     <Text>{`Date: ${monthlyPayment.date}`}</Text>
     <TouchableOpacity onPress={() => removePayment(monthlyPayment.businessName)} style={styles.removeButton}>
-      <Text style={styles.removeButtonText}>Remove</Text>
+      <Ionicons name="trash-bin-outline" style={styles.icon}/>
     </TouchableOpacity>
   </View>
 );
@@ -96,9 +96,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    backgroundColor:'#33404F'
   },
   card: {
-    backgroundColor: '#fff',
+    marginTop:100,
+    backgroundColor: '#FFF',
     padding: 20,
     marginVertical: 8,
     borderRadius: 10,
@@ -111,13 +113,13 @@ const styles = StyleSheet.create({
     position: 'absolute', // Position over your other content
     right: (width - 56) / 2, // 30 units from the right
     bottom: 60, // 30 units from the bottom
-    backgroundColor: '#7e57c2', // Replace with the color of your choice
+    backgroundColor: '#B5C5C3', // Replace with the color of your choice
     width: 56, // Diameter of the FAB
     height: 56, // Diameter of the FAB
     borderRadius: 28, // Half the size of width & height to make it perfectly round
     justifyContent: 'center', // Center the '+' icon vertically
     alignItems: 'center', // Center the '+' icon horizontally
-    shadowColor: '#9e9e9e', // Shadow Color
+    shadowColor: '#89CFF3', // Shadow Color
     shadowOpacity: 0.5, // Shadow Opacity
     shadowRadius: 5, // Shadow Radius
     shadowOffset: { height: 5, width: 5 }, // Shadow Offset
@@ -131,6 +133,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
+  icon: {
+    color: '#00DDA3',
+    fontSize: 30,
+  },
   backButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -140,11 +146,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   removeButton: {
-    backgroundColor: 'red', // Adjust the color as necessary
+    backgroundColor: '#FFF', // Adjust the color as necessary
     borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
+    padding: 15,
     alignItems: 'center',
+    marginLeft: 250,
+    marginTop:15,
+    position:'absolute',
+    left:20,
   },
   removeButtonText: {
     color: 'white', // Adjust the color as necessary

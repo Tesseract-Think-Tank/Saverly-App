@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator, BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomFabBar } from 'rn-wave-bottom-bar'; // Import your custom tab bar
@@ -7,10 +6,11 @@ import HomeScreen from './Home'; // Import your screen components
 import AccountsScreen from './Accounts';
 import ChatScreen from './Chat';
 import SettingsScreen from './Settings';
+import MonthlyPaymentsScreen from '../(hidden)/Month'
 
 
 type TabIconProps = {
-  name: 'Overview' | 'Accounts' | 'Settings' | 'Chat';
+  name: 'Overview' | 'Accounts' | 'Settings' | 'Chat' ;
   focused: boolean;
 };
 
@@ -102,6 +102,7 @@ const TabLayout: React.FC = () => {
           name="Settings"
           component={SettingsScreen}
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused }) => <TabIcon name="Settings" focused={focused} />,
           }}
         />
