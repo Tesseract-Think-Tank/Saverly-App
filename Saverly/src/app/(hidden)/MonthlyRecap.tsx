@@ -51,6 +51,8 @@ const MonthlyRecap = () => {
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
     ];
+
+    setSelectedMonth(monthNames[currentMonthIndex]);
     
     // Create an array of month names in descending order from the current month
     const descendingMonths = [];
@@ -74,6 +76,7 @@ const MonthlyRecap = () => {
   const legends = chartData["legends"];
   const sliceColor = chartData["sliceColor"];
   const chart_wh = 250;
+  const holeRadius = 0.2;
 
   return (
     <View style={styles.container}>
@@ -81,6 +84,7 @@ const MonthlyRecap = () => {
         widthAndHeight={chart_wh}
         series={series as number[]}
         sliceColor={sliceColor}
+        coverRadius={holeRadius}
       />
       <View style={styles.legendContainer}>
         {legends.map((legend, index) => (
