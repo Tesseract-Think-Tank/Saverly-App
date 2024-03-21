@@ -15,9 +15,6 @@ const Settings = ({ navigation }: any) => {
         router.push('MonthlyRecap')}}>
         <Text style={styles.buttonText}>MonthlyRecap</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push('ChatBar')} style={styles.button}>
-          <Text style={styles.buttonText}>Chat Bar Test</Text>
-      </TouchableOpacity>
     </View>
   )
 }

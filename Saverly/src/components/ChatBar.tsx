@@ -132,31 +132,31 @@ const Button = ({ icon, onPress }) => (
 
 const RentMenu = () => (
   <View style={styles.menu}>
-    <MenuButton text="Rent Button 1" />
-    <MenuButton text="Rent Button 2" />
-    <MenuButton text="Rent Button 3" />
-    <MenuButton text="Rent Button 4" />
-    <MenuButton text="Rent Button 5" />
+    <MenuButton text="Average monthly rent" />
+    <MenuButton text="Average rent in city areas" />
+    <MenuButton text="Public transport" />
+    <MenuButton text="Average student living cost" />
+    <MenuButton text="Average cost compared to other cities" />
   </View>
 );
 
 const FoodMenu = () => (
   <View style={styles.menu}>
-    <MenuButton text="Food Button 1" />
-    <MenuButton text="Food Button 2" />
-    <MenuButton text="Food Button 3" />
-    <MenuButton text="Food Button 4" />
-    <MenuButton text="Food Button 5" />
+    <MenuButton text="Easy to make dishes" />
+    <MenuButton text="Low budget meals" />
+    <MenuButton text="Food cheaper than X" />
+    <MenuButton text="Week plan to save time/money" />
+    <MenuButton text="Substitute for ingredient X" />
   </View>
 );
 
 const TravelMenu = () => (
   <View style={styles.menu}>
-    <MenuButton text="Travel Button 1" />
-    <MenuButton text="Travel Button 2" />
-    <MenuButton text="Travel Button 3" />
-    <MenuButton text="Travel Button 4" />
-    <MenuButton text="Travel Button 5" />
+    <MenuButton text="Must visit places" />
+    <MenuButton text="Cost-effective traveling" />
+    <MenuButton text="Affordable/free activities" />
+    <MenuButton text="Perfect time to vist" />
+    <MenuButton text="Cheap cities in Europe" />
   </View>
 );
 
