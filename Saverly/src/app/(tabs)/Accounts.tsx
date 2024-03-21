@@ -19,9 +19,30 @@ const AccountCard = ({ account }) => (
   </View>
 );
 
+const Pagination = ({ index, total }) => {
+  let dots = [];
+  for (let i = 0; i < total; i++) {
+    dots.push(
+      <View
+        key={i}
+        style={[
+          styles.dot,
+          index === i
+            ? styles.activeDot
+            : styles.inactiveDot,
+        ]}
+      />
+    );
+  }
+  return <View style={styles.paginationContainer}>{dots}</View>;
+};
+
 const AccountsScreen = ({ navigation }) => {
   const [accounts, setAccounts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+    // New state to manage the active card index
+  const [activeIndex, setActiveIndex] = useState(0);
+
 
   const loadAccounts = async () => {
     setRefreshing(true);
@@ -39,6 +60,12 @@ const AccountsScreen = ({ navigation }) => {
       loadAccounts();
     }, [])
   );
+  const handleScroll = (event) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const activeIndex = Math.round(contentOffsetX / width);
+    setActiveIndex(activeIndex);
+    console.log('Active Index:', activeIndex); 
+  };
 
   return (
     <View style={styles.container}>
@@ -52,6 +79,8 @@ const AccountsScreen = ({ navigation }) => {
         data={accounts}
         renderItem={({ item }) => <AccountCard account={item} />}
         keyExtractor={(item) => item.id.toString()}
+        onScroll={handleScroll}
+        scrollEventThrottle={16} // Add this for better performance
       />
       
       {/* Add Account Floating Action Button */}
@@ -62,6 +91,8 @@ const AccountsScreen = ({ navigation }) => {
       >
         <Ionicons name='add' size={30} color="white" />
       </TouchableOpacity>
+      <Pagination index={activeIndex} total={accounts.length} />
+
     </View>
   );
 };
@@ -121,6 +152,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
+  },
+  paginationContainer: {
+    position: 'absolute',
+    bottom: 560,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  dot: {
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  activeDot: {
+    backgroundColor: '#6C63FF',
+  },
+  inactiveDot: {
+    backgroundColor: '#E5E5E5',
   },
 });
 

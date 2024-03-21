@@ -1,36 +1,91 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
-import { router } from 'expo-router';
-import { addExpense } from '../../services/addExpense'; // Ensure this path matches your project structure
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
-const AddExpenseScreen = ({ navigation } : any)  => {
+import { addExpense,getAccounts } from '../../services/addExpense'; 
+
+const AddExpenseScreen = ({ navigation }) => {
+  
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [currency,setCurrency] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const categories = [
+    'Food',
+    'Transport',
+    'Utilities',
+    'Entertainment',
+    'Shopping',
+    'Health',
+    'Other',
+  ];
+
+  const currencies = [
+    'RON',
+    'USD',
+    'EUR',
+    'GBP'
+  ];
+
+  useEffect(() => {
+    const loadAccounts = async () => {
+      setLoading(true);
+      try {
+        const fetchedAccounts = await getAccounts(); 
+        setAccounts(fetchedAccounts);
+        setSelectedAccount(fetchedAccounts[0]); 
+      } catch (error) {
+        Alert.alert('Error', 'Unable to fetch accounts');
+      }
+      setLoading(false);
+    };
+
+    loadAccounts();
+  }, []);
+
   const handleAddExpense = async () => {
-    if (!category || !amount || !description || !currency) {
-      Alert.alert('Error', 'All fields are required.');
+    if (!selectedAccount || !category || !amount || !description || !currency) {
+      Alert.alert('Error', 'Please fill all the fields and select an account.');
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       const convertedAmount = parseFloat(amount);
-      await addExpense(category, convertedAmount, description,currency);
+      const [selectedCurrency, selectedType] = selectedAccount.split('_');
+      console.log(selectedCurrency);
+      console.log(selectedType);
+      const account = accounts.find(acc => acc.currency === selectedCurrency && acc.type === selectedType);
+      if (!account) throw new Error('Selected account not found.');
+  
+      await addExpense(selectedCurrency,selectedType, category, convertedAmount, description, currency); 
       Alert.alert('Success', 'Expense added successfully.');
+  
+     
+      const refreshedAccounts = await getAccounts();
+      setAccounts(refreshedAccounts);
+  
+      
       setCategory('');
       setAmount('');
       setDescription('');
       setCurrency('');
-
-      router.back(); // Navigate back to the previous screen
-    } catch (error : any) {
-      console.error('Error adding expense:', error);
-      Alert.alert('Error', error.message);
+      setSelectedAccount(null); 
+    } catch (error) {
+      Alert.alert('Error', error.message || 'Could not add expense.');
     } finally {
       setLoading(false);
     }
@@ -40,12 +95,15 @@ const AddExpenseScreen = ({ navigation } : any)  => {
     <View style={styles.container}>
       <Text style={styles.title}>Add New Expense</Text>
       <View style={styles.inputContainer}>
-        <TextInput
-          value={category}
-          onChangeText={setCategory}
-          placeholder='Expense Category (e.g., Food, Transport)'
-          style={styles.input}
-        />
+
+        <Picker
+          selectedValue={category}
+          onValueChange={(itemValue) => setCategory(itemValue)}
+          style={styles.picker}>
+          {categories.map((cat, index) => (
+            <Picker.Item key={index} label={cat} value={cat} />
+          ))}
+        </Picker>
         <TextInput
           value={amount}
           onChangeText={setAmount}
@@ -59,24 +117,37 @@ const AddExpenseScreen = ({ navigation } : any)  => {
           placeholder='Description'
           style={styles.input}
         />
-        <TextInput
-          value={currency}
-          onChangeText={setCurrency}
-          placeholder='Currency code'
-          style={styles.input}
-        />
+        <Picker
+          selectedValue={currency}
+          onValueChange={(itemValue) => setCurrency(itemValue)}
+          style={styles.picker}>
+          {currencies.map((cat, index) => (
+            <Picker.Item key={index} label={cat} value={cat} />
+          ))}
+        </Picker>
+        <Picker
+          selectedValue={selectedAccount}
+          onValueChange={(itemValue) => setSelectedAccount(itemValue)}
+          style={styles.picker}>
+          {accounts.map((account) => (
+          <Picker.Item 
+            key={`${account.currency}_${account.type}`} 
+            label={`${account.type} - ${account.currency}`} 
+            value={`${account.currency}_${account.type}`} 
+          />
+        ))}
+      </Picker>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <TouchableOpacity
+            onPress={handleAddExpense}
+            style={styles.button}
+            disabled={loading}>
+            <Text style={styles.buttonText}>Add Expense</Text>
+          </TouchableOpacity>
+        )}
       </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <TouchableOpacity
-          onPress={handleAddExpense}
-          style={styles.button}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>Add Expense</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 };
@@ -103,6 +174,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+  },
+  picker: {
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 5,
+    width: '100%', 
   },
   button: {
     backgroundColor: '#6C63FF',
