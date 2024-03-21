@@ -88,7 +88,7 @@ const Home = () => {
             <Text style={styles.cardDescription}>{item.description}</Text>
           </View>
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-            <Ionicons name="trash-bin-outline" size={22} color="#FF3D33" />
+            <Ionicons name="trash-bin-outline" size={22} color="#00DDA3" />
           </TouchableOpacity>
         </View>
       </View>
@@ -103,13 +103,13 @@ const Home = () => {
       </View>
 
       <View style={styles.boxContainer}>
-        <LinearGradient colors={['#00A9FF', '#89CFF3']} style={styles.boxGradient}>
+        <LinearGradient colors={['#00DDcf', '#00DDA3']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
           <Text style={styles.boxTitle}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
         
-        <LinearGradient colors={['#FF3D33', '#FF6961']} style={styles.boxGradient}>
+        <LinearGradient colors={['#B5C5C3', '#B5C5Df']} style={styles.boxGradient}>
           <Ionicons name="arrow-down" size={24} color="white" />
           <Text style={styles.boxTitle}>Expenses</Text>
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 33,
     paddingHorizontal: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#33404F',
   },
   balanceContainer: {
     marginBottom: height / 100,
@@ -154,19 +154,20 @@ const styles = StyleSheet.create({
     marginBottom: height/50 - 8, // Spacing below the line
     width: '90%', // Take up the full width of the screen
     alignSelf: 'center', // Center the line
+    color:'#00DDA3'
   },
   balanceText: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#ffffff',
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ffffff',
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 16,
     marginVertical: 8,
-    shadowColor: '#000',
+    shadowColor: '#fffff0',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -187,21 +188,21 @@ const styles = StyleSheet.create({
   cardAmount: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#33404F',
   },
   cardCategory: {
     fontSize: 16,
-    color: '#555',
+    color: '#33404F',
     marginTop: 4,
   },
   cardDate: {
     fontSize: 14,
-    color: '#777',
+    color: '#33404F',
     marginTop: 4,
   },
   cardDescription: {
     fontSize: 12,
-    color: '#999',
+    color: '#33404F',
     marginTop: 4,
   },
   deleteButton: {
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 80, // Adjust this value based on your tab bar height
-    backgroundColor: '#00A9FF', // Use your app's theme color
+    backgroundColor: '#B5C5C3', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,

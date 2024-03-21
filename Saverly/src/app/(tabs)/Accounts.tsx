@@ -100,7 +100,7 @@ const AccountsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#33404F',
   },
   flatListContentContainer: {
     paddingTop: 0, // space from the top of the screen
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: (width - 56) / 2, // center the button horizontally
     bottom: 80,
-    backgroundColor: '#6C63FF',
+    backgroundColor: '#B5C5C3',
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   activeDot: {
-    backgroundColor: '#6C63FF',
+    backgroundColor: '#00DDA3',
   },
   inactiveDot: {
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#B5C5C3',
   },
 });
 

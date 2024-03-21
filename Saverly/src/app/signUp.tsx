@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#33404F',
     },
     logo: {
         width: 250,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         width: '80%',
     },
     input: {
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#33404F',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,

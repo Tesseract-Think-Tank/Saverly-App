@@ -32,18 +32,18 @@ const TabIcon: React.FC<TabIconProps> = ({ name, focused }) => {
     }
   })();
 
-  return <Ionicons name={iconName} size={24} color={focused ? '#00A9FF' : '#DDDDDD'} />;
+  return <Ionicons name={iconName} size={24} color={focused ? '#00DDA3' : '#FFFFFF'} />;
 };
 
 const TabLayout: React.FC = () => {
   return (
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: '#FFFFFF',
-          tabBarActiveBackgroundColor: '#00A9FF',
-          tabBarInactiveTintColor: '#FFFFFF',
+          tabBarActiveTintColor: '#33404F',
+          tabBarActiveBackgroundColor: '#33404F',
+          tabBarInactiveTintColor: '#00DDA3',
           tabBarStyle: {
-            backgroundColor: '#FFFFFF', // For active tab background
+            backgroundColor: '#00DDA3', // For active tab background
             
           },
         }}
