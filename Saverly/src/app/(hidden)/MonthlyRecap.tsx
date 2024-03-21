@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import PieChart from 'react-native-pie-chart';
+import RNPickerSelect from 'react-native-picker-select';
 import { getCategoryPrices } from '../../services/expenseCategories';
 
-const fetchData = async () => {
+const fetchData = async (monthName) => {
   try {
-    const data = await getCategoryPrices();
+    const data = await getCategoryPrices(monthName);
+    if (Object.keys(data).length === 0)
+    {
+      return {"There are no expenses available for the current month": 1}
+    }
     return data;
   } catch (error) {
     console.error('Failed to fetch category prices:', error);
@@ -13,56 +18,87 @@ const fetchData = async () => {
   }
 };
 
-const transformDataToSeriesAndColors = (data, colors) => {
-  const series = [];
-  const sliceColors = [];
-  Object.entries(data).forEach(([label, value], index) => {
-    series.push(value);
-    sliceColors.push(colors[index % colors.length]);
-  });
-  return { series, sliceColors };
+const prepareChartData = (data) => {
+  const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#800000', '#008000', '#000080', '#808000', '#800080', '#008080'];
+  const legends = Object.keys(data);
+  const series = Object.values(data);
+  const sliceColor = colors.slice(0, series.length);
+
+  return { "series": series, "legends": legends, "sliceColor": sliceColor };
 };
 
 const MonthlyRecap = () => {
-  const [series, setSeries] = useState([]);
-  const [sliceColors, setSliceColors] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setChartData] = useState<{} | null>(null);
+  const [months, setMonths] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState('');
 
   useEffect(() => {
-    fetchData()
-      .then(data => {
-        const { series, sliceColors } = transformDataToSeriesAndColors(data, colors);
-        setSeries(series);
-        setSliceColors(sliceColors);
-      })
-      .catch(error => {
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const fetchDataAndUpdateChart = async () => {
+      try {
+        const _data = await fetchData(selectedMonth);
+        setChartData(_data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchDataAndUpdateChart(); // Call the async function
+  }, [fetchData, selectedMonth]); // Depend on fetchData to re-run effect when it changes
+  
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentMonthIndex = currentDate.getMonth();
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    
+    // Create an array of month names in descending order from the current month
+    const descendingMonths = [];
+    for (let i = currentMonthIndex; i >= 0; i--) {
+      descendingMonths.push({ label: monthNames[i], value: monthNames[i] });
+    }
+    for (let i = 11; i > currentMonthIndex; i--) {
+      descendingMonths.push({ label: monthNames[i], value: monthNames[i] });
+    }
+
+    setMonths(descendingMonths);
   }, []);
 
-  const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#800000', '#008000', '#000080', '#808000', '#800080', '#008080'];
-
-  if (isLoading) {
-    return <View style={styles.container}><ActivityIndicator size="large" /></View>;
+  if (!data || months.length === 0) {
+    // Render loading state or placeholder if data is not yet fetched
+    return <Text>Loading...</Text>;
   }
 
-  if (error) {
-    return <View style={styles.container}><Text>Error loading data</Text></View>;
-  }
+  const chartData = prepareChartData(data);
+  const series = chartData["series"];
+  const legends = chartData["legends"];
+  const sliceColor = chartData["sliceColor"];
+  const chart_wh = 250;
 
   return (
     <View style={styles.container}>
-      <View style={styles.chartContainer}>
-        <PieChart
-          widthAndHeight={300}
-          coverRadius={0.5}
-          style={styles.chart}
-          series={series}
-          sliceColor={sliceColors}
+      <PieChart
+        widthAndHeight={chart_wh}
+        series={series as number[]}
+        sliceColor={sliceColor}
+      />
+      <View style={styles.legendContainer}>
+        {legends.map((legend, index) => (
+          <View key={index} style={styles.legendItem}>
+            <View style={[styles.legendColor, { backgroundColor: sliceColor[index] }]} />
+            <Text>{legend}</Text>
+          </View>
+        ))}
+      </View>
+      <View>
+        <Text style={styles.monthDisplayedText}>{selectedMonth}</Text>
+        <RNPickerSelect
+          // style={pickerSelectStyles}
+          value={selectedMonth} // Default selected value to the current month
+          onValueChange={(value) => {
+            setSelectedMonth(value);
+          }}
+          items={months}
         />
       </View>
     </View>
@@ -74,15 +110,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F5FCFF',
   },
-  chartContainer: {
-    justifyContent: 'center',
+  legendContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  legendItem: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginRight: 10,
   },
-  chart: {
-    height: 200,
-    width: 200,
-  }
+  legendColor: {
+    width: 15,
+    height: 15,
+    borderRadius: 8,
+    marginRight: 5,
+  },
+  monthDisplayedText: {
+    fontSize: 20,
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
 });
 
 export default MonthlyRecap;
