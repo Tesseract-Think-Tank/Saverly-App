@@ -24,7 +24,7 @@ const TabIcon: React.FC<TabIconProps> = ({ name, focused }) => {
       case 'Accounts':
         return focused ? 'card' : 'card-outline';
       case 'Settings':
-        return focused ? 'settings' : 'settings-outline';
+        return focused ? 'calendar-outline' : 'calendar-outline';
       case 'Chat':
         return focused ? 'chatbubble-ellipses' : 'chatbubble-outline';
       default:
