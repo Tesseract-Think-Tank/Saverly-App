@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Animated, Text } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, TextInput, TouchableOpacity, StyleSheet, Animated, Text, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+
 
 const ChatBar = () => {
   const [isActive, setIsActive] = useState(false);
@@ -12,23 +14,54 @@ const ChatBar = () => {
   const opacityAnim = useState(new Animated.Value(0))[0]; // Initial opacity is 0 to hide the buttons
   const translateAnim = useState(new Animated.Value(50))[0]; // Start with buttons translated down
 
-  // Toggle function to animate buttons in and out
   const toggle = () => {
-    setIsActive(!isActive);
-
-    Animated.parallel([
-      Animated.timing(opacityAnim, {
-        toValue: isActive ? 0 : 1, // Fade in if isActive will be true, fade out otherwise
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateAnim, {
-        toValue: isActive ? 50 : 0, // Move up if isActive will be true, move down otherwise
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    const anyMenuOpen = showRentMenu || showFoodMenu || showTravelMenu;
+  
+    if (anyMenuOpen) {
+      // Close all menus
+      setShowRentMenu(false);
+      setShowFoodMenu(false);
+      setShowTravelMenu(false);
+      // Ensure the chat bar buttons show up after closing the menu
+      if (!isActive) {
+        setIsActive(true);
+      }
+      // Trigger the animation to reveal the chat bar buttons
+      Animated.parallel([
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      setIsActive(!isActive);
+  
+      // Adjust the animation based on the new state of isActive
+      const targetOpacity = isActive ? 0 : 1;
+      const targetTranslation = isActive ? 50 : 0;
+  
+      Animated.parallel([
+        Animated.timing(opacityAnim, {
+          toValue: targetOpacity,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateAnim, {
+          toValue: targetTranslation,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
   };
+  
+  
 
   const handleRentButtonPress = () => {
     setShowRentMenu(!showRentMenu);
@@ -51,34 +84,39 @@ const ChatBar = () => {
         {showTravelMenu && <TravelMenu />}
         <View style={[styles.chatBar, { borderTopRightRadius: showRentMenu || showFoodMenu || showTravelMenu ? 0 : 36, borderTopLeftRadius: showRentMenu || showFoodMenu || showTravelMenu ? 0 : 36 }]}>
           <TouchableOpacity onPress={toggle} style={styles.chatBarToggle}>
-            <Icon name="add" size={30} color="#FFF" />
+              <Icon name={isActive ? "remove" : "add"} size={30} color="#FFF" />
           </TouchableOpacity>
           <View style={styles.chatBarContent}>
-            {!isActive && (
-              <View style={styles.chatBarMessage}>
-                <TextInput
-                  style={styles.chatBarInput}
-                  placeholder="Message..."
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                />
-                <TouchableOpacity style={styles.sendButton}>
-                  <Icon name="send" size={24} color="#FFF" />
-                </TouchableOpacity>
-              </View>
-            )}
-            <Animated.View
-            style={[
-              styles.chatBarButtons,
-              {
-                opacity: opacityAnim,
-                transform: [{ translateY: translateAnim }],
-              },
-            ]}>
-            <Button icon="home" onPress={handleRentButtonPress} />
-            <Button icon="airplanemode-active" onPress={handleTravelButtonPress} />
-            <Button icon="fastfood" onPress={handleFoodButtonPress} />
-            {/* <Button icon="more-horiz" /> */}
-          </Animated.View>
+          {(!isActive || showRentMenu || showFoodMenu || showTravelMenu) && (
+  <View style={styles.chatBarMessage}>
+    <TextInput
+      style={styles.chatBarInput}
+      placeholder="Message..."
+      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+    />
+    <TouchableOpacity style={styles.sendButton}>
+      <Icon name="send" size={24} color="#FFF" />
+    </TouchableOpacity>
+  </View>
+)}
+<Animated.View
+  style={[
+    styles.chatBarButtons,
+    {
+      opacity: opacityAnim,
+      transform: [{ translateY: translateAnim }],
+    },
+  ]}
+>
+  {isActive && !showRentMenu && !showFoodMenu && !showTravelMenu && (
+    <>
+      <Button icon="home" onPress={handleRentButtonPress} />
+      <Button icon="airplanemode-active" onPress={handleTravelButtonPress} />
+      <Button icon="fastfood" onPress={handleFoodButtonPress} />
+    </>
+  )}
+</Animated.View>
+
           </View>
         </View>
       </View>
@@ -141,21 +179,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5', // Example background color
-  },
+    alignItems: 'center'
+    },
   chatBarWrapper: {
     position: 'relative',
   },
   chatBar: {
-    backgroundColor: '#714efc', // Purple color for the chat bar
+    backgroundColor: '#6C63FF', // Purple color for the chat bar
     borderRadius: 36,
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
     overflow: 'hidden',
-    width: '90%', // Assuming chat bar takes 90% of container width
+    width: '95%', // Assuming chat bar takes 90% of container width
     zIndex: 1, // Add zIndex to keep chatBar above the menu
   },
   chatBarToggle: {
@@ -187,7 +224,7 @@ const styles = StyleSheet.create({
     fontSize: 16, // Default font size
   },
   chatBarButtons: {
-    position: 'relative',
+    // position: 'relative',
     // left: 10, // Positioned to the right within the chat bar
     right: 10,
     flexDirection: 'row',
@@ -206,13 +243,13 @@ const styles = StyleSheet.create({
   menu: {
     position: 'absolute',
     // left: '5%',
-    top: -236, // Adjusted to touch the chatBar
+    top: -235, // Adjusted to touch the chatBar
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '90%',
+    width: '95%',
     paddingVertical: 8,
-    backgroundColor: '#714efc',
+    backgroundColor: '#6C63FF',
     borderTopLeftRadius: 36,
     borderTopRightRadius: 36,
     zIndex: 2, // Add zIndex to keep menu above the chatBar
