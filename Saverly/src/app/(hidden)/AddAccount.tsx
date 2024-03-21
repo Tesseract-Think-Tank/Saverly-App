@@ -64,7 +64,7 @@ const AddAccountScreen = () => {
       />
         </View>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#00DDA3" />
       ) : (
         <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     title: {
+        color:'#00DDA3',
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
         width: '80%',
     },
     input: {
-        backgroundColor: '#33404F',
+        backgroundColor: '#fff',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
     },
     button: {
-        backgroundColor: '#6C63FF',
+        backgroundColor: '#00DDA3',
         width: '100%',
         padding: 15,
         borderRadius: 10,
