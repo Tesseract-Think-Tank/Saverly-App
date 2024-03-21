@@ -88,7 +88,7 @@ const Home = () => {
             <Text style={styles.cardDescription}>{item.description}</Text>
           </View>
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-            <Ionicons name="trash-bin-outline" size={22} color="#ff7e5f" />
+            <Ionicons name="trash-bin-outline" size={22} color="#FF3D33" />
           </TouchableOpacity>
         </View>
       </View>
@@ -103,13 +103,13 @@ const Home = () => {
       </View>
 
       <View style={styles.boxContainer}>
-        <LinearGradient colors={['#34c3c7', '#34eee7']} style={styles.boxGradient}>
+        <LinearGradient colors={['#00A9FF', '#89CFF3']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
           <Text style={styles.boxTitle}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
         
-        <LinearGradient colors={['#ff7e5f', '#feb47b']} style={styles.boxGradient}>
+        <LinearGradient colors={['#FF3D33', '#FF6961']} style={styles.boxGradient}>
           <Ionicons name="arrow-down" size={24} color="white" />
           <Text style={styles.boxTitle}>Expenses</Text>
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 33,
     paddingHorizontal: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5F5F5',
   },
   balanceContainer: {
     marginBottom: height / 100,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -260,14 +260,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 80, // Adjust this value based on your tab bar height
-    backgroundColor: '#6C63FF', // Use your app's theme color
+    backgroundColor: '#00A9FF', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#6C63FF',
+    shadowColor: '#89CFF3',
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },
