@@ -19,7 +19,7 @@ async function getUserExpenses(userId) {
     return expenses;
   }
 
-const getCategoryPrices = async () => {
+const getCategoryPrices = async (month) => {
     try {
     const userId = FIREBASE_AUTH.currentUser?.uid;
     if (!userId) throw new Error('No user is signed in.');
@@ -30,13 +30,28 @@ const getCategoryPrices = async () => {
 
     // Iterate over each expense and sum up the amount spent on each category
     userExpenses.forEach(expense => {
+        const dateAndTime = expense.dateAndTime;
+        const milliseconds = dateAndTime.seconds * 1000 + Math.round(dateAndTime.nanoseconds / 1000000);
+
+        const date = new Date(milliseconds);
+
         const category = expense.category;
         const price = parseFloat(expense.amount);
 
-        if (!categories[category]) {
-          categories[category] = price;
-        } else {
-          categories[category] += price;
+        const monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        monthName = monthNames[date.getMonth()]
+
+        if (monthName === month)
+        {
+          if (!categories[category]) {
+            categories[category] = price;
+          } else {
+            categories[category] += price;
+          }
         }
       });
 
