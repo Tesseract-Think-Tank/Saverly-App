@@ -138,7 +138,7 @@ const AddExpenseScreen = ({ navigation }) => {
         ))}
       </Picker>
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#00DDA3" />
         ) : (
           <TouchableOpacity
             onPress={handleAddExpense}
@@ -188,7 +188,8 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
+    zIndex:3,
   },
   buttonText: {
     color: 'white',

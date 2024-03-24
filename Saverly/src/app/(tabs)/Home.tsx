@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth} from 'firebase/auth';
 import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
-import { doc, getDoc, onSnapshot, getFirestore, collection, getDocs, deleteDoc } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
-import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
-import { useNavigation } from 'expo-router';
+import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
+import { FIREBASE_DB } from '../../../firebaseConfig';
 import { router } from 'expo-router';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -40,28 +39,73 @@ const Home = () => {
   };
 
   const deleteExpenseById = async (expenseId) => {
-    try {
-      if (!userId) {
-        console.log('User ID not set');
-        return;
-      }
-
-      const expenseRef = doc(FIREBASE_DB, 'users', userId, 'expenses', expenseId);
-      await deleteDoc(expenseRef);
-      console.log('Expense deleted successfully');
-      setListData((prevListData) => prevListData.filter((item) => item.id !== expenseId));
-    } catch (error) {
-      console.error('Error deleting expense', error);
-    }
+    Alert.alert(
+      'Delete Expense',
+      'Are you sure you want to delete this expense?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              if (!userId) {
+                console.log('User ID not set');
+                return;
+              }
+  
+              // Fetch the expense data using the expenseId
+              const expenseDocRef = doc(FIREBASE_DB, 'users', userId, 'expenses', expenseId);
+              const expenseDocSnapshot = await getDoc(expenseDocRef);
+  
+              if (!expenseDocSnapshot.exists()) {
+                console.log('Expense not found');
+                return;
+              }
+  
+              // Extract the expense amount from the expense data
+              const expenseAmount = expenseDocSnapshot.data().amount;
+  
+              // Add the expense amount back to the income
+              setIncome((prevIncome) => prevIncome + expenseAmount);
+              // Fetch the user's expenses data
+              const userData = await fetchDataForUser(userId);
+              
+              // Subtract the expense amount from the total expenses
+              const newExpenses = userData.expenses - expenseAmount;
+              setExpenses(newExpenses);
+              // Update the user's expenses data in Firebase
+              const userDocRef = doc(FIREBASE_DB, 'users', userId);
+              await updateDoc(userDocRef, {
+                expenses: newExpenses,
+              });
+              await updateDoc(userDocRef,{
+                income: userData.income+expenseAmount
+              })
+  
+              // Delete the expense from Firebase
+              await deleteDoc(expenseDocRef);
+              console.log('Expense deleted successfully');
+  
+              // Update the listData
+              setListData((prevListData) => prevListData.filter((item) => item.id !== expenseId));
+            } catch (error) {
+              console.error('Error deleting expense', error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const fetchExpenses = async (userId) => {
     try {
       const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
       const expensesSnapshot = await getDocs(expensesCollectionRef);
-      console.log('Screen height: ' + height);
       if (expensesSnapshot.empty) {
-        console.log('No matching documents in expenses collection.');
         return;
       }
       const newExpensesData = expensesSnapshot.docs.map((doc) => ({

@@ -14,7 +14,7 @@ const AccountCard = ({ account }) => (
     <View style={styles.card}>
       {/* You can add more details and style according to your card info */}
       <Text style={styles.cardTitle}>{account.type}</Text>
-      <Text style={styles.cardBalance}>{`Balance: ${account.balance} ${account.currency}`}</Text>
+      <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
     </View>
   </View>
 );
