@@ -4,12 +4,27 @@ const bodyParser = require('body-parser');
 const foodQuestions = require("./chatbot/Food_questions");
 const rentQuestions = require("./chatbot/Rent_questions");
 const travelQuestions = require("./chatbot/Travel_questions");
+const {create_response} = require('./chatbot/open-ai')
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
+app.post('/default-question', async (req, res) => {
+  try {
+    // console.log("aaaa")
+    const { question } = req.body;
+    // console.log(question)
+    // console.log("bbb")
+    // const response = await foodQuestions.ba_ej_prost(question);
+    const response = await create_response(question);
+    console.log(response)
+    res.json({ response });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 app.post('/food-question-1', async (req, res) => {
   // console.log("aaa1");
   try {

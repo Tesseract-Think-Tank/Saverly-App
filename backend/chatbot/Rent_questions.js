@@ -8,7 +8,7 @@ const openai = new OpenAI({
 });
 
 
-async function create_respond(prompt1){
+async function create_response(prompt1){
     const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
@@ -43,7 +43,7 @@ async function question_rent_1(userInput){
             5. i-j
         where a,b,c,d,e,f,g,h,i,j are integers an are the bounds of the intervals
     `
-    return await create_respond(prompt1);
+    return await create_response(prompt1);
 }
 async function question_rent_2(userInput){
     const prompt2 =  `Estimate the average monthly rent in euros for the following types of properties in ${userInput}. 
@@ -53,27 +53,27 @@ async function question_rent_2(userInput){
             3. Highest cost areas in the city.
         use this format there shouldnt be anything more than just the name of the area.
     `
-    return await create_respond(prompt2);
+    return await create_response(prompt2);
 }
 
 async function question_rent_3(userInput){
     const prompt3 =  `Tell me how is public transportation in the city, and does it impact housing choices?${userInput}.
     Please provide an answer in romanian with a cost of the ticket on every transportation for students.Maximum 100 words
     `
-    return await create_respond(prompt3);
+    return await create_response(prompt3);
 }
 
 async function question_rent_4(userInput){
     const prompt2 =  `What is the average cost of living in the city for students?${userInput}.
     Please provide an answer in romanian.Maximum 100 words
     `
-    return await create_respond(prompt2);
+    return await create_response(prompt2);
 }
 async function question_rent_5(userInput){
     const prompt2 =  `How does the overall cost of living compare to other cities?${userInput}.
     Please provide an answer in romanian.Maximum 100 words
     `
-    return await create_respond(prompt2);
+    return await create_response(prompt2);
 }
 async function menu_Rent(){
     userInput = readlineSync.question("Enter a city: ");
