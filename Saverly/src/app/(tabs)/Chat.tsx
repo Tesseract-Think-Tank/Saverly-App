@@ -59,7 +59,7 @@ const ChatBox: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#33404F',
   },
   scrollView: {
     flex: 1,
@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#fff',
+    backgroundColor: '#00DDA3',
     borderBottomWidth: 1,
-    borderBottomColor: '#ececec',
+    borderBottomColor: '#000',
     marginTop: 25, // Adjust this value to lower the top bar
   },
   
@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
   avatar: {
     width: 35,
     height: 35,
-    backgroundColor: '#3f51b5',
+    backgroundColor: '#fff',
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   avatarText: {
-    color: '#fff',
+    color: '#',
   },
   name: {
     marginLeft: 10,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    backgroundColor: '#fff',
+    backgroundColor: '#33404F',
     padding: 10,
     bottom: 0
   },
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   outgoingBubble: {
     // backgroundColor: '#3f51b5',
-    backgroundColor: '#6C63FF',
+    backgroundColor: '#00DDA3',
     alignSelf: 'flex-end',
     width: '70%'
   },

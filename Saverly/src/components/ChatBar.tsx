@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   chatBar: {
-    backgroundColor: '#6C63FF', // Purple color for the chat bar
+    backgroundColor: '#00DDA3', // Purple color for the chat bar
     borderRadius: 36,
     padding: 10,
     flexDirection: 'row',
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '97%',
     paddingVertical: 8,
-    backgroundColor: '#6C63FF',
+    backgroundColor: '#00DDA3',
     borderTopLeftRadius: 36,
     borderTopRightRadius: 36,
     zIndex: 2, // Add zIndex to keep menu above the chatBar
