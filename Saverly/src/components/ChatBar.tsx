@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Animated, Text, Keyboard } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Animated, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-
+import { useChat } from '@/services/chatContext';
 
 const ChatBar = () => {
   const [isActive, setIsActive] = useState(false);
@@ -14,6 +14,107 @@ const ChatBar = () => {
   const opacityAnim = useState(new Animated.Value(0))[0]; // Initial opacity is 0 to hide the buttons
   const translateAnim = useState(new Animated.Value(50))[0]; // Start with buttons translated down
 
+  // Inside ChatBar component
+  const { sendMessage } = useChat();
+  const [inputText, setInputText] = useState('');
+
+  const handleSend = async () => {
+    if (inputText.trim()) {
+      // Send the user's message as an 'outgoing' message
+      sendMessage(inputText.trim(), 'outgoing');
+      console.log(inputText)
+  
+      const url = `http://192.168.1.131:5000/default-question`;
+  
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: inputText }), // Ensure this matches your server's expected format
+        });
+        
+        setInputText('');
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+        // Assuming data.response contains the text you want to send as an incoming message
+        if (data && data.response) {
+          // Send the server's response as an 'incoming' message
+          sendMessage(data.response, 'incoming');
+        }
+      } catch (error) {
+        Alert.alert('Error', 'Failed to fetch response from the server.');
+        console.error(error);
+      }
+      setInputText('');
+    }
+  };
+  
+  const handleCategoryOptionPress = async (category, optionIndex) => {
+    const userInput = inputText; // This uses the inputText state from ChatBar
+    let url;
+    // Define an array of options that require userInput
+    const optionsRequiringInput = {
+      food: [2, 4], // 0-indexed, corresponds to food-question-3 and food-question-5
+      rent: [0, 1, 2, 3, 4], // All rent questions
+      travel: [0, 2, 3] // corresponds to travel-question-1, travel-question-3, travel-question-4
+    };
+
+    // Check if the selected option requires input and if the inputText is empty
+    if (optionsRequiringInput[category].includes(optionIndex) && !userInput.trim()) {
+      // console.log("Input needed");
+      Alert.alert("Input Needed", "Please provide input for this question.");
+      return; // Return early to prevent making a server request
+    }
+    
+    switch(category) {
+      case 'food':
+        url = `http://192.168.1.131:5000/food-question-${optionIndex + 1}`;
+        setShowFoodMenu(!showFoodMenu);
+        setIsActive(!isActive);
+        break;
+      case 'rent':
+        url = `http://192.168.1.131:5000/rent-question-${optionIndex + 1}`;
+        setShowRentMenu(!showRentMenu);
+        setIsActive(!isActive);
+        break;
+      case 'travel':
+        url = `http://192.168.1.131:5000/travel-question-${optionIndex + 1}`;
+        setShowTravelMenu(!showTravelMenu);
+        setIsActive(!isActive);
+        break;
+      default:
+        console.error('Unknown category');
+        return;
+    }
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userInput }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      if (data && data.response) {
+        // Send the server's response as an 'incoming' message
+        sendMessage(data.response, 'incoming');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch response from the server.');
+      console.error(error);
+    }
+    setInputText('');
+  };
+  
+  
   const toggle = () => {
     const anyMenuOpen = showRentMenu || showFoodMenu || showTravelMenu;
   
@@ -79,44 +180,46 @@ const ChatBar = () => {
   return (
     <View style={styles.container}>
       <View style={styles.chatBarWrapper}>
-        {showRentMenu && <RentMenu />}
-        {showFoodMenu && <FoodMenu />}
-        {showTravelMenu && <TravelMenu />}
+      {showFoodMenu && <FoodMenu onPressOption={(optionIndex) => handleCategoryOptionPress('food', optionIndex)} inputText={inputText} sendMessage={sendMessage} />}
+      {showRentMenu && <RentMenu onPressOption={(optionIndex) => handleCategoryOptionPress('rent', optionIndex)} inputText={inputText} sendMessage={sendMessage} />}
+      {showTravelMenu && <TravelMenu onPressOption={(optionIndex) => handleCategoryOptionPress('travel', optionIndex)} inputText={inputText} sendMessage={sendMessage} />}
+
         <View style={[styles.chatBar, { borderTopRightRadius: showRentMenu || showFoodMenu || showTravelMenu ? 0 : 36, borderTopLeftRadius: showRentMenu || showFoodMenu || showTravelMenu ? 0 : 36 }]}>
           <TouchableOpacity onPress={toggle} style={styles.chatBarToggle}>
               <Icon name={isActive ? "remove" : "add"} size={30} color="#FFF" />
           </TouchableOpacity>
           <View style={styles.chatBarContent}>
           {(!isActive || showRentMenu || showFoodMenu || showTravelMenu) && (
-  <View style={styles.chatBarMessage}>
-    <TextInput
-      style={styles.chatBarInput}
-      placeholder="Message..."
-      placeholderTextColor="rgba(255, 255, 255, 0.5)"
-    />
-    <TouchableOpacity style={styles.sendButton}>
-      <Icon name="send" size={24} color="#FFF" />
-    </TouchableOpacity>
-  </View>
-)}
-<Animated.View
-  style={[
-    styles.chatBarButtons,
-    {
-      opacity: opacityAnim,
-      transform: [{ translateY: translateAnim }],
-    },
-  ]}
->
-  {isActive && !showRentMenu && !showFoodMenu && !showTravelMenu && (
-    <>
-      <Button icon="home" onPress={handleRentButtonPress} />
-      <Button icon="airplanemode-active" onPress={handleTravelButtonPress} />
-      <Button icon="fastfood" onPress={handleFoodButtonPress} />
-    </>
-  )}
-</Animated.View>
-
+          <View style={styles.chatBarMessage}>
+            <TextInput
+          style={styles.chatBarInput}
+          placeholder="Message..."
+          placeholderTextColor="rgba(255, 255, 255, 0.5)"
+          value={inputText}
+          onChangeText={setInputText}
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+          <Icon name="send" size={24} color="#FFF" />
+        </TouchableOpacity>
+          </View>
+        )}
+            <Animated.View
+              style={[
+                styles.chatBarButtons,
+                {
+                  opacity: opacityAnim,
+                  transform: [{ translateY: translateAnim }],
+                },
+              ]}
+            >
+              {isActive && !showRentMenu && !showFoodMenu && !showTravelMenu && (
+                <>
+                  <Button icon="home" onPress={handleRentButtonPress} />
+                  <Button icon="airplanemode-active" onPress={handleTravelButtonPress} />
+                  <Button icon="fastfood" onPress={handleFoodButtonPress} />
+                </>
+              )}
+            </Animated.View>
           </View>
         </View>
       </View>
@@ -130,41 +233,73 @@ const Button = ({ icon, onPress }) => (
   </TouchableOpacity>
 );
 
-const RentMenu = () => (
+const RentMenu = ({ onPressOption, inputText, sendMessage }) => (
   <View style={styles.menu}>
-    <MenuButton text="Average monthly rent" />
-    <MenuButton text="Average rent in city areas" />
-    <MenuButton text="Public transport" />
-    <MenuButton text="Average student living cost" />
-    <MenuButton text="Average cost compared to other cities" />
+    <MenuButton text="Average monthly rent" onPress={() => {
+      sendMessage(`Average monthly rent in ${inputText}`,'outgoing');
+      // console.log(`Average monthly rent in ${inputText}`)
+      onPressOption(0)}}/>
+    <MenuButton text="Average rent in city areas" onPress={() => {
+      sendMessage(`Average rent in city areas in ${inputText}`,'outgoing');
+      onPressOption(1)}}/>
+    <MenuButton text="Public transport" onPress={() => {
+      sendMessage(`Public transport in ${inputText}`,'outgoing');
+      onPressOption(2)}}/>
+    <MenuButton text="Average student living cost" onPress={() => {
+      sendMessage(`Average student living cost in ${inputText}`,'outgoing');      
+      onPressOption(3)}}/>
+    <MenuButton text="Average cost compared to other cities" onPress={() => {
+      sendMessage(`Average cost compared to other cities, ${inputText}`,'outgoing');
+      onPressOption(4)}}/>
   </View>
 );
 
-const FoodMenu = () => (
+const FoodMenu = ({ onPressOption, inputText, sendMessage  }) => (
   <View style={styles.menu}>
-    <MenuButton text="Easy to make dishes" />
-    <MenuButton text="Low budget meals" />
-    <MenuButton text="Food cheaper than X" />
-    <MenuButton text="Week plan to save time/money" />
-    <MenuButton text="Substitute for ingredient X" />
+    <MenuButton text="Easy to make dishes" onPress={() => {
+      sendMessage("Easy to make dishes");
+      onPressOption(0)}}/>
+    <MenuButton text="Low budget meals" onPress={() => {
+      sendMessage("Low budget meals");
+      onPressOption(1)}}/>
+    <MenuButton text="Food cheaper than X" onPress={() => {
+      sendMessage(`Food cheaper than ${inputText}`)
+      onPressOption(2)}}/>
+    <MenuButton text="Week plan to save time/money" onPress={() => {
+      sendMessage("Week plan to save time/money");
+      onPressOption(3)}}/>
+    <MenuButton text="Substitute for ingredient X" onPress={() => {
+      sendMessage(`Substitute for ingredient ${inputText}`)
+      onPressOption(4)}}/>
   </View>
 );
 
-const TravelMenu = () => (
+const TravelMenu = ({ onPressOption, inputText, sendMessage  }) => (
   <View style={styles.menu}>
-    <MenuButton text="Must visit places" />
-    <MenuButton text="Cost-effective traveling" />
-    <MenuButton text="Affordable/free activities" />
-    <MenuButton text="Perfect time to vist" />
-    <MenuButton text="Cheap cities in Europe" />
+    <MenuButton text="Must visit places" onPress={() => {
+      sendMessage(`Must visit places in ${inputText}`)
+      onPressOption(0)}}/>
+    <MenuButton text="Cost-effective traveling" onPress={() => {
+      sendMessage("Cost-effective traveling");
+      onPressOption(1)}}/>
+    <MenuButton text="Affordable/free activities" onPress={() => {
+      sendMessage(`Affordable/free activities in ${inputText}`);
+      onPressOption(2)}}/>
+    <MenuButton text="Perfect time to vist" onPress={() => {
+      sendMessage(`Perfect time to vist ${inputText}`);
+      onPressOption(3)}}/>
+    <MenuButton text="Cheap cities in Europe" onPress={() => {
+      sendMessage("Cheap cities in Europe");
+      onPressOption(4)}}/>
   </View>
 );
 
-const MenuButton = ({ text }) => (
-  <TouchableOpacity style={styles.menuButton}>
+const MenuButton = ({ text, onPress }) => (
+  <TouchableOpacity style={styles.menuButton} onPress={onPress}>
     <Text style={styles.menuButtonText}>{text}</Text>
   </TouchableOpacity>
 );
+
 
 const styles = StyleSheet.create({
   sendButton: {
@@ -192,7 +327,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     overflow: 'hidden',
-    width: '95%', // Assuming chat bar takes 90% of container width
+    width: '97%', // Assuming chat bar takes 90% of container width
     zIndex: 1, // Add zIndex to keep chatBar above the menu
   },
   chatBarToggle: {
@@ -247,7 +382,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '95%',
+    width: '97%',
     paddingVertical: 8,
     backgroundColor: '#6C63FF',
     borderTopLeftRadius: 36,

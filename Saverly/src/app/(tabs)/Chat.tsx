@@ -1,84 +1,60 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import ChatBar from '@/components/ChatBar'; // Make sure this path is correct
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native';
+import ChatBar from '@/components/ChatBar'; // Ensure this path is correct
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { ChatProvider, useChat } from '../../services/chatContext'; // Adjust the import path as needed
 
-const ChatBox = () => {
+// We'll create a new component that consumes the context
+const ChatContent: React.FC = () => {
+  const { messages } = useChat();
   const navigation = useNavigation();
-  const [chatBarPosition, setChatBarPosition] = useState(75);
-  const [bottomPadding, setBottomPadding] = useState(125);
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
-      navigation.setOptions({ tabBarStyle: { display: 'none' } });
-      setChatBarPosition(0);
-      setBottomPadding(145);
-    });
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-      navigation.setOptions({ tabBarStyle: { display: 'flex' } });
-      setChatBarPosition(75);
-      setBottomPadding(125);
-    });
 
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
+  useEffect(() => {
+    navigation.setOptions({ tabBarStyle: { display: 'none' } });
   }, [navigation]);
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
       <View style={styles.topBar}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>S</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+          <AntDesign name="left" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.avatarContainer}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>S</Text>
+          </View>
+          <Text style={styles.name}>SaveBot</Text>
         </View>
-        <Text style={styles.name}>SaveBot</Text>
       </View>
-      <ScrollView 
-        style={styles.scrollView} 
-        // contentContainerStyle={[styles.scrollViewContent, { bottom: bottomPadding }]}>
-        contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.middle}>
-          <View style={styles.incoming}>
-            <View style={[styles.bubble, styles.incomingBubble]}>
-              <Text style={styles.bubbleText}>
-                👋 Hello there! I'm SaveBot, your personal financial assistant here at Saverly. I'm dedicated to helping you make smarter financial decisions, find better ways to save, and ultimately reach your financial goals. Whether you're looking to save for a rainy day, pay off debt, or plan for a big purchase, I'm here to guide and support you every step of the way.
-              </Text>
+          {messages.map((message) => (
+            <View style={[styles.bubble, message.type === 'incoming' ? styles.incomingBubble : styles.outgoingBubble]} key={message.id}>
+              <Text style={styles.bubbleText}>{message.text}</Text>
             </View>
-
-            <View style={[styles.bubble, styles.incomingBubble]}>
-              <Text style={styles.bubbleText}>
-                👋 Hello there! I'm SaveBot, your personal financial assistant here at Saverly. I'm dedicated to helping you make smarter financial decisions, find better ways to save, and ultimately reach your financial goals. Whether you're looking to save for a rainy day, pay off debt, or plan for a big purchase, I'm here to guide and support you every step of the way.
-              </Text>
-            </View>
-
-            <View style={[styles.bubble, styles.incomingBubble]}>
-              <Text style={styles.bubbleText}>
-                👋 Hello there! I'm SaveBot, your personal financial assistant here at Saverly. I'm dedicated to helping you make smarter financial decisions, find better ways to save, and ultimately reach your financial goals. Whether you're looking to save for a rainy day, pay off debt, or plan for a big purchase, I'm here to guide and support you every step of the way.
-              </Text>
-            </View>
-            
-          </View>
-          <View style={styles.outgoing}>
-            <View style={[styles.bubble, styles.outgoingBubble]}>
-              <Text style={styles.bubbleText}>Nah, it's cool.</Text>
-            </View>
-            
-            <View style={[styles.bubble, styles.outgoingBubble, styles.lower]}>
-              <Text style={styles.bubbleText}>Well you should get your Dad a cologne. Here smell it. Oh wait! ...</Text>
-            </View>
-          </View>
+          ))}
         </View>
-        </ScrollView>
-      <View style={styles.maskingView}></View>
-      <View style={[styles.chatBarContainer, { bottom: chatBarPosition }]}>
+      </ScrollView>
+      <View style={styles.chatBarContainer}>
         <ChatBar />
       </View>
     </KeyboardAvoidingView>
   );
 };
+
+// ChatBox component that simply wraps ChatContent with ChatProvider
+const ChatBox: React.FC = () => {
+  return (
+    <ChatProvider>
+      <ChatContent />
+    </ChatProvider>
+  );
+};
+
 
 const styles = StyleSheet.create({
   container: {
@@ -103,6 +79,7 @@ const styles = StyleSheet.create({
   },
   topBar: {
     flexDirection: 'row',
+    // justifyContent: 'center',
     alignItems: 'center',
     padding: 15,
     backgroundColor: '#fff',
@@ -111,6 +88,14 @@ const styles = StyleSheet.create({
     marginTop: 25, // Adjust this value to lower the top bar
   },
   
+  avatarContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      paddingRight: 55
+  },
+
   avatar: {
     width: 35,
     height: 35,
@@ -132,6 +117,7 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#fff',
     padding: 10,
+    bottom: 0
   },
   middle: {
     padding: 20,
@@ -163,6 +149,19 @@ const styles = StyleSheet.create({
   },
   lower: {
     marginTop: 15,
+  },
+  buttonContainer: {
+    // padding: 12, // Increase the touchable area by adding padding
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  // Update your button style to remove the margins and adjust padding if necessary
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50
+    // Ensure the button itself does not grow larger, only its touchable area does
   },
 });
 

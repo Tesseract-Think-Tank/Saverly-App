@@ -1,32 +1,4 @@
-const OpenAI = require("openai");
-const dotenv = require('dotenv');
-const readlineSync = require('readline-sync');
-
-dotenv.config();
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-
-async function create_respond(prompt1){
-    // console.log("ccc1")
-    const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-        {
-            "role": "user",
-            "content": prompt1
-        }
-        ],
-        temperature: 1,
-        max_tokens: 256,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-    })
-    // console.log("", response.choices[0].message.content);
-    return response.choices[0].message.content;
-}
+const {create_response} = require('./open-ai')
 
 async function question_food_1(){
     // console.log("bbb1")
@@ -34,34 +6,34 @@ async function question_food_1(){
     Please provide 5 examples,    
     the answer you give should be in romanian and i want to see the cost in ron
     `
-    return await create_respond(prompt1);
+    return await create_response(prompt1);
 }
 async function question_food_2(){
     const prompt2 =  `What are the type of dish that are low budget?Give me some delicious examples,i need 5 examples
     the answer you give should be in romanian and i want to see the cost in ron
     `
-    return await create_respond(prompt2);
+    return await create_response(prompt2);
 }
 
 async function question_food_3(userInput){
     const prompt3 =  `I have this amount of money ${userInput}, give me 5 examples of dishes the i could cook.
     Please provide an answer in romanian.
     `
-    return await create_respond(prompt3);
+    return await create_response(prompt3);
 }
 
 async function question_food_4(){
     const prompt2 =  `How can I plan meals for the week to save time and money?.
     Please provide an answer in romanian.Maximum 100 words and then give 5 examples.
     `
-    return await create_respond(prompt2);
+    return await create_response(prompt2);
 }
 async function question_food_5(userInput){
     const prompt2 =  `Can you recommend substitutes for certain ingredients if I don't have them?
     I dont't have this ingredient ${userInput}.
     Please provide an answer in romanian.Maximum 100 words
     `
-    return await create_respond(prompt2);
+    return await create_response(prompt2);
 }
 async function menu_Food(){
     while(true){
@@ -95,7 +67,7 @@ async function menu_Food(){
     }
 }
 module.exports = {
-    create_respond,
+    create_respond: create_response,
     question_food_1,
     question_food_2,
     question_food_3,
