@@ -64,6 +64,7 @@ const Home = () => {
                 console.log('Expense not found');
                 return;
               }
+              
   
               // Extract the expense amount from the expense data
               let expenseAmount = expenseDocSnapshot.data().amount;
@@ -84,7 +85,6 @@ const Home = () => {
               setIncome((prevIncome) => prevIncome + expenseAmount);
               // Fetch the user's expenses data
               const userData = await fetchDataForUser(userId);
-              
               // Subtract the expense amount from the total expenses
               const newExpenses = userData.expenses - expenseAmount;
               setExpenses(newExpenses);

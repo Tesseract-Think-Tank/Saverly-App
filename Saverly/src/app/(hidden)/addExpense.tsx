@@ -12,7 +12,7 @@ import { Picker } from '@react-native-picker/picker';
 
 import { addExpense,getAccounts } from '../../services/addExpense'; 
 
-const AddExpenseScreen = ({ navigation }) => {
+const AddExpenseScreen = () => {
   
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState('');
@@ -66,8 +66,6 @@ const AddExpenseScreen = ({ navigation }) => {
     try {
       const convertedAmount = parseFloat(amount);
       const [selectedCurrency, selectedType] = selectedAccount.split('_');
-      console.log(selectedCurrency);
-      console.log(selectedType);
       const account = accounts.find(acc => acc.currency === selectedCurrency && acc.type === selectedType);
       if (!account) throw new Error('Selected account not found.');
   
