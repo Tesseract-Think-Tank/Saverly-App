@@ -11,7 +11,6 @@ import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
 import { useNavigation } from 'expo-router';
 import { router } from 'expo-router';
 
-
 const { width, height } = Dimensions.get('window');
 
 const cardHeight = height / 6.9; // Height of a single card
@@ -21,22 +20,32 @@ const Home = () => {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [listData, setListData] = useState([]);
-  let userId;
+  const [userId, setUserId] = useState(null);
 
   const fetchUserData = async () => {
     const auth = getAuth();
-    userId = auth.currentUser?.uid;
-    if (!userId) {
+    const currentUserId = auth.currentUser?.uid;
+    if (!currentUserId) {
       console.log('No user logged in');
       return;
     }
-    const userData = await fetchDataForUser(userId);
+
+    setUserId(currentUserId);
+
+    const userData = await fetchDataForUser(currentUserId);
     setIncome(userData.income);
     setExpenses(userData.expenses);
+
+    await fetchExpenses(currentUserId);
   };
 
   const deleteExpenseById = async (expenseId) => {
     try {
+      if (!userId) {
+        console.log('User ID not set');
+        return;
+      }
+
       const expenseRef = doc(FIREBASE_DB, 'users', userId, 'expenses', expenseId);
       await deleteDoc(expenseRef);
       console.log('Expense deleted successfully');
@@ -46,7 +55,7 @@ const Home = () => {
     }
   };
 
-  const fetchExpenses = async () => {
+  const fetchExpenses = async (userId) => {
     try {
       const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
       const expensesSnapshot = await getDocs(expensesCollectionRef);
@@ -68,7 +77,6 @@ const Home = () => {
   useFocusEffect(
     useCallback(() => {
       fetchUserData();
-      fetchExpenses();
     }, [])
   );
 
@@ -77,7 +85,7 @@ const Home = () => {
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
     const handleDelete = () => deleteExpenseById(item.id);
-  
+
     return (
       <View style={styles.card}>
         <View style={styles.cardContent}>
@@ -95,7 +103,6 @@ const Home = () => {
     );
   };
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.balanceContainer}>
@@ -108,16 +115,15 @@ const Home = () => {
           <Text style={styles.boxTitle}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
-        
+
         <LinearGradient colors={['#B5C5C3', '#B5C5Df']} style={styles.boxGradient}>
           <Ionicons name="arrow-down" size={24} color="white" />
           <Text style={styles.boxTitle}>Expenses</Text>
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
         </LinearGradient>
       </View>
-      
-      <View style={styles.divider} />
 
+      <View style={styles.divider} />
 
       <FlatList
         data={listData}
@@ -130,8 +136,8 @@ const Home = () => {
         onPress={() => router.push('addExpense')}
         activeOpacity={0.7}
       >
-  <Ionicons name="add" size={30} color="#FFF" />
-</TouchableOpacity>
+        <Ionicons name="add" size={30} color="#FFF" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
