@@ -66,8 +66,20 @@ const Home = () => {
               }
   
               // Extract the expense amount from the expense data
-              const expenseAmount = expenseDocSnapshot.data().amount;
-  
+              let expenseAmount = expenseDocSnapshot.data().amount;
+              const expensecurrency = expenseDocSnapshot.data().currency;
+              //aici facem exchange-ul
+              const exchangeRates = {
+                'EUR:RON': 5, 'RON:EUR': 0.2,
+                'USD:RON': 4.57, 'RON:USD': 0.22,
+                'GBP:RON': 5.82, 'RON:GBP': 0.17,
+                'EUR:USD': 1.09, 'USD:EUR': 0.92,
+                'GBP:EUR': 1.17, 'EUR:GBP': 0.86,
+                'USD:GBP': 0.79, 'GBP:USD': 1.27
+            };
+              const keyForExchangeRate = `${expensecurrency}:${'RON'}`;
+              const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
+              expenseAmount = expenseAmount * exchangeRate;
               // Add the expense amount back to the income
               setIncome((prevIncome) => prevIncome + expenseAmount);
               // Fetch the user's expenses data
