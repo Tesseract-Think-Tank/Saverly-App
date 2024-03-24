@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatarText: {
-    color: '#',
+    color: '#000',
   },
   name: {
     marginLeft: 10,
@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
     width: '80%'
   },
   outgoingBubble: {
-    // backgroundColor: '#3f51b5',
     backgroundColor: '#00DDA3',
     alignSelf: 'flex-end',
     width: '70%'
