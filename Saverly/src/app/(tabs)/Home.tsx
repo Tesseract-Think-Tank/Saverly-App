@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     width: width * 0.45, // adjusted for better responsiveness
     alignItems: 'center',
     justifyContent: 'center', // Center content vertically
-    shadowColor: '#000', // adding shadow for depth
+    shadowColor: '#fff', // adding shadow for depth
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
