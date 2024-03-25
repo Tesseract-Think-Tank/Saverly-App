@@ -51,6 +51,7 @@ const AddMonthlyPaymentScreen = () => {
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
+      router.push('Month');
     }
   };
 
