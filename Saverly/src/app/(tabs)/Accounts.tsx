@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchUserAccounts } from '../../services/accountService'; // Adjust as necessary
 import { router } from 'expo-router';
+import PageHeader from '../../components/PageHeader';
 
 const { width, height } = Dimensions.get('window');
 
@@ -69,6 +70,7 @@ const AccountsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <PageHeader title="Accounts" />
       <FlatList
         horizontal
         pagingEnabled
@@ -101,6 +103,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#33404F',
+    paddingTop:45,
   },
   flatListContentContainer: {
     paddingTop: 0, // space from the top of the screen
@@ -158,6 +161,7 @@ const styles = StyleSheet.create({
     bottom: 560,
     flexDirection: 'row',
     alignSelf: 'center',
+    paddingTop:45,
   },
   dot: {
     height: 10,

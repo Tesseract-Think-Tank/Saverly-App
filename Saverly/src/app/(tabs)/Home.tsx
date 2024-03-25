@@ -8,6 +8,7 @@ import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust th
 import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../firebaseConfig';
 import { router } from 'expo-router';
+import PageHeader from '../../components/PageHeader';
 
 
 const { width, height } = Dimensions.get('window');
@@ -161,6 +162,7 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <PageHeader title="Home" />
       <View style={styles.balanceContainer}>
         <Text style={styles.balanceText}>Balance: {balance.toFixed(2)} RON</Text>
       </View>

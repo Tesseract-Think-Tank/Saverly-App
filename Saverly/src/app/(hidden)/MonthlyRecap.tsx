@@ -81,7 +81,7 @@ const MonthlyRecap = () => {
   return (
     <View style={styles.container}>
       <PieChart
-        style={{ marginTop: 100 }}
+        style={{ marginTop: 50 }}
         widthAndHeight={chart_wh}
         series={series as number[]}
         sliceColor={sliceColor}
@@ -120,12 +120,13 @@ const styles = StyleSheet.create({
   },
   legendContainer: {
     flexDirection: 'row',
-    marginTop: 50,
+    marginBottom: 10,
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 10,
+    marginBottom:10,
   },
   legendColor: {
     width: 15,
