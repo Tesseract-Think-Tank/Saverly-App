@@ -69,8 +69,8 @@ const AccountsScreen = ({ navigation }) => {
   };
 
   return (
+    <><PageHeader title="Accounts" />
     <View style={styles.container}>
-      <PageHeader title="Accounts" />
       <FlatList
         horizontal
         pagingEnabled
@@ -84,7 +84,7 @@ const AccountsScreen = ({ navigation }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16} // Add this for better performance
       />
-      
+
       {/* Add Account Floating Action Button */}
       <TouchableOpacity
         style={styles.addButton}
@@ -95,7 +95,7 @@ const AccountsScreen = ({ navigation }) => {
       </TouchableOpacity>
       <Pagination index={activeIndex} total={accounts.length} />
 
-    </View>
+    </View></>
   );
 };
 

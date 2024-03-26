@@ -161,8 +161,8 @@ const Home = () => {
   };
 
   return (
+    <><PageHeader title="Home" />
     <SafeAreaView style={styles.container}>
-      <PageHeader title="Home" />
       <View style={styles.balanceContainer}>
         <Text style={styles.balanceText}>Balance: {balance.toFixed(2)} RON</Text>
       </View>
@@ -187,8 +187,7 @@ const Home = () => {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        style={[styles.list, { height: listHeight }]}
-      />
+        style={[styles.list, { height: listHeight }]} />
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('addExpense')}
@@ -196,7 +195,7 @@ const Home = () => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </SafeAreaView></>
   );
 };
 

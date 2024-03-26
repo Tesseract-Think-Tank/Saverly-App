@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 type Props = {
   title: string;
@@ -15,10 +17,11 @@ const PageHeader: React.FC<Props> = ({ title }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:45,
+    position:'relative',
+    paddingTop:30,
     backgroundColor: '#00DDA3',
     paddingVertical: 16,
-    paddingHorizontal: 24,
+    width: width,
     elevation: 4, // For Android
     shadowColor: '#000', // For iOS
     shadowOffset: {
