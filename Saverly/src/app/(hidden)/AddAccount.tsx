@@ -35,6 +35,7 @@ const AddAccountScreen = () => {
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
+      router.push('Accounts');
     }
   };
 

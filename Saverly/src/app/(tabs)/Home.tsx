@@ -8,6 +8,7 @@ import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust th
 import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../firebaseConfig';
 import { router } from 'expo-router';
+import PageHeader from '../../components/PageHeader';
 
 
 const { width, height } = Dimensions.get('window');
@@ -184,6 +185,7 @@ const Home = () => {
   };
 
   return (
+    <><PageHeader title="Home" />
     <SafeAreaView style={styles.container}>
       <View style={styles.balanceContainer}>
         <Text style={styles.balanceText}>Balance: {balance.toFixed(2)} RON</Text>
@@ -209,6 +211,7 @@ const Home = () => {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
+
         style={[styles.list, { height: listHeight }]}
       />
       {showLogs && (
@@ -233,7 +236,7 @@ const Home = () => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </SafeAreaView></>
   );
 };
 
@@ -337,7 +340,7 @@ const styles = StyleSheet.create({
     width: width * 0.45, // adjusted for better responsiveness
     alignItems: 'center',
     justifyContent: 'center', // Center content vertically
-    shadowColor: '#000', // adding shadow for depth
+    shadowColor: '#fff', // adding shadow for depth
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,

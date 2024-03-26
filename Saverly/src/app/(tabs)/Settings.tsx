@@ -3,10 +3,12 @@ import React from 'react'
 import { router } from 'expo-router';
 import MonthlyRecap from '../(hidden)/MonthlyRecap';
 import { Ionicons } from '@expo/vector-icons';
+import PageHeader from '../../components/PageHeader';
 
 const Settings = () => {
   return (
     <View className='flex-1'>
+      <PageHeader title='Month Recap'></PageHeader>
       <MonthlyRecap></MonthlyRecap>
       <TouchableOpacity onPress={() => router.push('Month')} style={styles.buttonexpense}>
       <View style={[styles.buttonHalf, { backgroundColor: '#00DDA3' }]} />

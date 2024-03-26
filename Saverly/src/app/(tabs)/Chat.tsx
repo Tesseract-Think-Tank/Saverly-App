@@ -81,11 +81,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'center',
     alignItems: 'center',
-    padding: 15,
+    padding: 25,
     backgroundColor: '#00DDA3',
     borderBottomWidth: 1,
     borderBottomColor: '#000',
-    marginTop: 25, // Adjust this value to lower the top bar
+ // Adjust this value to lower the top bar
   },
   
   avatarContainer: {
@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       flex: 1,
-      paddingRight: 55
+      paddingRight: 55,
+      top:10,
   },
 
   avatar: {
@@ -153,13 +154,15 @@ const styles = StyleSheet.create({
     // padding: 12, // Increase the touchable area by adding padding
     justifyContent: 'center',
     alignItems: 'center',
+    top:10,
   },
   
   // Update your button style to remove the margins and adjust padding if necessary
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 50
+    width: 50,
+    top:10,
     // Ensure the button itself does not grow larger, only its touchable area does
   },
 });

@@ -41,7 +41,7 @@ const Login = ({navigation}: any) => {
         <View style={styles.container}>
             <Image source={require('../assets/login.png')} style={styles.logo} />
             {/* <Saverly_Logo width={300} height={300}/> */}
-            <Text style={styles.title}>Welcome Back!</Text>
+            <Text style={styles.title}>Welcome!</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     value={email}

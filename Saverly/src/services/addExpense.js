@@ -82,4 +82,36 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
       
     return true; 
 };
-export{addExpense,getAccounts}
+const removeExpense = async (category, description, currency, amount) => {
+    const userId = FIREBASE_AUTH.currentUser?.uid;
+    if (!userId) throw new Error('No user is signed in.');
+  
+    const expensesRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
+    const expenseQuery = query(expensesRef, where('category', '==', category), where('description', '==', description), where('currency', '==', currency), where('amount', '==', amount));
+  
+    const querySnapshot = await getDocs(expenseQuery);
+  
+    const deletionPromises = [];
+    querySnapshot.forEach((doc) => {
+      deletionPromises.push(deleteDoc(doc.ref));
+    });
+  
+    await Promise.all(deletionPromises);
+  
+    const userDocRef = doc(FIREBASE_DB, 'users', userId);
+    const userDocSnapshot = await getDoc(userDocRef);
+    if (!userDocSnapshot.exists()) {
+      throw new Error('User not found.');
+    }
+  
+    const currentExpenses = userDocSnapshot.data().expenses;
+    const newExpensesValue = currentExpenses - amount;
+  
+    await updateDoc(userDocRef, {
+      expenses: newExpensesValue
+    });
+  
+    return true;
+  };
+  
+export{addExpense,getAccounts,removeExpense}

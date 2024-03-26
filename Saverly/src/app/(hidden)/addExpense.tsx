@@ -11,6 +11,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 
 import { addExpense,getAccounts } from '../../services/addExpense'; 
+import { router } from 'expo-router';
 
 const AddExpenseScreen = () => {
   
@@ -87,6 +88,7 @@ const AddExpenseScreen = () => {
     } finally {
       setLoading(false);
     }
+    router.back();
   };
 
   return (
