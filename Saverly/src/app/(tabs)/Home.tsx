@@ -20,6 +20,8 @@ const Home = () => {
   const [expenses, setExpenses] = useState(0);
   const [listData, setListData] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [logData,setLogData] = useState([]);
+  const [showLogs, setShowLogs] = useState(false);
 
   const fetchUserData = async () => {
     const auth = getAuth();
@@ -36,6 +38,11 @@ const Home = () => {
     setExpenses(userData.expenses);
 
     await fetchExpenses(currentUserId);
+    await fetchLogs(currentUserId);
+  };
+
+  const toggleShowLogs = () => {
+    setShowLogs((prevShowLogs) => !prevShowLogs);
   };
 
   const deleteExpenseById = async (expenseId) => {
@@ -130,6 +137,23 @@ const Home = () => {
     }
   };
 
+  const fetchLogs = async(userId) => {
+    try{
+      const logsCollectionRef = collection(FIREBASE_DB,'users',userId,'logs');
+      const logsSnapshot = await getDocs(logsCollectionRef);
+      if(logsSnapshot.empty){
+        return;
+      }
+      const newLogsData = logsSnapshot.docs.map((doc) =>({
+        id:doc.id,
+        ...doc.data(),
+      }));
+      setLogData(newLogsData);
+    }catch(error){
+      console.error("Error fetching logs: ",error);
+    } 
+  };
+
   useFocusEffect(
     useCallback(() => {
       fetchUserData();
@@ -168,7 +192,7 @@ const Home = () => {
       <View style={styles.boxContainer}>
         <LinearGradient colors={['#00DDcf', '#00DDA3']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
-          <Text style={styles.boxTitle}>Income</Text>
+          <Text style={styles.boxTitle} onPress={toggleShowLogs}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
 
@@ -187,6 +211,21 @@ const Home = () => {
         keyExtractor={(item) => item.id.toString()}
         style={[styles.list, { height: listHeight }]}
       />
+      {showLogs && (
+        <FlatList
+          data={logData}
+            renderItem={({ item }) => (
+            <View style={styles.logItem}>
+              {/* Display message, amount, and currency */}
+              <Text style={styles.logItemText}>
+                {item.message} + {item.balance.toFixed(2)} {item.currency}
+              </Text>
+            </View>
+        )}
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.list}
+        />
+      )}
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('addExpense')}
@@ -208,6 +247,23 @@ const styles = StyleSheet.create({
   balanceContainer: {
     marginBottom: height / 100,
     height: height / 20,
+  },
+  logItem: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 8,
+    borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  logItemText: {
+    fontSize: 16,
+    color: '#333',
   },
   divider: {
     borderBottomColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent black for a subtle look

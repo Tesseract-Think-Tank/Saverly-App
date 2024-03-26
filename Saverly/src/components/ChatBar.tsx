@@ -24,7 +24,7 @@ const ChatBar = () => {
       sendMessage(inputText.trim(), 'outgoing');
       console.log(inputText)
   
-      const url = `http://192.168.1.131:5000/default-question`;
+      const url = `http://192.168.118.82:5000/default-question`;
   
       try {
         const response = await fetch(url, {
@@ -72,17 +72,17 @@ const ChatBar = () => {
     
     switch(category) {
       case 'food':
-        url = `http://192.168.1.131:5000/food-question-${optionIndex + 1}`;
+        url = `http://192.168.118.82:5000/food-question-${optionIndex + 1}`;
         setShowFoodMenu(!showFoodMenu);
         setIsActive(!isActive);
         break;
       case 'rent':
-        url = `http://192.168.1.131:5000/rent-question-${optionIndex + 1}`;
+        url = `http://192.168.118.82:5000/rent-question-${optionIndex + 1}`;
         setShowRentMenu(!showRentMenu);
         setIsActive(!isActive);
         break;
       case 'travel':
-        url = `http://192.168.1.131:5000/travel-question-${optionIndex + 1}`;
+        url = `http://192.168.118.82:5000/travel-question-${optionIndex + 1}`;
         setShowTravelMenu(!showTravelMenu);
         setIsActive(!isActive);
         break;

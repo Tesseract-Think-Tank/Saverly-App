@@ -69,7 +69,7 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
 
     await addDoc(collection(FIREBASE_DB, 'users', userId, 'expenses'), { 
         category,
-        accountId:id,
+        accountId:accountIdForExpense,
         amount: parseFloat(amount),
         dateAndTime: new Date(),
         description,
