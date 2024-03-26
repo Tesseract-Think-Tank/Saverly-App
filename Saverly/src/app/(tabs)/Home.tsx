@@ -187,9 +187,12 @@ const Home = () => {
   return (
     <><PageHeader title="Home" />
     <SafeAreaView style={styles.container}>
-      <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>Balance: {balance.toFixed(2)} RON</Text>
-      </View>
+    <View style={styles.balanceContainer}>
+      <Text>
+        <Text style={styles.currencyText}>BALANCE: </Text>
+        <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
+      </Text>
+    </View>
 
       <View style={styles.boxContainer}>
         <LinearGradient colors={['#00DDcf', '#00DDA3']} style={styles.boxGradient}>
@@ -225,10 +228,18 @@ const Home = () => {
               </Text>
             </View>
         )}
+        
           keyExtractor={(item) => item.id.toString()}
           style={styles.list}
         />
+        
       )}
+      <LinearGradient
+        colors={['transparent', '#33404F']}
+        // Add locations for the gradient colors to define where the transition begins
+        locations={[0, 1]}
+        style={styles.fadeOutContainer}
+      />
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('addExpense')}
@@ -243,12 +254,18 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 33,
+    paddingTop: 10,
     paddingHorizontal: 16,
     backgroundColor: '#33404F',
   },
+  fadeOutContainer: {
+    position: 'absolute',
+    bottom: 50, // start from the bottom of the container
+    width: width, // stretch across the container
+    height: cardHeight, // height of the fade effect
+  },
   balanceContainer: {
-    marginBottom: height / 100,
+    marginBottom: 0,
     height: height / 20,
   },
   logItem: {
@@ -280,6 +297,11 @@ const styles = StyleSheet.create({
   balanceText: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  currencyText: {
+    fontWeight: 'normal',
+    fontSize: 22,
     color: '#ffffff',
   },
   card: {
@@ -376,7 +398,7 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: height/3.8,
+    marginBottom: 70,
   },
   fab: {
     position: 'absolute',
