@@ -181,12 +181,18 @@ const Home = () => {
 
       <View style={styles.divider} />
 
-      <FlatList
-        data={listData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        style={[styles.list, { height: listHeight }]}
-      />
+      <View style={styles.listContainer}>
+        <FlatList
+          data={listData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          style={[styles.list, { height: listHeight }]}
+        />
+        <LinearGradient
+          colors={['transparent', '#33404F']} // Adjust the second color to match your container's background
+          style={styles.gradientOverlay}
+        />
+      </View>
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('addExpense')}
@@ -217,6 +223,17 @@ const styles = StyleSheet.create({
     width: '90%', // Take up the full width of the screen
     alignSelf: 'center', // Center the line
     color:'#00DDA3'
+  },
+  listContainer: {
+    flex: 1, // Ensure the container takes up the full space
+    position: 'relative', // Needed for absolute positioning of the gradient
+  },
+  gradientOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 100, // Adjust the height to control the fade effect length
   },
   balanceText: {
     fontSize: 22,
@@ -317,7 +334,7 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: height/3.8,
+    
   },
   fab: {
     position: 'absolute',
