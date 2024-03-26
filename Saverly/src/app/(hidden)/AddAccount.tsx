@@ -5,6 +5,8 @@ import { FIREBASE_DB, FIREBASE_AUTH } from '../../../firebaseConfig';
 import { fetchDataForUser } from '../../services/firebaseServices';
 import { addAccount, fetchUserAccounts } from '../../services/accountService';
 import { router } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
+import PageHeader from '@/components/PageHeader';
 
 const AddAccountScreen = () => {
   const [type, setType] = useState('');
@@ -40,44 +42,48 @@ const AddAccountScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../../assets/card.png')} style={styles.logo} />  
+    <>
+    <TouchableOpacity
+    style={styles.backButton}
+    onPress={() => router.push('Accounts')} // Go back to the previous screen
+    >
+    <AntDesign name="left" size={24} color="black" />
+  </TouchableOpacity>
+    <PageHeader title="Add Account" /><View style={styles.container}>
+      <Image source={require('../../assets/card.png')} style={styles.logo} />
       <Text style={styles.title}>Add New Account</Text>
       <View style={styles.inputContainer}>
-      <TextInput
-        value={type}
-        onChangeText={setType}
-        placeholder='Account Type (e.g., Cash, Revolut)'
-        style={styles.input}
-      />
-      <TextInput
-        value={balance}
-        onChangeText={setBalance}
-        placeholder='Initial Balance'
-        keyboardType='numeric'
-        style={styles.input}
-      />
-      <TextInput
-        value={currency}
-        onChangeText={setCurrency}
-        placeholder='Currency (e.g., USD, EUR)'
-        style={styles.input}
-      />
-        </View>
+        <TextInput
+          value={type}
+          onChangeText={setType}
+          placeholder='Account Type (e.g., Cash, Revolut)'
+          style={styles.input} />
+        <TextInput
+          value={balance}
+          onChangeText={setBalance}
+          placeholder='Initial Balance'
+          keyboardType='numeric'
+          style={styles.input} />
+        <TextInput
+          value={currency}
+          onChangeText={setCurrency}
+          placeholder='Currency (e.g., USD, EUR)'
+          style={styles.input} />
+      </View>
       {loading ? (
         <ActivityIndicator size="large" color="#00DDA3" />
       ) : (
         <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleAddAccount}
-          style={styles.button}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>Add Account</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleAddAccount}
+            style={styles.button}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>Add Account</Text>
+          </TouchableOpacity>
         </View>
       )}
-    </View>
+    </View></>
   );
 };
 
@@ -101,6 +107,14 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: '80%',
+    },
+    backButton: {
+      position: 'absolute',
+      top:20,
+      left:20,
+      padding: 10,
+      borderRadius: 5,
+      zIndex:1,
     },
     input: {
         backgroundColor: '#fff',
