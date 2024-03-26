@@ -32,6 +32,7 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
     const accountId = accountSnap.id; 
     const accountData = accountSnap.data();
     const accountBalance = accountData.balance || 0;
+    const accountIdForExpense = accountData.id;
     
     const userDocRef = doc(FIREBASE_DB,'users',userId);
     const userDocSnapshot = await getDoc(userDocRef);
@@ -68,6 +69,7 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
 
     await addDoc(collection(FIREBASE_DB, 'users', userId, 'expenses'), { 
         category,
+        accountId:accountIdForExpense,
         amount: parseFloat(amount),
         dateAndTime: new Date(),
         description,
