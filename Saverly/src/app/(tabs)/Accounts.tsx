@@ -4,6 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchUserAccounts } from '../../services/accountService'; // Adjust as necessary
 import { router } from 'expo-router';
+import { FIREBASE_AUTH, FIREBASE_DB } from 'firebaseConfig';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import PageHeader from '@/components/PageHeader';
 
 
 const { width, height } = Dimensions.get('window');
