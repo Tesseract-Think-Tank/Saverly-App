@@ -9,6 +9,8 @@ const ChatBar = () => {
   const [showRentMenu, setShowRentMenu] = useState(false);
   const [showFoodMenu, setShowFoodMenu] = useState(false);
   const [showTravelMenu, setShowTravelMenu] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState([]);
+
 
   // Animated values
   const opacityAnim = useState(new Animated.Value(0))[0]; // Initial opacity is 0 to hide the buttons
@@ -20,100 +22,116 @@ const ChatBar = () => {
 
   const handleSend = async () => {
     if (inputText.trim()) {
-      // Send the user's message as an 'outgoing' message
-      sendMessage(inputText.trim(), 'outgoing');
-      console.log(inputText)
-  
-      const url = `http://192.168.1.131:5000/default-question`;
-  
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: inputText }), // Ensure this matches your server's expected format
-        });
+        // Append user's message to the history
+        const updatedHistory = conversationHistory.concat([{
+            role: "user",
+            content: inputText.trim(),
+        }]);
         
+        // console.log(inputText);
+        sendMessage(inputText);
         setInputText('');
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        const url = `http://192.168.1.16:5000/default-question`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    question: inputText,
+                    history: updatedHistory, // Send the updated history to the backend
+                }),
+            });
+
+            setInputText('');
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            if (data && data.response) {
+                // Append bot's response to the history
+                const newHistory = updatedHistory.concat([{
+                    role: "assistant",
+                    content: data.response,
+                }]);
+
+                // Update the conversation history state
+                setConversationHistory(newHistory);
+
+                // Send the server's response as an 'incoming' message
+                sendMessage(data.response, 'incoming');
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Failed to fetch response from the server.');
+            console.error(error);
         }
-  
-        const data = await response.json();
-        // Assuming data.response contains the text you want to send as an incoming message
-        if (data && data.response) {
-          // Send the server's response as an 'incoming' message
-          sendMessage(data.response, 'incoming');
-        }
-      } catch (error) {
-        Alert.alert('Error', 'Failed to fetch response from the server.');
-        console.error(error);
-      }
-      setInputText('');
+        // setInputText('');
     }
-  };
+};
+
   
-  const handleCategoryOptionPress = async (category, optionIndex) => {
-    const userInput = inputText; // This uses the inputText state from ChatBar
-    let url;
-    // Define an array of options that require userInput
-    const optionsRequiringInput = {
-      food: [2, 4], // 0-indexed, corresponds to food-question-3 and food-question-5
+const handleCategoryOptionPress = async (category, optionIndex) => {
+  const userInput = inputText; // This uses the inputText state from ChatBar
+  let url = `http://192.168.1.16:5000`;
+  // Define an array of options that require userInput
+  const optionsRequiringInput = {
+      food: [2, 4], // 0-indexed, corresponding to food-question-3 and food-question-5
       rent: [0, 1, 2, 3, 4], // All rent questions
       travel: [0, 2, 3] // corresponds to travel-question-1, travel-question-3, travel-question-4
-    };
+  };
 
-    // Check if the selected option requires input and if the inputText is empty
-    if (optionsRequiringInput[category].includes(optionIndex) && !userInput.trim()) {
-      // console.log("Input needed");
+  if (optionsRequiringInput[category].includes(optionIndex) && !userInput.trim()) {
       Alert.alert("Input Needed", "Please provide input for this question.");
       return; // Return early to prevent making a server request
-    }
-    
-    switch(category) {
+  }
+  
+  switch(category) {
       case 'food':
-        url = `http://192.168.1.131:5000/food-question-${optionIndex + 1}`;
-        setShowFoodMenu(!showFoodMenu);
-        setIsActive(!isActive);
-        break;
+          url += `/food-question-${optionIndex + 1}`;
+          break;
       case 'rent':
-        url = `http://192.168.1.131:5000/rent-question-${optionIndex + 1}`;
-        setShowRentMenu(!showRentMenu);
-        setIsActive(!isActive);
-        break;
+          url += `/rent-question-${optionIndex + 1}`;
+          break;
       case 'travel':
-        url = `http://192.168.1.131:5000/travel-question-${optionIndex + 1}`;
-        setShowTravelMenu(!showTravelMenu);
-        setIsActive(!isActive);
-        break;
+          url += `/travel-question-${optionIndex + 1}`;
+          break;
       default:
-        console.error('Unknown category');
-        return;
-    }
-  
-    try {
+          console.error('Unknown category');
+          return;
+  }
+
+  try {
       const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userInput }),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              userInput, // Send user input as is
+              history: conversationHistory, // Send the current history
+          }),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok');
       }
-  
+
       const data = await response.json();
       if (data && data.response) {
-        // Send the server's response as an 'incoming' message
-        sendMessage(data.response, 'incoming');
+          // The backend should append user input and bot response to the history
+          setConversationHistory(data.history); // Update the frontend history based on the backend response
+
+          // Send the server's response as an 'incoming' message
+          sendMessage(data.response, 'incoming');
       }
-    } catch (error) {
+  } catch (error) {
       Alert.alert('Error', 'Failed to fetch response from the server.');
       console.error(error);
-    }
-    setInputText('');
-  };
-  
+  }
+  setInputText(''); // Clear input text after handling
+};
+
   
   const toggle = () => {
     const anyMenuOpen = showRentMenu || showFoodMenu || showTravelMenu;
