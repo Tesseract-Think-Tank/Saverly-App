@@ -7,7 +7,13 @@ import { addAccount, fetchUserAccounts } from '../../services/accountService';
 import { router } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import PageHeader from '@/components/PageHeader';
-
+import { Picker } from '@react-native-picker/picker';
+const currencies = [
+  'RON',
+  'USD',
+  'EUR',
+  'GBP'
+];
 const AddAccountScreen = () => {
   const [type, setType] = useState('');
   const [balance, setBalance] = useState('');
@@ -37,7 +43,7 @@ const AddAccountScreen = () => {
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
-      router.back();
+      router.push('Accounts');
     }
   };
 
@@ -45,13 +51,12 @@ const AddAccountScreen = () => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.back()} // Go back to the previous screen
+    onPress={() => router.push('Accounts')} // Go back to the previous screen
     >
     <AntDesign name="left" size={24} color="black" />
   </TouchableOpacity>
-    <PageHeader title="Add Account" /><View style={styles.container}>
+    <PageHeader title="Add new Account" /><View style={styles.container}>
       <Image source={require('../../assets/card.png')} style={styles.logo} />
-      <Text style={styles.title}>Add New Account</Text>
       <View style={styles.inputContainer}>
         <TextInput
           value={type}
@@ -64,11 +69,14 @@ const AddAccountScreen = () => {
           placeholder='Initial Balance'
           keyboardType='numeric'
           style={styles.input} />
-        <TextInput
-          value={currency}
-          onChangeText={setCurrency}
-          placeholder='Currency (e.g., USD, EUR)'
-          style={styles.input} />
+          <Picker
+          selectedValue={currency}
+          onValueChange={(itemValue) => setCurrency(itemValue)}
+          style={styles.picker}>
+          {currencies.map((cat, index) => (
+            <Picker.Item key={index} label={cat} value={cat} />
+          ))}
+        </Picker>
       </View>
       {loading ? (
         <ActivityIndicator size="large" color="#00DDA3" />
@@ -128,6 +136,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 40,
+    },
+    picker: {
+      backgroundColor: '#B5C5C3',
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      borderRadius: 10,
+      marginTop: 5,
+      width: '100%', 
     },
     button: {
         backgroundColor: '#00DDA3',

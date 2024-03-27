@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { addMonthlyPayment, fetchUserMonthlyPayments } from '../../services/monthlyPaymentService';
 import { MonthlyPayment } from '../../services/monthlyPaymentService';
@@ -7,6 +7,8 @@ import { scheduleMonthlyNotifications } from '../../services/Notifications';
 import DatePicker from '@react-native-community/datetimepicker';
 import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
+import { getAccounts } from '@/services/addExpense';
 const AddMonthlyPaymentScreen = () => {
   const [businessName, setBusinessName] = useState('');
   const [cost, setCost] = useState('');
@@ -14,8 +16,30 @@ const AddMonthlyPaymentScreen = () => {
   const [date, setDate] = useState(new Date()); // Initialize date state with current date
   const [cardHolderName, setCardHolderName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [accounts, setAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false); // State to control date picker visibility
+  const currencies = [
+    'RON',
+    'USD',
+    'EUR',
+    'GBP'
+  ];
+  useEffect(() => {
+    const loadAccounts = async () => {
+      setLoading(true);
+      try {
+        const fetchedAccounts = await getAccounts(); 
+        setAccounts(fetchedAccounts);
+        setSelectedAccount(fetchedAccounts[0]); 
+      } catch (error) {
+        Alert.alert('Error', 'Unable to fetch accounts');
+      }
+      setLoading(false);
+    };
 
+    loadAccounts();
+  }, []);
   const handleAddMonthlyPayment = async () => {
     const monthlyPayment = new MonthlyPayment(businessName, cost, currency, date.getDate().toString(), cardHolderName);
 
@@ -28,7 +52,6 @@ const AddMonthlyPaymentScreen = () => {
 
     try {
       await addMonthlyPayment(monthlyPayment);
-
       Alert.alert('Success', 'Monthly payment added successfully.');
       setBusinessName('');
       setCost('');
@@ -76,12 +99,14 @@ const AddMonthlyPaymentScreen = () => {
           placeholder='Amount'
           keyboardType='numeric'
           style={styles.input} />
-        <TextInput
-          value={currency}
-          onChangeText={text => setCurrency(text)}
-          placeholder='Currency (e.g., USD, EUR)'
-          style={styles.input} />
-        {/* Replace TextInput with DatePicker */}
+          <Picker
+          selectedValue={currency}
+          onValueChange={(itemValue) => setCurrency(itemValue)}
+          style={styles.picker}>
+          {currencies.map((cat, index) => (
+            <Picker.Item key={index} label={cat} value={cat} />
+          ))}
+        </Picker>
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <Text style={styles.input}>
             {date.toDateString()}
@@ -97,11 +122,17 @@ const AddMonthlyPaymentScreen = () => {
               setDate(selectedDate || date); // Update date state with selected date or keep the previous date
             } } />
         )}
-        <TextInput
-          value={cardHolderName}
-          onChangeText={text => setCardHolderName(text)}
-          placeholder='Card Holder Name'
-          style={styles.input} />
+        <Picker
+          selectedValue={cardHolderName}
+          onValueChange={(itemValue) => setCardHolderName(itemValue)}
+          style={styles.picker}>
+          {accounts.map((account) => (
+            <Picker.Item
+              key={`${account.currency}_${account.type}`}
+              label={`${account.type} - ${account.currency}`}
+              value={`${account.currency}_${account.type}`} />
+          ))}
+        </Picker>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -139,6 +170,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+  },
+  picker: {
+    backgroundColor: '#B5C5C3',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 5,
+    width: '100%', 
   },
   buttonContainer: {
     width: '60%',
