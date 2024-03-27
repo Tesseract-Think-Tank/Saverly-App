@@ -10,6 +10,8 @@ import { FIREBASE_DB } from '../../../firebaseConfig';
 import { router } from 'expo-router';
 import PageHeader from '../../components/PageHeader';
 import { getExpenseDateAndTime } from '@/services/accountService';
+import AnimatedLoader from "react-native-animated-loader";
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -24,24 +26,37 @@ const Home = () => {
   const [userId, setUserId] = useState(null);
   const [logData,setLogData] = useState([]);
   const [showLogs, setShowLogs] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
 
   const fetchUserData = async () => {
-    const auth = getAuth();
-    const currentUserId = auth.currentUser?.uid;
-    if (!currentUserId) {
-      console.log('No user logged in');
-      return;
+    if (isInitialLoad) {
+      setIsLoading(true);
     }
-
-    setUserId(currentUserId);
-
-    const userData = await fetchDataForUser(currentUserId);
-    setIncome(userData.income);
-    setExpenses(userData.expenses);
-
-    await fetchExpenses(currentUserId);
-    await fetchLogs(currentUserId);
+    try {
+      const auth = getAuth();
+      const currentUserId = auth.currentUser?.uid;
+      if (!currentUserId) {
+        console.log('No user logged in');
+        return;
+      }
+      setUserId(currentUserId);
+      const userData = await fetchDataForUser(currentUserId);
+      setIncome(userData.income);
+      setExpenses(userData.expenses);
+      await fetchExpenses(currentUserId);
+      await fetchLogs(currentUserId);
+    } catch (error) {
+      console.error("Error fetching user data: ", error);
+    } finally {
+      if (isInitialLoad) {
+        setIsLoading(false);
+        setIsInitialLoad(false); // Mark initial load as complete
+      }
+    }
   };
+  
 
   const toggleShowLogs = () => {
     setShowLogs((prevShowLogs) => !prevShowLogs);
@@ -225,8 +240,10 @@ const fetchExpenses = async (userId) => {
   };
 
   return (
-    <><PageHeader title="Home" />
+    <>
+    <PageHeader title="Home" />
     <SafeAreaView style={styles.container}>
+    
     <View style={styles.balanceContainer}>
       <Text>
         <Text style={styles.currencyText}>BALANCE: </Text>
@@ -287,6 +304,15 @@ const fetchExpenses = async (userId) => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
+      <AnimatedLoader
+            visible={isLoading} // Keep visible true because we are conditionally rendering this whole component
+            overlayColor="rgba(150,150,150,0.95)"
+            source={require("../../assets/white_dots.json")}
+            animationStyle={styles.lottie}
+            speed={1}
+          >
+            <Text>Loading...</Text>
+      </AnimatedLoader>
     </SafeAreaView></>
   );
 };
@@ -460,6 +486,18 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  lottie: {
+    width: 150,
+    height: 150,
+  },
+  absolute: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  }
+  
 });
 
 export default Home;
