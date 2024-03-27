@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -163,6 +163,16 @@ const Home = () => {
 
   const balance = income - expenses;
 
+  const categories = {
+    'Food': require("../../assets/food.png"),
+    'Transport': require("../../assets/transport.png"),
+    'Utilities': require("../../assets/utilities.png"),
+    'Entertainment': require("../../assets/entertainment.png"),
+    'Shopping': require("../../assets/shopping.png"),
+    'Health': require("../../assets/health.png"),
+    'Other': require("../../assets/others.png"),
+  };
+
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
     const handleDelete = () => deleteExpenseById(item.id);
@@ -171,11 +181,12 @@ const Home = () => {
       <View style={styles.card}>
         <View style={styles.cardContent}>
           <View style={styles.cardInfo}>
-            <Text style={styles.cardAmount}>${item.amount}</Text>
+            <Text style={styles.cardAmount}>{item.amount} {item.currency}</Text>
             <Text style={styles.cardCategory}>{item.category}</Text>
             <Text style={styles.cardDate}>{date}</Text>
             <Text style={styles.cardDescription}>{item.description}</Text>
           </View>
+          <Image source={categories[item.category]} style={styles.categoryIcon}></Image>
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
             <Ionicons name="trash-bin-outline" size={22} color="#00DDA3" />
           </TouchableOpacity>
@@ -393,6 +404,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },
+  },
+  categoryIcon: {
+    width: 50,
+    height: 50,
   },
 });
 
