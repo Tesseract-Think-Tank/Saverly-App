@@ -3,16 +3,19 @@ import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpac
 import ChatBar from '@/components/ChatBar'; // Ensure this path is correct
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
+import AnimatedLoader from "react-native-animated-loader";
 import { ChatProvider, useChat } from '../../services/chatContext'; // Adjust the import path as needed
+import { TypingAnimation } from 'react-native-typing-animation';
 
 // We'll create a new component that consumes the context
 const ChatContent: React.FC = () => {
-  const { messages } = useChat();
+  const { messages, isLoading } = useChat();
   const navigation = useNavigation();
 
   useEffect(() => {
     navigation.setOptions({ tabBarStyle: { display: 'none' } });
   }, [navigation]);
+  
 
   return (
     <KeyboardAvoidingView
@@ -37,6 +40,19 @@ const ChatContent: React.FC = () => {
               <Text style={styles.bubbleText}>{message.text}</Text>
             </View>
           ))}
+        {isLoading && (
+          <View style={styles.bubble}>
+              <TypingAnimation 
+                dotColor="white"
+                dotMargin={3}
+                dotAmplitude={10}
+                dotSpeed={0.15}
+                dotRadius={5}
+                dotX={12}
+                dotY={6}
+              />
+          </View>
+        )} 
         </View>
       </ScrollView>
       <View style={styles.chatBarContainer}>
@@ -112,6 +128,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontWeight: 'bold',
   },
+
+  lottie: {
+    width: 100,
+    height: 100
+  },
+
   chatBarContainer: {
     position: 'absolute',
     left: 0,

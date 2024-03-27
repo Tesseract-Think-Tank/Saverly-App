@@ -13,73 +13,84 @@ app.use(bodyParser.json());
 
 app.post('/default-question', async (req, res) => {
   try {
-    // console.log("aaaa")
-    const { question } = req.body;
-    // console.log(question)
-    // console.log("bbb")
-    // const response = await foodQuestions.ba_ej_prost(question);
-    const response = await create_response(question);
-    console.log(response)
-    res.json({ response });
+    const { question, history } = req.body; // Now also extracting the history from the request body
+
+    // Passing both the question and the history to the create_response function
+    const { response, history: updatedHistory } = await create_response(question, history);
+
+    // Sending back both the response and the updated history
+    res.json({ response, history: updatedHistory });
   } catch (error) {
+    console.error("Error in /default-question route:", error);
     res.status(500).send(error.message);
   }
 });
+
 app.post('/food-question-1', async (req, res) => {
-  // console.log("aaa1");
   try {
-    const response = await foodQuestions.question_food_1();
-    // console.log(response)
-    res.json({ response });
+    const { history } = req.body; // Extracting history from the request body
+    const { response, history: updatedHistory } = await foodQuestions.question_food_1(history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
+
 
 app.post('/food-question-2', async (req, res) => {
-    try {
-      const response = await foodQuestions.question_food_2();
-      res.json({ response });
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
+  try {
+    const { history } = req.body;
+    const { response, history: updatedHistory } = await foodQuestions.question_food_2(history);
+    res.json({ response, history: updatedHistory });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
-
 
 app.post('/food-question-3', async (req, res) => {
     try {
-      const { userInput } = req.body;
-      const response = await foodQuestions.question_food_3(userInput);
-      res.json({ response });
+      // Extract both userInput and history from the request body
+      const { userInput, history } = req.body;
+
+      // Pass both userInput and the current history to the question handler
+      const { response, history: updatedHistory } = await foodQuestions.question_food_3(userInput, history);
+
+      // Return both the response and the updated history to the frontend
+      res.json({ response, history: updatedHistory });
     } catch (error) {
+      console.error("Error in /food-question-3 route:", error);
       res.status(500).send(error.message);
     }
 });
 
+
 app.post('/food-question-4', async (req, res) => {
   try {
-    const response = await foodQuestions.question_food_4();
-    res.json({ response });
+    const { history } = req.body;
+    const { response, history: updatedHistory } = await foodQuestions.question_food_4(history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
+
 
 app.post('/food-question-5', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await foodQuestions.question_food_5(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const { response, history: updatedHistory } = await foodQuestions.question_food_5(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
 
+
 app.post('/rent-question-1', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await rentQuestions.question_rent_1(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const { response, history: updatedHistory } = await rentQuestions.question_rent_1(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -87,9 +98,9 @@ app.post('/rent-question-1', async (req, res) => {
 
 app.post('/rent-question-2', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await rentQuestions.question_rent_2(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const {response, history: updatedHistory} = await rentQuestions.question_rent_2(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -97,9 +108,9 @@ app.post('/rent-question-2', async (req, res) => {
 
 app.post('/rent-question-3', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await rentQuestions.question_rent_3(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const { response, history: updatedHistory } = await rentQuestions.question_rent_3(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -107,19 +118,18 @@ app.post('/rent-question-3', async (req, res) => {
 
 app.post('/rent-question-4', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await rentQuestions.question_rent_4(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const { response, history: updatedHistory } = await rentQuestions.question_rent_4(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
-
 app.post('/rent-question-5', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await rentQuestions.question_rent_5(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const { response, history: updatedHistory } = await rentQuestions.question_rent_5(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -127,9 +137,9 @@ app.post('/rent-question-5', async (req, res) => {
   
 app.post('/travel-question-1', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await travelQuestions.question_travel_1(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const {response, history: updatedHistory} = await travelQuestions.question_travel_1(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -137,8 +147,9 @@ app.post('/travel-question-1', async (req, res) => {
 
 app.post('/travel-question-2', async (req, res) => {
   try {
-    const response = await travelQuestions.question_travel_2();
-    res.json({ response });
+    const { history } = req.body;
+    const {response, history: updatedHistory} = await travelQuestions.question_travel_2(history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -146,9 +157,9 @@ app.post('/travel-question-2', async (req, res) => {
 
 app.post('/travel-question-3', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await travelQuestions.question_travel_3(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const {response, history: updatedHistory} = await travelQuestions.question_travel_3(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -156,9 +167,9 @@ app.post('/travel-question-3', async (req, res) => {
 
 app.post('/travel-question-4', async (req, res) => {
   try {
-    const { userInput } = req.body;
-    const response = await travelQuestions.question_travel_4(userInput);
-    res.json({ response });
+    const { userInput, history } = req.body;
+    const {response, history: updatedHistory} = await travelQuestions.question_travel_4(userInput, history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -166,8 +177,9 @@ app.post('/travel-question-4', async (req, res) => {
 
 app.post('/travel-question-5', async (req, res) => {
   try {
-    const response = await travelQuestions.question_travel_5();
-    res.json({ response });
+    const { history } = req.body;
+    const {response, history: updatedHistory} = await travelQuestions.question_travel_5(history);
+    res.json({ response, history: updatedHistory });
   } catch (error) {
     res.status(500).send(error.message);
   }

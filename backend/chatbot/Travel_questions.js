@@ -1,33 +1,6 @@
-const OpenAI = require("openai");
-const dotenv = require('dotenv');
-const readlineSync = require('readline-sync');
+const {create_response} = require('./open-ai')
 
-dotenv.config();
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-
-async function create_response(prompt1){
-    const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-        {
-            "role": "user",
-            "content": prompt1
-        }
-        ],
-        temperature: 1,
-        max_tokens: 256,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-    })
-    // console.log("", response.choices[0].message.content);
-    return response.choices[0].message.content;
-}
-
-async function question_travel_1(userInput){
+async function question_travel_1(userInput, history){
     const prompt1 =  `What are the must-visit places in ${userInput}
             1. a
             2. c
@@ -37,16 +10,23 @@ async function question_travel_1(userInput){
         where a,c,e,g,i are the places
         the answer you give should be in romanian and if these places have an enter fee say how much 
     `
-    return await create_response(prompt1);
+    const updatedHistory = history.concat([
+        { role: "user", content: prompt1 }
+    ]);
+
+    return await create_response(prompt1, updatedHistory);
 }
-async function question_travel_2(){
+async function question_travel_2(history){
     const prompt2 =  `What is the most cost-effective way to travel?
         the answer should be in romanian and maximum 100 words.
     `
-    return await create_response(prompt2);
+    const updatedHistory = history.concat([
+        { role: "user", content: prompt2 }
+    ]);
+    return await create_response(prompt2, updatedHistory);
 }
 
-async function question_travel_3(userInput){
+async function question_travel_3(userInput, history){
     const prompt3 =  `What are some affordable or free activities to do in ${userInput}.
     i want 5 examples like that:
     1.
@@ -56,53 +36,32 @@ async function question_travel_3(userInput){
     5.
     Please provide an answer in romanian .Maximum 100 words
     `
-    return await create_response(prompt3);
+    const updatedHistory = history.concat([
+        { role: "user", content: prompt3 }
+    ]);
+    return await create_response(prompt3, updatedHistory);
 }
 
-async function question_travel_4(userInput){
-    const prompt2 =  `When is the perfect time to visit ${userInput}.
+async function question_travel_4(userInput, history){
+    const prompt4 =  `When is the perfect time to visit ${userInput}.
     Please provide an answer in romanian.Maximum 100 words
     `
-    return await create_response(prompt2);
+    const updatedHistory = history.concat([
+        { role: "user", content: prompt4 }
+    ]);
+    return await create_response(prompt4, updatedHistory);
 }
-async function question_travel_5(){
-    const prompt2 =  `What are some cheap cities in Europe that i can visit?.
+async function question_travel_5(history){
+    const prompt5 =  `What are some cheap cities in Europe that i can visit?.
     Please provide an answer in romanian.Maximum 100 words and give 3 examples
     `
-    return await create_response(prompt2);
+    const updatedHistory = history.concat([
+        { role: "user", content: prompt5 }
+    ]);
+    return await create_response(prompt5, updatedHistory);
 }
-async function menu_Travel(){
-    userInput = readlineSync.question("Enter a city: ");
-    while(true){
-        console.log("1.What are the must-visit places?")
-        console.log("2.What is the most cost-effective way to travel?")
-        console.log("3.What are some affordable or free activities to do?")
-        console.log("4.When is the perfect time to visit?")
-        console.log("5.What are some cheap cities in Europe that i can visit?")
-        console.log("6.Back.")
-        userInput_question = readlineSync.question("Enter what question do you want to ask: ")
-        if(userInput_question=='1'){
-            await question_travel_1(userInput);
-        }
-        if(userInput_question=='2'){
-            await question_travel_2();
-        }
-        if(userInput_question=='3'){
-        await question_travel_3(userInput);
-        }
-        if(userInput_question=='4'){
-            await question_travel_4(userInput);
-        }
-        if(userInput_question=='5'){
-            await question_travel_5();
-        }
-        if(userInput_question=='6'){
-            break;
-        }
-    }
-}
+
 module.exports = {
-    menu_Travel,
     question_travel_1,
     question_travel_2,
     question_travel_3,
