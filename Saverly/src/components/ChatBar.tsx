@@ -46,13 +46,7 @@ const ChatBar = () => {
   const [inputText, setInputText] = useState('');
 
   const handleSend = async () => {
-    if (inputText.trim()) {
-        // Append user's message to the history
-        const updatedHistory = conversationHistory.concat([{
-            role: "user",
-            content: inputText.trim(),
-        }]);
-        
+    if (inputText.trim()) 
         // console.log(inputText);
         sendMessage(inputText);
         setInputText('');
@@ -118,15 +112,7 @@ const handleCategoryOptionPress = async (category, optionIndex) => {
   }
   
   switch(category) {
-      case 'food':
-          url += `/food-question-${optionIndex + 1}`;
-          break;
-      case 'rent':
-          url += `/rent-question-${optionIndex + 1}`;
-          break;
-      case 'travel':
-          url += `/travel-question-${optionIndex + 1}`;
-          break;
+      case 'food'
       default:
           console.error('Unknown category');
           return;

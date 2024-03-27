@@ -11,6 +11,9 @@ import {
 import { Picker } from '@react-native-picker/picker';
 
 import { addExpense,getAccounts } from '../../services/addExpense'; 
+import { router } from 'expo-router';
+import PageHeader from '@/components/PageHeader';
+import { AntDesign } from '@expo/vector-icons';
 
 const AddExpenseScreen = () => {
   
@@ -87,9 +90,18 @@ const AddExpenseScreen = () => {
     } finally {
       setLoading(false);
     }
+    router.push('Home');
   };
 
   return (
+    <>
+    <TouchableOpacity
+    style={styles.backButton}
+    onPress={() => router.push('Home')} // Go back to the previous screen
+    >
+    <AntDesign name="left" size={24} color="black" />
+  </TouchableOpacity>
+    <PageHeader title="Add an expense" />
     <View style={styles.container}>
       <Text style={styles.title}>Add New Expense</Text>
       <View style={styles.inputContainer}>
@@ -107,14 +119,12 @@ const AddExpenseScreen = () => {
           onChangeText={setAmount}
           placeholder='Amount'
           keyboardType='numeric'
-          style={styles.input}
-        />
+          style={styles.input} />
         <TextInput
           value={description}
           onChangeText={setDescription}
           placeholder='Description'
-          style={styles.input}
-        />
+          style={styles.input} />
         <Picker
           selectedValue={currency}
           onValueChange={(itemValue) => setCurrency(itemValue)}
@@ -128,13 +138,12 @@ const AddExpenseScreen = () => {
           onValueChange={(itemValue) => setSelectedAccount(itemValue)}
           style={styles.picker}>
           {accounts.map((account) => (
-          <Picker.Item 
-            key={`${account.currency}_${account.type}`} 
-            label={`${account.type} - ${account.currency}`} 
-            value={`${account.currency}_${account.type}`} 
-          />
-        ))}
-      </Picker>
+            <Picker.Item
+              key={`${account.currency}_${account.type}`}
+              label={`${account.type} - ${account.currency}`}
+              value={`${account.currency}_${account.type}`} />
+          ))}
+        </Picker>
         {loading ? (
           <ActivityIndicator size="large" color="#00DDA3" />
         ) : (
@@ -146,7 +155,7 @@ const AddExpenseScreen = () => {
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </View></>
   );
 };
 
@@ -188,6 +197,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     zIndex:3,
+  },
+  backButton: {
+    position: 'absolute',
+    top:20,
+    left:20,
+    padding: 10,
+    borderRadius: 5,
+    zIndex:1,
   },
   buttonText: {
     color: 'white',

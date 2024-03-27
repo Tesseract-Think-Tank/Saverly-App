@@ -5,7 +5,15 @@ import { FIREBASE_DB, FIREBASE_AUTH } from '../../../firebaseConfig';
 import { fetchDataForUser } from '../../services/firebaseServices';
 import { addAccount, fetchUserAccounts } from '../../services/accountService';
 import { router } from 'expo-router';
-
+import { AntDesign } from '@expo/vector-icons';
+import PageHeader from '@/components/PageHeader';
+import { Picker } from '@react-native-picker/picker';
+const currencies = [
+  'RON',
+  'USD',
+  'EUR',
+  'GBP'
+];
 const AddAccountScreen = () => {
   const [type, setType] = useState('');
   const [balance, setBalance] = useState('');
@@ -35,48 +43,55 @@ const AddAccountScreen = () => {
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
+      router.push('Accounts');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../../assets/card.png')} style={styles.logo} />  
-      <Text style={styles.title}>Add New Account</Text>
+    <>
+    <TouchableOpacity
+    style={styles.backButton}
+    onPress={() => router.push('Accounts')} // Go back to the previous screen
+    >
+    <AntDesign name="left" size={24} color="black" />
+  </TouchableOpacity>
+    <PageHeader title="Add new Account" /><View style={styles.container}>
+      <Image source={require('../../assets/card.png')} style={styles.logo} />
       <View style={styles.inputContainer}>
-      <TextInput
-        value={type}
-        onChangeText={setType}
-        placeholder='Account Type (e.g., Cash, Revolut)'
-        style={styles.input}
-      />
-      <TextInput
-        value={balance}
-        onChangeText={setBalance}
-        placeholder='Initial Balance'
-        keyboardType='numeric'
-        style={styles.input}
-      />
-      <TextInput
-        value={currency}
-        onChangeText={setCurrency}
-        placeholder='Currency (e.g., USD, EUR)'
-        style={styles.input}
-      />
-        </View>
+        <TextInput
+          value={type}
+          onChangeText={setType}
+          placeholder='Account Type (e.g., Cash, Revolut)'
+          style={styles.input} />
+        <TextInput
+          value={balance}
+          onChangeText={setBalance}
+          placeholder='Initial Balance'
+          keyboardType='numeric'
+          style={styles.input} />
+          <Picker
+          selectedValue={currency}
+          onValueChange={(itemValue) => setCurrency(itemValue)}
+          style={styles.picker}>
+          {currencies.map((cat, index) => (
+            <Picker.Item key={index} label={cat} value={cat} />
+          ))}
+        </Picker>
+      </View>
       {loading ? (
         <ActivityIndicator size="large" color="#00DDA3" />
       ) : (
         <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleAddAccount}
-          style={styles.button}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>Add Account</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleAddAccount}
+            style={styles.button}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>Add Account</Text>
+          </TouchableOpacity>
         </View>
       )}
-    </View>
+    </View></>
   );
 };
 
@@ -101,6 +116,14 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: '80%',
     },
+    backButton: {
+      position: 'absolute',
+      top:20,
+      left:20,
+      padding: 10,
+      borderRadius: 5,
+      zIndex:1,
+    },
     input: {
         backgroundColor: '#fff',
         paddingHorizontal: 15,
@@ -113,6 +136,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 40,
+    },
+    picker: {
+      backgroundColor: '#B5C5C3',
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      borderRadius: 10,
+      marginTop: 5,
+      width: '100%', 
     },
     button: {
         backgroundColor: '#00DDA3',

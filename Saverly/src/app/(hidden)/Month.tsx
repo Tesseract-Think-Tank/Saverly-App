@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import TabLayout from '../(tabs)/_layout'
+import { AntDesign } from '@expo/vector-icons';
+import PageHeader from '@/components/PageHeader';
 
 const { width } = Dimensions.get('window');
 
@@ -70,6 +72,14 @@ const MonthlyPaymentsScreen = ({ }: any) => {
   };
 
   return (
+    <>
+    <TouchableOpacity
+    style={styles.backButton}
+    onPress={() => router.push('Settings')} // Go back to the previous screen
+  >
+    <AntDesign name="left" size={24} color="black" />
+  </TouchableOpacity>
+    <PageHeader title="Monthly Expenses" />
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={{ backgroundColor: '#33404F' }}>
         {loading ? <Text>Loading monthly payments...</Text> : monthlyPayments.map((payment: MonthlyPayment) => (
@@ -83,13 +93,7 @@ const MonthlyPaymentsScreen = ({ }: any) => {
       >
         <Ionicons name='add' size={24} color="white" />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => router.push('Settings')} // Go back to the previous screen
-      >
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
-    </View> 
+    </View></> 
   );
 };
 
@@ -128,11 +132,11 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    right: 20,
-    top: 50,
-    backgroundColor: '#ccc',
+    top:20,
+    left:20,
     padding: 10,
     borderRadius: 5,
+    zIndex:1,
   },
   icon: {
     color: '#00DDA3',

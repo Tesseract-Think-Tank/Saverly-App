@@ -28,6 +28,8 @@ const getCategoryPrices = async (month) => {
 
     const categories = {};
 
+    const valutar_change_from_ron = {"USD": 4.57, "EUR": 5, "GBP": 5.82, "RON": 1};
+
     // Iterate over each expense and sum up the amount spent on each category
     userExpenses.forEach(expense => {
         const dateAndTime = expense.dateAndTime;
@@ -36,7 +38,9 @@ const getCategoryPrices = async (month) => {
         const date = new Date(milliseconds);
 
         const category = expense.category;
-        const price = parseFloat(expense.amount);
+        const currency = expense.currency;
+        const price = parseFloat(expense.amount) * valutar_change_from_ron[currency];
+      
 
         const monthNames = [
           'January', 'February', 'March', 'April', 'May', 'June',

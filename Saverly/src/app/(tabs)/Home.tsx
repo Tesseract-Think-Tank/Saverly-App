@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,6 +8,10 @@ import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust th
 import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../firebaseConfig';
 import { router } from 'expo-router';
+import PageHeader from '../../components/PageHeader';
+import { getExpenseDateAndTime } from '@/services/accountService';
+import AnimatedLoader from "react-native-animated-loader";
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -20,22 +24,42 @@ const Home = () => {
   const [expenses, setExpenses] = useState(0);
   const [listData, setListData] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [logData,setLogData] = useState([]);
+  const [showLogs, setShowLogs] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
 
   const fetchUserData = async () => {
-    const auth = getAuth();
-    const currentUserId = auth.currentUser?.uid;
-    if (!currentUserId) {
-      console.log('No user logged in');
-      return;
+    if (isInitialLoad) {
+      setIsLoading(true);
     }
+    try {
+      const auth = getAuth();
+      const currentUserId = auth.currentUser?.uid;
+      if (!currentUserId) {
+        console.log('No user logged in');
+        return;
+      }
+      setUserId(currentUserId);
+      const userData = await fetchDataForUser(currentUserId);
+      setIncome(userData.income);
+      setExpenses(userData.expenses);
+      await fetchExpenses(currentUserId);
+      await fetchLogs(currentUserId);
+    } catch (error) {
+      console.error("Error fetching user data: ", error);
+    } finally {
+      if (isInitialLoad) {
+        setIsLoading(false);
+        setIsInitialLoad(false); // Mark initial load as complete
+      }
+    }
+  };
+  
 
-    setUserId(currentUserId);
-
-    const userData = await fetchDataForUser(currentUserId);
-    setIncome(userData.income);
-    setExpenses(userData.expenses);
-
-    await fetchExpenses(currentUserId);
+  const toggleShowLogs = () => {
+    setShowLogs((prevShowLogs) => !prevShowLogs);
   };
 
   const deleteExpenseById = async (expenseId) => {
@@ -113,21 +137,55 @@ const Home = () => {
     );
   };
 
-  const fetchExpenses = async (userId) => {
-    try {
-      const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
-      const expensesSnapshot = await getDocs(expensesCollectionRef);
-      if (expensesSnapshot.empty) {
-        return;
-      }
-      const newExpensesData = expensesSnapshot.docs.map((doc) => ({
+const fetchExpenses = async (userId) => {
+  try {
+    const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
+    const expensesSnapshot = await getDocs(expensesCollectionRef);
+    if (expensesSnapshot.empty) {
+      setListData([]);
+      return;
+    }
+
+    // Fetch each expense's date and time individually (inefficient)
+    const expensesDataPromises = expensesSnapshot.docs.map(async (doc) => {
+      const dateAndTime = await getExpenseDateAndTime(doc.id);
+      return {
         id: doc.id,
         ...doc.data(),
+        dateAndTime: dateAndTime || null, // Fallback to null if dateAndTime couldn't be fetched
+      };
+    });
+
+    const newExpensesData = await Promise.all(expensesDataPromises);
+
+    // Filter and sort as before
+    const sortedExpensesData = newExpensesData
+      .filter((item) => item.dateAndTime !== null)
+      .sort((a, b) => b.dateAndTime - a.dateAndTime);
+
+    setListData(sortedExpensesData);
+  } catch (error) {
+    console.error("Error fetching expenses: ", error);
+  }
+};
+
+  
+
+  const fetchLogs = async(userId) => {
+    try{
+      const logsCollectionRef = collection(FIREBASE_DB,'users',userId,'logs');
+      const logsSnapshot = await getDocs(logsCollectionRef);
+      if(logsSnapshot.empty){
+        return;
+      }
+      const newLogsData = logsSnapshot.docs.map((doc) =>({
+        id:doc.id,
+        ...doc.data(),
       }));
-      setListData(newExpensesData);
-    } catch (error) {
-      console.error("Error fetching expenses: ", error);
-    }
+      setLogData(newLogsData);
+    }catch(error){
+      console.error("Error fetching logs: ",error);
+    } 
   };
 
   useFocusEffect(
@@ -138,6 +196,26 @@ const Home = () => {
 
   const balance = income - expenses;
 
+  const category_ionicons = {
+    'Food': "fast-food-outline",
+    'Transport': "emoji-transportation",
+    'Utilities': "home",
+    'Entertainment': "game-controller-outline",
+    'Shopping': "shopping-cart",
+    'Health': "health-and-safety",
+    'Other': "question-circle-o",
+  };
+
+  const categories = {
+    'Food': require("../../assets/food.png"),
+    'Transport': require("../../assets/transport.png"),
+    'Utilities': require("../../assets/utilities.png"),
+    'Entertainment': require("../../assets/entertainment.png"),
+    'Shopping': require("../../assets/shopping.png"),
+    'Health': require("../../assets/health.png"),
+    'Other': require("../../assets/others.png"),
+  };
+
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
     const handleDelete = () => deleteExpenseById(item.id);
@@ -146,11 +224,13 @@ const Home = () => {
       <View style={styles.card}>
         <View style={styles.cardContent}>
           <View style={styles.cardInfo}>
-            <Text style={styles.cardAmount}>${item.amount}</Text>
+            <Text style={styles.cardAmount}>{item.amount} {item.currency}</Text>
             <Text style={styles.cardCategory}>{item.category}</Text>
             <Text style={styles.cardDate}>{date}</Text>
             <Text style={styles.cardDescription}>{item.description}</Text>
           </View>
+          <Ionicons name={category_ionicons[item.category]} size={50} color="black" />
+          {/* <Image source={categories[item.category]} style={styles.categoryIcon} /> */}
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
             <Ionicons name="trash-bin-outline" size={22} color="#00DDA3" />
           </TouchableOpacity>
@@ -160,15 +240,21 @@ const Home = () => {
   };
 
   return (
+    <>
+    <PageHeader title="Home" />
     <SafeAreaView style={styles.container}>
-      <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>Balance: {balance.toFixed(2)} RON</Text>
-      </View>
+    
+    <View style={styles.balanceContainer}>
+      <Text>
+        <Text style={styles.currencyText}>BALANCE: </Text>
+        <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
+      </Text>
+    </View>
 
       <View style={styles.boxContainer}>
         <LinearGradient colors={['#00DDcf', '#00DDA3']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
-          <Text style={styles.boxTitle}>Income</Text>
+          <Text style={styles.boxTitle} onPress={toggleShowLogs}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
 
@@ -185,7 +271,31 @@ const Home = () => {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
+
         style={[styles.list, { height: listHeight }]}
+      />
+      {showLogs && (
+        <FlatList
+          data={logData}
+            renderItem={({ item }) => (
+            <View style={styles.logItem}>
+              {/* Display message, amount, and currency */}
+              <Text style={styles.logItemText}>
+                {item.message} + {item.balance.toFixed(2)} {item.currency}
+              </Text>
+            </View>
+        )}
+        
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.list}
+        />
+        
+      )}
+      <LinearGradient
+        colors={['transparent', '#33404F']}
+        // Add locations for the gradient colors to define where the transition begins
+        locations={[0, 1]}
+        style={styles.fadeOutContainer}
       />
       <TouchableOpacity
         style={styles.fab}
@@ -194,20 +304,52 @@ const Home = () => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
-    </SafeAreaView>
+      <AnimatedLoader
+            visible={isLoading} // Keep visible true because we are conditionally rendering this whole component
+            overlayColor="rgba(150,150,150,0.95)"
+            source={require("../../assets/white_dots.json")}
+            animationStyle={styles.lottie}
+            speed={1}
+          >
+            <Text>Loading...</Text>
+      </AnimatedLoader>
+    </SafeAreaView></>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 33,
+    paddingTop: 10,
     paddingHorizontal: 16,
     backgroundColor: '#33404F',
   },
+  fadeOutContainer: {
+    position: 'absolute',
+    bottom: 50, // start from the bottom of the container
+    width: width, // stretch across the container
+    height: cardHeight, // height of the fade effect
+  },
   balanceContainer: {
-    marginBottom: height / 100,
+    marginBottom: 0,
     height: height / 20,
+  },
+  logItem: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 8,
+    borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  logItemText: {
+    fontSize: 16,
+    color: '#333',
   },
   divider: {
     borderBottomColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent black for a subtle look
@@ -221,6 +363,11 @@ const styles = StyleSheet.create({
   balanceText: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  currencyText: {
+    fontWeight: 'normal',
+    fontSize: 22,
     color: '#ffffff',
   },
   card: {
@@ -281,7 +428,7 @@ const styles = StyleSheet.create({
     width: width * 0.45, // adjusted for better responsiveness
     alignItems: 'center',
     justifyContent: 'center', // Center content vertically
-    shadowColor: '#000', // adding shadow for depth
+    shadowColor: '#fff', // adding shadow for depth
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
@@ -317,24 +464,40 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: height/3.8,
+    marginBottom: 70,
   },
   fab: {
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 110, // Adjust this value based on your tab bar height
-    backgroundColor: '#B5C5C3', // Use your app's theme color
+    backgroundColor: '#33404F', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#89CFF3',
+    shadowColor: '#333',
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },
   },
+  categoryIcon: {
+    width: 50,
+    height: 50,
+  },
+  lottie: {
+    width: 150,
+    height: 150,
+  },
+  absolute: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  }
+  
 });
 
 export default Home;
