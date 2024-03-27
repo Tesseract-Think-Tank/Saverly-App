@@ -9,6 +9,7 @@ import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase
 import { FIREBASE_DB } from '../../../firebaseConfig';
 import { router } from 'expo-router';
 import PageHeader from '../../components/PageHeader';
+import { getExpenseDateAndTime } from '@/services/accountService';
 
 
 const { width, height } = Dimensions.get('window');
@@ -121,22 +122,39 @@ const Home = () => {
     );
   };
 
-  const fetchExpenses = async (userId) => {
-    try {
-      const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
-      const expensesSnapshot = await getDocs(expensesCollectionRef);
-      if (expensesSnapshot.empty) {
-        return;
-      }
-      const newExpensesData = expensesSnapshot.docs.map((doc) => ({
+const fetchExpenses = async (userId) => {
+  try {
+    const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
+    const expensesSnapshot = await getDocs(expensesCollectionRef);
+    if (expensesSnapshot.empty) {
+      setListData([]);
+      return;
+    }
+
+    // Fetch each expense's date and time individually (inefficient)
+    const expensesDataPromises = expensesSnapshot.docs.map(async (doc) => {
+      const dateAndTime = await getExpenseDateAndTime(doc.id);
+      return {
         id: doc.id,
         ...doc.data(),
-      }));
-      setListData(newExpensesData);
-    } catch (error) {
-      console.error("Error fetching expenses: ", error);
-    }
-  };
+        dateAndTime: dateAndTime || null, // Fallback to null if dateAndTime couldn't be fetched
+      };
+    });
+
+    const newExpensesData = await Promise.all(expensesDataPromises);
+
+    // Filter and sort as before
+    const sortedExpensesData = newExpensesData
+      .filter((item) => item.dateAndTime !== null)
+      .sort((a, b) => b.dateAndTime - a.dateAndTime);
+
+    setListData(sortedExpensesData);
+  } catch (error) {
+    console.error("Error fetching expenses: ", error);
+  }
+};
+
+  
 
   const fetchLogs = async(userId) => {
     try{
@@ -187,9 +205,12 @@ const Home = () => {
   return (
     <><PageHeader title="Home" />
     <SafeAreaView style={styles.container}>
-      <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>Balance: {balance.toFixed(2)} RON</Text>
-      </View>
+    <View style={styles.balanceContainer}>
+      <Text>
+        <Text style={styles.currencyText}>BALANCE: </Text>
+        <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
+      </Text>
+    </View>
 
       <View style={styles.boxContainer}>
         <LinearGradient colors={['#00DDcf', '#00DDA3']} style={styles.boxGradient}>
@@ -225,10 +246,18 @@ const Home = () => {
               </Text>
             </View>
         )}
+        
           keyExtractor={(item) => item.id.toString()}
           style={styles.list}
         />
+        
       )}
+      <LinearGradient
+        colors={['transparent', '#33404F']}
+        // Add locations for the gradient colors to define where the transition begins
+        locations={[0, 1]}
+        style={styles.fadeOutContainer}
+      />
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('addExpense')}
@@ -243,12 +272,18 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 33,
+    paddingTop: 10,
     paddingHorizontal: 16,
     backgroundColor: '#33404F',
   },
+  fadeOutContainer: {
+    position: 'absolute',
+    bottom: 50, // start from the bottom of the container
+    width: width, // stretch across the container
+    height: cardHeight, // height of the fade effect
+  },
   balanceContainer: {
-    marginBottom: height / 100,
+    marginBottom: 0,
     height: height / 20,
   },
   logItem: {
@@ -280,6 +315,11 @@ const styles = StyleSheet.create({
   balanceText: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  currencyText: {
+    fontWeight: 'normal',
+    fontSize: 22,
     color: '#ffffff',
   },
   card: {
@@ -376,20 +416,20 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: height/3.8,
+    marginBottom: 70,
   },
   fab: {
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 110, // Adjust this value based on your tab bar height
-    backgroundColor: '#B5C5C3', // Use your app's theme color
+    backgroundColor: '#33404F', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#89CFF3',
+    shadowColor: '#333',
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },

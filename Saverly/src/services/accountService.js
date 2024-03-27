@@ -72,4 +72,26 @@ const fetchUserAccounts = async () => {
 };
   
 
-export { addAccount, fetchUserAccounts };
+const getExpenseDateAndTime = async (expenseId) => {
+  const userId = FIREBASE_AUTH.currentUser?.uid;
+  if (!userId) throw new Error('No user is signed in.');
+  if (!expenseId) throw new Error('Expense ID is required.');
+
+  // Reference to the specific expense document
+  const expenseRef = doc(FIREBASE_DB, 'users', userId, 'expenses', expenseId);
+  const expenseSnap = await getDoc(expenseRef);
+
+  if (!expenseSnap.exists()) {
+    throw new Error('Expense not found.');
+  }
+
+  const expenseData = expenseSnap.data();
+
+  // Assuming the date and time are stored in a field named 'dateAndTime'
+  // and it's a Firestore Timestamp object
+  const dateAndTime = expenseData.dateAndTime || null;
+
+  return dateAndTime;
+};
+
+export { addAccount, fetchUserAccounts, getExpenseDateAndTime };
