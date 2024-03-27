@@ -9,6 +9,7 @@ import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase
 import { FIREBASE_DB } from '../../../firebaseConfig';
 import { router } from 'expo-router';
 import PageHeader from '../../components/PageHeader';
+import { getExpenseDateAndTime } from '@/services/accountService';
 
 
 const { width, height } = Dimensions.get('window');
@@ -121,22 +122,39 @@ const Home = () => {
     );
   };
 
-  const fetchExpenses = async (userId) => {
-    try {
-      const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
-      const expensesSnapshot = await getDocs(expensesCollectionRef);
-      if (expensesSnapshot.empty) {
-        return;
-      }
-      const newExpensesData = expensesSnapshot.docs.map((doc) => ({
+const fetchExpenses = async (userId) => {
+  try {
+    const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
+    const expensesSnapshot = await getDocs(expensesCollectionRef);
+    if (expensesSnapshot.empty) {
+      setListData([]);
+      return;
+    }
+
+    // Fetch each expense's date and time individually (inefficient)
+    const expensesDataPromises = expensesSnapshot.docs.map(async (doc) => {
+      const dateAndTime = await getExpenseDateAndTime(doc.id);
+      return {
         id: doc.id,
         ...doc.data(),
-      }));
-      setListData(newExpensesData);
-    } catch (error) {
-      console.error("Error fetching expenses: ", error);
-    }
-  };
+        dateAndTime: dateAndTime || null, // Fallback to null if dateAndTime couldn't be fetched
+      };
+    });
+
+    const newExpensesData = await Promise.all(expensesDataPromises);
+
+    // Filter and sort as before
+    const sortedExpensesData = newExpensesData
+      .filter((item) => item.dateAndTime !== null)
+      .sort((a, b) => b.dateAndTime - a.dateAndTime);
+
+    setListData(sortedExpensesData);
+  } catch (error) {
+    console.error("Error fetching expenses: ", error);
+  }
+};
+
+  
 
   const fetchLogs = async(userId) => {
     try{
@@ -404,14 +422,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 110, // Adjust this value based on your tab bar height
-    backgroundColor: '#B5C5C3', // Use your app's theme color
+    backgroundColor: '#33404F', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#89CFF3',
+    shadowColor: '#333',
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },
