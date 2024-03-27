@@ -37,7 +37,7 @@ const AddAccountScreen = () => {
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
-      router.push('Accounts');
+      router.back();
     }
   };
 
@@ -45,7 +45,7 @@ const AddAccountScreen = () => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Accounts')} // Go back to the previous screen
+    onPress={() => router.back()} // Go back to the previous screen
     >
     <AntDesign name="left" size={24} color="black" />
   </TouchableOpacity>

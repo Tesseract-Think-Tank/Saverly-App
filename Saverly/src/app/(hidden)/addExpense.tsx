@@ -97,7 +97,7 @@ const AddExpenseScreen = () => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Home')} // Go back to the previous screen
+    onPress={() => router.back()} // Go back to the previous screen
     >
     <AntDesign name="left" size={24} color="black" />
   </TouchableOpacity>

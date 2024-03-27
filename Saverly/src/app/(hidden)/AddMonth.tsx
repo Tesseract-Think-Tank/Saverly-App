@@ -5,7 +5,8 @@ import { MonthlyPayment } from '../../services/monthlyPaymentService';
 import { router } from 'expo-router';
 import { scheduleMonthlyNotifications } from '../../services/Notifications';
 import DatePicker from '@react-native-community/datetimepicker';
-
+import PageHeader from '@/components/PageHeader';
+import { AntDesign } from '@expo/vector-icons';
 const AddMonthlyPaymentScreen = () => {
   const [businessName, setBusinessName] = useState('');
   const [cost, setCost] = useState('');
@@ -56,28 +57,30 @@ const AddMonthlyPaymentScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add New Monthly Payment</Text>
+    <>
+    <TouchableOpacity
+    style={styles.backButton}
+    onPress={() => router.back()} // Go back to the previous screen
+    >
+    <AntDesign name="left" size={24} color="black" />
+  </TouchableOpacity><PageHeader title="Add new Monthly Payment"></PageHeader><View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           value={businessName}
           onChangeText={text => setBusinessName(text)}
           placeholder='Business Name'
-          style={styles.input}
-        />
+          style={styles.input} />
         <TextInput
           value={cost}
           onChangeText={text => setCost(text)}
           placeholder='Amount'
           keyboardType='numeric'
-          style={styles.input}
-        />
+          style={styles.input} />
         <TextInput
           value={currency}
           onChangeText={text => setCurrency(text)}
           placeholder='Currency (e.g., USD, EUR)'
-          style={styles.input}
-        />
+          style={styles.input} />
         {/* Replace TextInput with DatePicker */}
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <Text style={styles.input}>
@@ -92,15 +95,13 @@ const AddMonthlyPaymentScreen = () => {
             onChange={(event, selectedDate) => {
               setShowDatePicker(false);
               setDate(selectedDate || date); // Update date state with selected date or keep the previous date
-            }}
-          />
+            } } />
         )}
         <TextInput
           value={cardHolderName}
           onChangeText={text => setCardHolderName(text)}
           placeholder='Card Holder Name'
-          style={styles.input}
-        />
+          style={styles.input} />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -112,7 +113,7 @@ const AddMonthlyPaymentScreen = () => {
         </TouchableOpacity>
       </View>
       {loading && <ActivityIndicator size="large" color="#00DDA3" />}
-    </View>
+    </View></>
   );
 };
 
@@ -155,6 +156,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  backButton: {
+    position: 'absolute',
+    top:20,
+    left:20,
+    padding: 10,
+    borderRadius: 5,
+    zIndex:1,
   },
 });
 
