@@ -181,6 +181,16 @@ const fetchExpenses = async (userId) => {
 
   const balance = income - expenses;
 
+  const category_ionicons = {
+    'Food': "fast-food-outline",
+    'Transport': "emoji-transportation",
+    'Utilities': "home",
+    'Entertainment': "game-controller-outline",
+    'Shopping': "shopping-cart",
+    'Health': "health-and-safety",
+    'Other': "question-circle-o",
+  };
+
   const categories = {
     'Food': require("../../assets/food.png"),
     'Transport': require("../../assets/transport.png"),
@@ -204,7 +214,8 @@ const fetchExpenses = async (userId) => {
             <Text style={styles.cardDate}>{date}</Text>
             <Text style={styles.cardDescription}>{item.description}</Text>
           </View>
-          <Image source={categories[item.category]} style={styles.categoryIcon}></Image>
+          <Ionicons name={category_ionicons[item.category]} size={50} color="black" />
+          {/* <Image source={categories[item.category]} style={styles.categoryIcon} /> */}
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
             <Ionicons name="trash-bin-outline" size={22} color="#00DDA3" />
           </TouchableOpacity>
