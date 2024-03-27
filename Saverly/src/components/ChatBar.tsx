@@ -1,23 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Animated, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 import { useChat } from '@/services/chatContext';
+import { fetchUserDataAsString } from '@/services/userDataUtils'
+
 
 const ChatBar = () => {
   const [isActive, setIsActive] = useState(false);
   const [showRentMenu, setShowRentMenu] = useState(false);
   const [showFoodMenu, setShowFoodMenu] = useState(false);
   const [showTravelMenu, setShowTravelMenu] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState([]);
+  const [conversationHistory, setConversationHistory] = useState([
+    {
+      role: "system",
+      content: "Your name is SaveBot, you are a friendly but professional  financial advisor. Your goal is to help students save money by providing suggestions on how to budget their money. You should keep your messages short (under 50 words if possible), as they should look like real messages between people around the age 20."
+    }
+  ]);
 
+  useEffect(() => {
+    const addSystemMessage = async () => {
+      const userDataString = await fetchUserDataAsString();
+      // Assuming the function returns a string or 'No user logged in'/'No such user!' messages.
+
+      console.log(userDataString);
+
+      setConversationHistory(prevHistory => [
+        ...prevHistory,
+        {
+          role: "system",
+          content: userDataString
+        }
+      ]);
+    };
+
+    addSystemMessage();
+  }, []);
 
   // Animated values
   const opacityAnim = useState(new Animated.Value(0))[0]; // Initial opacity is 0 to hide the buttons
   const translateAnim = useState(new Animated.Value(50))[0]; // Start with buttons translated down
 
   // Inside ChatBar component
-  const { sendMessage } = useChat();
+  const { sendMessage, toggleLoading } = useChat();
   const [inputText, setInputText] = useState('');
 
   const handleSend = async () => {
@@ -32,7 +57,9 @@ const ChatBar = () => {
         sendMessage(inputText);
         setInputText('');
 
-        const url = `http://192.168.1.16:5000/default-question`;
+        const url = `http://192.168.1.131:5000/default-question`;
+
+        toggleLoading();
 
         try {
             const response = await fetch(url, {
@@ -67,6 +94,8 @@ const ChatBar = () => {
         } catch (error) {
             Alert.alert('Error', 'Failed to fetch response from the server.');
             console.error(error);
+        } finally{
+          // toggleLoading();
         }
         // setInputText('');
     }
@@ -75,7 +104,7 @@ const ChatBar = () => {
   
 const handleCategoryOptionPress = async (category, optionIndex) => {
   const userInput = inputText; // This uses the inputText state from ChatBar
-  let url = `http://192.168.1.16:5000`;
+  let url = `http://192.168.1.131:5000`;
   // Define an array of options that require userInput
   const optionsRequiringInput = {
       food: [2, 4], // 0-indexed, corresponding to food-question-3 and food-question-5
@@ -103,33 +132,41 @@ const handleCategoryOptionPress = async (category, optionIndex) => {
           return;
   }
 
+  toggleLoading();
+
   try {
-      const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-              userInput, // Send user input as is
-              history: conversationHistory, // Send the current history
-          }),
-      });
+    setInputText('');
+    setIsActive(!isActive);
+    setShowFoodMenu(false);
+    setShowRentMenu(false);
+    setShowTravelMenu(false);
 
-      if (!response.ok) {
-          throw new Error('Network response was not ok');
-      }
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userInput, // Send user input as is
+            history: conversationHistory, // Send the current history
+        }),
+    });
 
-      const data = await response.json();
-      if (data && data.response) {
-          // The backend should append user input and bot response to the history
-          setConversationHistory(data.history); // Update the frontend history based on the backend response
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
 
-          // Send the server's response as an 'incoming' message
-          sendMessage(data.response, 'incoming');
-      }
+    const data = await response.json();
+    if (data && data.response) {
+        // The backend should append user input and bot response to the history
+        setConversationHistory(data.history); // Update the frontend history based on the backend response
+
+        // Send the server's response as an 'incoming' message
+        sendMessage(data.response, 'incoming');
+    }
   } catch (error) {
       Alert.alert('Error', 'Failed to fetch response from the server.');
       console.error(error);
   }
-  setInputText(''); // Clear input text after handling
+  // setInputText(''); // Clear input text after handling
 };
 
   

@@ -8,8 +8,9 @@ interface Message {
 
 interface ChatContextType {
   messages: Message[];
-  // Updated to reflect the new sendMessage function signature
   sendMessage: (text: string, type?: 'incoming' | 'outgoing') => void;
+  isLoading: boolean; // Add this line
+  toggleLoading: () => void; // And this line
 }
 
 
@@ -32,21 +33,31 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     { id: 1, text: "Welcome to SaveBot Chat! How can we assist you today?", type: 'incoming' },
   ]);
 
-  // Add a type parameter to the sendMessage function
+  const [isLoading, setIsLoading] = useState(false);
+
+  const toggleLoading = () => {
+    setIsLoading(!isLoading);
+  };
+
   const sendMessage = (text: string, type: 'incoming' | 'outgoing' = 'outgoing') => {
     const newMessage = {
-      id: messages.length + 1, // Assuming you have a way to generate unique IDs
+      id: messages.length + 1, // Adjust if you have a unique ID generator
       text: text,
       type: type,
     };
+    
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
-  
 
+    // Automatically set isLoading to false when an outgoing message is sent
+    if (type === 'incoming') {
+      setIsLoading(false); // This line ensures loading state is turned off when a message is sent
+    }
+  };
 
   return (
-    <ChatContext.Provider value={{ messages, sendMessage }}>
+    <ChatContext.Provider value={{ messages, sendMessage, isLoading, toggleLoading }}>
       {children}
     </ChatContext.Provider>
   );
 };
+
