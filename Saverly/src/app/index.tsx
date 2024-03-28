@@ -60,7 +60,7 @@ const Login = ({navigation}: any) => {
                 />
             </View>
             {loading ? (
-                <ActivityIndicator size="large" color="#00DDA3" />
+                <ActivityIndicator size="large" color="#2F80ED" />
             ) : (
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={signIn} style={styles.button}>
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#33404F',
+        backgroundColor: '#ecc13e',
     },
     logo: {
         width: 170,
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
-        color:'#00DDA3'
+        color:'#2F80ED'
     },
     inputContainer: {
         width: '80%',
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
     },
     button: {
-        backgroundColor: '#00DDA3',
+        backgroundColor: '#2F80ED',
         width: '100%',
         padding: 15,
         borderRadius: 10,
@@ -123,11 +123,11 @@ const styles = StyleSheet.create({
     buttonOutline: {
         backgroundColor: '#FFF',
         marginTop: 15,
-        borderColor: '#00DDA3',
+        borderColor: '#2F80ED',
         borderWidth: 2,
     },
     buttonOutlineText: {
-        color: '#00DDA3',
+        color: '#2F80ED',
         fontWeight: 'bold',
     },
 });

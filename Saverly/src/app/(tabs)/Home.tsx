@@ -206,12 +206,11 @@ const Home = () => {
       </View>
 
       <View style={styles.divider} />
-
+      <View style={styles.cardcontainer}>
       <FlatList
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-
         style={[styles.list, { height: listHeight }]}
       />
       {showLogs && (
@@ -219,7 +218,6 @@ const Home = () => {
           data={logData}
             renderItem={({ item }) => (
             <View style={styles.logItem}>
-              {/* Display message, amount, and currency */}
               <Text style={styles.logItemText}>
                 {item.message} + {item.balance.toFixed(2)} {item.currency}
               </Text>
@@ -236,11 +234,18 @@ const Home = () => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
+      </View>
     </SafeAreaView></>
   );
 };
 
 const styles = StyleSheet.create({
+  cardcontainer:{
+    backgroundColor:'#fff',
+    padding:17,
+    zIndex:1,
+    borderRadius:55,
+  },
   container: {
     flex: 1,
     paddingTop: 33,
@@ -253,7 +258,7 @@ const styles = StyleSheet.create({
   },
   logItem: {
     backgroundColor: '#fff',
-    padding: 20,
+    padding: 50,
     marginVertical: 8,
     borderRadius: 5,
     flexDirection: 'row',
@@ -283,8 +288,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
+    backgroundColor: '#fff',
+    borderRadius: 30,
     paddingVertical: 10,
     paddingHorizontal: 16,
     marginVertical: 8,
@@ -297,6 +302,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     height: height / 7, // Adjust the height of the card based on your screen size
+    borderBottomWidth:1,
+    borderBottomColor:'000',
+    zIndex:100
   },
   cardContent: {
     flexDirection: 'row',
@@ -369,6 +377,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    borderWidth:1,
+    borderColor:'#000'
   },
   listItemText: {
     fontSize: 16,
