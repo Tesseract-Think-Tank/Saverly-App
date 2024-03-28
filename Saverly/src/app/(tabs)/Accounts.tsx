@@ -7,12 +7,12 @@ import { router } from 'expo-router';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import {FIREBASE_AUTH,FIREBASE_DB } from '../../../firebaseConfig';
 import {Animated} from 'react-native';
-
+import { Alert } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 const CARD_HEIGHT = height * 0.6; // 60% of the screen height
 
-const AccountCard = ({ account }) => (
+const AccountCard = ({ account,onSelectAccount,navigation }) => (
   <View style={styles.cardContainer}>
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{account.type}</Text>
@@ -25,7 +25,7 @@ const AccountCard = ({ account }) => (
           const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
           return (
             <View style={styles.expenseCard}>
-              <Text style={styles.cardAmount}>${item.amount}</Text>
+              <Text style={styles.cardAmount}>{item.currency} {item.amount}</Text>
               <Text style={styles.cardCategory}>{item.category}</Text>
               <Text style={styles.cardDate}>{date}</Text>
               <Text style={styles.cardDescription}>{item.description}</Text>
@@ -154,6 +154,8 @@ const AccountsScreen = ({ navigation }) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const activeIndex = Math.round(contentOffsetX / width);
     setActiveIndex(activeIndex);
+    const selectedAccount = accounts[activeIndex];
+    setSelectedAccount(selectedAccount);
     console.log('Active Index:', activeIndex); 
   };
 
@@ -163,7 +165,7 @@ const AccountsScreen = ({ navigation }) => {
       <View style={styles.card}>
         <View style={styles.cardContent}>
           <View style={styles.cardInfo}>
-            <Text style={styles.cardAmount}>${item.amount}</Text>
+            <Text style={styles.cardAmount}>{item.currency}{item.amount}</Text>
             <Text style={styles.cardCategory}>{item.category}</Text>
             <Text style={styles.cardDate}>{date}</Text>
             <Text style={styles.cardDescription}>{item.description}</Text>
@@ -183,7 +185,10 @@ const AccountsScreen = ({ navigation }) => {
         decelerationRate="fast"
         contentContainerStyle={styles.flatListContentContainer}
         data={accounts}
-        renderItem={({ item }) => <AccountCard account={item} />}
+        renderItem={({ item }) => <AccountCard account={item} navigation={navigation} 
+        onSelectAccount={(selectedAccount) => {
+          setSelectedAccount(selectedAccount);
+        }}/>}
         keyExtractor={(item) => item.id.toString()}
         onScroll={handleScroll}
         scrollEventThrottle={16}
@@ -209,14 +214,20 @@ const AccountsScreen = ({ navigation }) => {
             },
           ]}
         >
-          {/* Option 1 Button */}
-          <TouchableOpacity
-            style={styles.optionButton2}
-            onPress={() => router.push('addExpense')}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
-          </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.optionButton2}
+        onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
+        activeOpacity={0.7}
+>
+  <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+</TouchableOpacity>
+<TouchableOpacity
+        style={styles.optionButton3}
+        onPress={() => navigation.navigate('addFundsScreen', { selectedAccount: selectedAccount })}
+        activeOpacity={0.7}
+>
+  <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+</TouchableOpacity>
 
           {/* Option 2 Button */}
           <TouchableOpacity
@@ -255,6 +266,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },
+  },
+  addButtonText: {
+    color: 'white', // White color for the text
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   cardContainer: {
     width: width, // each card spans the full width
@@ -348,6 +364,22 @@ const styles = StyleSheet.create({
   optionButton2: {
     position: 'absolute',
     right: 10, // adjust the horizontal position
+    bottom: 80, // adjust the vertical position
+    backgroundColor: '#B5C5C3',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#6C63FF',
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  optionButton3: {
+    position: 'absolute',
+    right: 190, // adjust the horizontal position
     bottom: 80, // adjust the vertical position
     backgroundColor: '#B5C5C3',
     width: 56,
