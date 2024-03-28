@@ -198,11 +198,11 @@ const fetchExpenses = async (userId) => {
 
   const category_ionicons = {
     'Food': "fast-food-outline",
-    'Transport': "emoji-transportation",
-    'Utilities': "home",
+    'Transport': "car-outline",
+    'Utilities': "home-outline",
     'Entertainment': "game-controller-outline",
-    'Shopping': "shopping-cart",
-    'Health': "health-and-safety",
+    'Shopping': "cart-outline",
+    'Health': "heart-circle-outline",
     'Other': "question-circle-o",
   };
 
