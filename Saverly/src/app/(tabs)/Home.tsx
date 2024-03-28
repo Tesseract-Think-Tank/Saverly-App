@@ -7,7 +7,8 @@ import { getAuth} from 'firebase/auth';
 import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
 import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../firebaseConfig';
-import { router } from 'expo-router';
+// import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import PageHeader from '../../components/PageHeader';
 import { getExpenseDateAndTime } from '@/services/accountService';
 import AnimatedLoader from "react-native-animated-loader";
@@ -20,20 +21,17 @@ const cardHeight = height / 6.9; // Height of a single card
 const listHeight = cardHeight * 3; // Height of the list to display only 3 cards
 
 const Home = () => {
+  const router = useRouter();
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [listData, setListData] = useState([]);
   const [userId, setUserId] = useState(null);
   const [logData,setLogData] = useState([]);
   const [showLogs, setShowLogs] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
 
   const fetchUserData = async () => {
-    if (isInitialLoad) {
-      setIsLoading(true);
-    }
     try {
       const auth = getAuth();
       const currentUserId = auth.currentUser?.uid;
@@ -50,10 +48,7 @@ const Home = () => {
     } catch (error) {
       console.error("Error fetching user data: ", error);
     } finally {
-      if (isInitialLoad) {
-        setIsLoading(false);
-        setIsInitialLoad(false); // Mark initial load as complete
-      }
+      setIsLoading(false);
     }
   };
   
