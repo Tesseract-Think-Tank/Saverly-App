@@ -12,6 +12,8 @@ import { useRouter } from 'expo-router';
 import PageHeader from '../../components/PageHeader';
 import { getExpenseDateAndTime } from '@/services/accountService';
 import AnimatedLoader from "react-native-animated-loader";
+import {filterExpensesByCategory} from "@/services/filterExpensesByCategory";
+import RNPickerSelect from 'react-native-picker-select';
 
 
 
@@ -29,6 +31,8 @@ const Home = () => {
   const [logData,setLogData] = useState([]);
   const [showLogs, setShowLogs] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
 
 
   const fetchUserData = async () => {
@@ -201,7 +205,7 @@ const fetchExpenses = async (userId) => {
     'Other': "question-circle-o",
   };
 
-  const categories = {
+  const category_images = {
     'Food': require("../../assets/food.png"),
     'Transport': require("../../assets/transport.png"),
     'Utilities': require("../../assets/utilities.png"),
@@ -210,6 +214,23 @@ const fetchExpenses = async (userId) => {
     'Health': require("../../assets/health.png"),
     'Other': require("../../assets/others.png"),
   };
+
+  const categories = [
+    'All',
+    'Food',
+    'Transport',
+    'Utilities',
+    'Entertainment',
+    'Shopping',
+    'Health',
+    'Other',
+  ];
+
+  const category_items = categories.map(str => ({
+    label: str,
+    value: str,
+  }));
+
 
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
@@ -259,11 +280,21 @@ const fetchExpenses = async (userId) => {
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
         </LinearGradient>
       </View>
+      <View>
+        <RNPickerSelect
+          // style={pickerSelectStyles}
+          value={selectedCategory} // Default selected value to the current month
+          onValueChange={(value) => {
+            setSelectedCategory(value);
+          }}
+          items={ category_items }
+        />
+      </View>
 
       <View style={styles.divider} />
 
       <FlatList
-        data={listData}
+        data={filterExpensesByCategory(listData, selectedCategory)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
 
