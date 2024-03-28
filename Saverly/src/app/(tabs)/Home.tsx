@@ -219,18 +219,17 @@ const fetchExpenses = async (userId) => {
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
     const handleDelete = () => deleteExpenseById(item.id);
-
+  
     return (
       <View style={styles.card}>
-        <View style={styles.cardContent}>
-          <View style={styles.cardInfo}>
-            <Text style={styles.cardAmount}>{item.amount} {item.currency}</Text>
+        <View style={styles.cardRow}>
+          <Ionicons name={category_ionicons[item.category]} size={30} color="black" />
+          <View style={styles.cardMiddle}>
             <Text style={styles.cardCategory}>{item.category}</Text>
-            <Text style={styles.cardDate}>{date}</Text>
             <Text style={styles.cardDescription}>{item.description}</Text>
+            <Text style={styles.cardDate}>{date}</Text>
           </View>
-          <Ionicons name={category_ionicons[item.category]} size={50} color="black" />
-          {/* <Image source={categories[item.category]} style={styles.categoryIcon} /> */}
+          <Text style={styles.cardAmount}>{item.amount} {item.currency}</Text>
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
             <Ionicons name="trash-bin-outline" size={22} color="#00DDA3" />
           </TouchableOpacity>
@@ -238,6 +237,7 @@ const fetchExpenses = async (userId) => {
       </View>
     );
   };
+  
 
   return (
     <>
@@ -291,12 +291,14 @@ const fetchExpenses = async (userId) => {
         />
         
       )}
-      <LinearGradient
+      
+      {/* <LinearGradient
         colors={['transparent', '#33404F']}
         // Add locations for the gradient colors to define where the transition begins
         locations={[0, 1]}
         style={styles.fadeOutContainer}
       />
+       */}
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('addExpense')}
@@ -373,49 +375,48 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
     borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    padding: 16,
     marginVertical: 8,
-    shadowColor: '#fffff0',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    height: height / 7, // Adjust the height of the card based on your screen size
   },
-  cardContent: {
+  cardRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  cardInfo: {
+  cardMiddle: {
     flex: 1,
+    justifyContent: 'center',
+    marginLeft: 16, // Adjust as needed for spacing
+  },
+  cardCategory: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#33404F',
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: '#999',
+  },
+  cardDate: {
+    fontSize: 12,
+    color: '#999',
   },
   cardAmount: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#33404F',
-  },
-  cardCategory: {
-    fontSize: 16,
-    color: '#33404F',
-    marginTop: 4,
-  },
-  cardDate: {
-    fontSize: 14,
-    color: '#33404F',
-    marginTop: 4,
-  },
-  cardDescription: {
-    fontSize: 12,
-    color: '#33404F',
-    marginTop: 4,
+    color: '#333',
+    position: 'absolute', // Position it absolutely to align it in the middle-right
+    left: 200, // Adjust this value to move the amount left or right
+    alignSelf: 'center',
   },
   deleteButton: {
-    marginLeft: 12,
+    position: 'absolute',
+    top: 10,
+    right: 10,
     padding: 10,
   },
   boxContainer: {
