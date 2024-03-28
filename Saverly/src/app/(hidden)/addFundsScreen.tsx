@@ -21,7 +21,9 @@ const AddFundsScreen = ({ route, navigation }) => {
     try {
       await updateAccountBalance(accountId, parseFloat(amount), currency);
       alert('Funds added successfully!');
+      //fetchDataForUser();
       navigation.goBack();
+
     } catch (error) {
       alert(error.message);
     }

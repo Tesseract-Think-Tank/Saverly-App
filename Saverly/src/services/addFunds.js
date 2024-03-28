@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs,query, updateDoc,where} from 'firebase/firestore';
+import { addDoc,getDoc, collection, doc, getDocs,query, updateDoc,where} from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 
 const updateAccountBalance = async (accountId, amount, currency) => {
@@ -24,9 +24,12 @@ const updateAccountBalance = async (accountId, amount, currency) => {
     const accountData = accountSnap.data();
     const currentBalance = accountData.balance || 0;
     const accountCurrency = accountData.currency;
-  
-    // If currency conversion is needed, calculate accordingly
-    // In this example, we assume all transactions are in the account's currency.
+
+    const userRef = doc(FIREBASE_DB, 'users', userId);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data() || {};
+    const currentIncome = userData.income || 0;
+
     const exchangeRates = {
         'EUR:RON': 5, 'RON:EUR': 0.2,
         'USD:RON': 4.57, 'RON:USD': 0.22,
@@ -41,7 +44,12 @@ const updateAccountBalance = async (accountId, amount, currency) => {
 
     const convertedAmount = amount * exchangeRate;
     const newBalance = currentBalance + parseFloat(convertedAmount);
-  
+    const newIncome = currentIncome + parseFloat(convertedAmount);
+
+    await updateDoc(userRef, {
+      income: newIncome,
+    });
+
     const accountRef = doc(FIREBASE_DB, 'users', userId, 'accounts', documentId);
     await updateDoc(accountRef, {
     balance: newBalance
