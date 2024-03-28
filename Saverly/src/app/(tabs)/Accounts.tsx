@@ -137,13 +137,21 @@ const AccountsScreen = ({ navigation }) => {
         const expenses = await fetchExpensesForAccount(account.id);
         return { ...account, expenses };
       }));
+  
       setAccounts(fetchedAccounts);
+      
+      // After accounts are successfully fetched and set, check and update selectedAccount
+      if (fetchedAccounts.length > 0) {
+        setSelectedAccount(fetchedAccounts[0]); // Set the first account as selected
+        setActiveIndex(0); // Ensure the active index is set to 0
+      }
     } catch (error) {
       console.error('Error loading accounts or expenses:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useFocusEffect(
     useCallback(() => {
