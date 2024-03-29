@@ -16,22 +16,6 @@ const AccountCard = ({ account, onSelectAccount, navigation }) => (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{account.type}</Text>
       <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
-      {/* Expenses List */}
-      <FlatList
-        data={account.expenses}
-        renderItem={({ item }) => {
-          const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
-          return (
-            <View style={styles.expenseCard}>
-              <Text style={styles.cardAmount}>{item.currency} {item.amount}</Text>
-              <Text style={styles.cardCategory}>{item.category}</Text>
-              <Text style={styles.cardDate}>{date}</Text>
-              <Text style={styles.cardDescription}>{item.description}</Text>
-            </View>
-          );
-        }}
-        keyExtractor={(item) => item.id.toString()}
-      />
     </View>
   </View>
 );
@@ -168,7 +152,7 @@ const AccountsScreen = ({ navigation }) => {
         decelerationRate="fast"
         contentContainerStyle={styles.flatListContentContainer}
         data={accounts}
-        renderItem={({ item }) => <AccountCard account={item} navigation={navigation} 
+        renderItem={({ item }) => <AccountCard account={item} navigation={navigation}
         onSelectAccount={(selectedAccount) => {
           setSelectedAccount(selectedAccount);
         }}/>}
@@ -176,6 +160,25 @@ const AccountsScreen = ({ navigation }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       />
+      {selectedAccount && (
+        <View style={styles.expensesListContainer}>
+          <FlatList
+            data={selectedAccount.expenses}
+            renderItem={({ item }) => {
+              const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
+              return (
+                <View style={styles.expenseCard}>
+                  <Text style={styles.cardAmount}>{item.currency} {item.amount}</Text>
+                  <Text style={styles.cardCategory}>{item.category}</Text>
+                  <Text style={styles.cardDate}>{date}</Text>
+                  <Text style={styles.cardDescription}>{item.description}</Text>
+                </View>
+              );
+            }}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </View>
+      )}
 
       <TouchableOpacity
         style={styles.actionButton}
@@ -434,14 +437,16 @@ const styles = StyleSheet.create({
   inactiveDot: {
     backgroundColor: '#B5C5C3',
   },
-  expensesList: {
-    paddingBottom:450,
-    flex: 1,
-    marginTop: 0,
-    marginHorizontal: 0,
+  expensesListContainer: {
+    top:300,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: '#fff',
-    borderRadius: 30,
-    padding: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 0,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
