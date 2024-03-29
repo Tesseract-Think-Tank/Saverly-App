@@ -6,6 +6,7 @@ import { fetchUserAccounts } from '../../services/accountService'; // Adjust as 
 import { router } from 'expo-router';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
+import PageHeader from '@/components/PageHeader';
 
 const { width, height } = Dimensions.get('window');
 
@@ -143,7 +144,7 @@ const AccountsScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <><PageHeader title='Accounts'></PageHeader><View style={styles.container}>
       <FlatList
         horizontal
         pagingEnabled
@@ -153,13 +154,12 @@ const AccountsScreen = ({ navigation }) => {
         contentContainerStyle={styles.flatListContentContainer}
         data={accounts}
         renderItem={({ item }) => <AccountCard account={item} navigation={navigation}
-        onSelectAccount={(selectedAccount) => {
-          setSelectedAccount(selectedAccount);
-        }}/>}
+          onSelectAccount={(selectedAccount) => {
+            setSelectedAccount(selectedAccount);
+          } } />}
         keyExtractor={(item) => item.id.toString()}
         onScroll={handleScroll}
-        scrollEventThrottle={16}
-      />
+        scrollEventThrottle={16} />
       {selectedAccount && (
         <View style={styles.expensesListContainer}>
           <FlatList
@@ -174,9 +174,8 @@ const AccountsScreen = ({ navigation }) => {
                   <Text style={styles.cardDescription}>{item.description}</Text>
                 </View>
               );
-            }}
-            keyExtractor={(item) => item.id.toString()}
-          />
+            } }
+            keyExtractor={(item) => item.id.toString()} />
         </View>
       )}
 
@@ -188,42 +187,44 @@ const AccountsScreen = ({ navigation }) => {
         <Ionicons name="ellipsis-vertical" size={30} color="#fff" />
       </TouchableOpacity>
       <Animated.View
-          style={[
-            styles.animatedContainer,
-            {
-              opacity: opacityAnim,
-              transform: [{ translateY: positionAnim.interpolate({
+        style={[
+          styles.animatedContainer,
+          {
+            opacity: opacityAnim,
+            transform: [{
+              translateY: positionAnim.interpolate({
                 inputRange: [0, 1],
                 outputRange: [0, -20]
-              }) }],
-            },
-          ]}
+              })
+            }],
+          },
+        ]}
+      >
+        <TouchableOpacity
+          style={styles.optionButton2}
+          onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
+          activeOpacity={0.7}
         >
-      <TouchableOpacity
-        style={styles.optionButton2}
-        onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.optionButton3}
-        onPress={() => navigation.navigate('addFundsScreen', { selectedAccount: selectedAccount })}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
-      </TouchableOpacity>
+          <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.optionButton3}
+          onPress={() => navigation.navigate('addFundsScreen', { selectedAccount: selectedAccount })}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.optionButton}
-        onPress={() => router.push('AddAccount')}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="card" size={30} color="#FFF" />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.optionButton}
+          onPress={() => router.push('AddAccount')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="card" size={30} color="#FFF" />
+        </TouchableOpacity>
       </Animated.View>
       <Pagination index={activeIndex} total={accounts.length} />
-    </View>
+    </View></>
   );
 };
 
