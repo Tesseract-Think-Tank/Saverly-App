@@ -252,13 +252,13 @@ const fetchExpenses = async (userId) => {
     </View>
 
       <View style={styles.boxContainer}>
-        <LinearGradient colors={['#00DDcf', '#00DDA3']} style={styles.boxGradient}>
+        <LinearGradient colors={['#6AD4DD', '#6AD4DD']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
           <Text style={styles.boxTitle} onPress={toggleShowLogs}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
 
-        <LinearGradient colors={['#B5C5C3', '#B5C5Df']} style={styles.boxGradient}>
+        <LinearGradient colors={['#DF1525', '#DF1525']} style={styles.boxGradient}>
           <Ionicons name="arrow-down" size={24} color="white" />
           <Text style={styles.boxTitle}>Expenses</Text>
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     paddingHorizontal: 16,
-    backgroundColor: '#33404F',
+    backgroundColor: '#2B2D31',
   },
   fadeOutContainer: {
     position: 'absolute',
@@ -345,9 +345,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowOpacity: 0,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 0,
   },
   logItemText: {
     fontSize: 16,
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     shadowColor: '#fff', // adding shadow for depth
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 0,
   },
   boxTitle: {
     color: 'white',
@@ -465,13 +465,13 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: 70,
+    marginBottom: 240,
   },
   fab: {
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 110, // Adjust this value based on your tab bar height
-    backgroundColor: '#33404F', // Use your app's theme color
+    backgroundColor: '#6AD4DD', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,
