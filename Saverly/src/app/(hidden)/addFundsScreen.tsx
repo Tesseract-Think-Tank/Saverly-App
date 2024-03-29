@@ -57,7 +57,7 @@ const AddFundsScreen = ({ route, navigation }) => {
           <Picker.Item key={index} label={cat} value={cat} />
         ))}
       </Picker>
-      <TouchableOpacity style={styles.buttonContainer} onPress={handleAddFunds}>
+      <TouchableOpacity style={styles.button} onPress={handleAddFunds}>
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>
     </View></>
@@ -65,11 +65,6 @@ const AddFundsScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   buttonContainer: {
     height:20,
     marginTop: 20,
@@ -81,6 +76,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#33404F', // Set the background color here
+  },
+  button: {
+    backgroundColor: '#00DDA3',
+    width: '100%',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
     input: {
         backgroundColor: '#B5C5C3',
