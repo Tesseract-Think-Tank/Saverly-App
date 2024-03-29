@@ -235,18 +235,17 @@ const fetchExpenses = async (userId) => {
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
     const handleDelete = () => deleteExpenseById(item.id);
-
+  
     return (
       <View style={styles.card}>
-        <View style={styles.cardContent}>
-          <View style={styles.cardInfo}>
-            <Text style={styles.cardAmount}>{item.amount} {item.currency}</Text>
+        <View style={styles.cardRow}>
+          <Ionicons name={category_ionicons[item.category]} size={30} color="black" />
+          <View style={styles.cardMiddle}>
             <Text style={styles.cardCategory}>{item.category}</Text>
-            <Text style={styles.cardDate}>{date}</Text>
             <Text style={styles.cardDescription}>{item.description}</Text>
+            <Text style={styles.cardDate}>{date}</Text>
           </View>
-          <Ionicons name={category_ionicons[item.category]} size={50} color="black" />
-          {/* <Image source={categories[item.category]} style={styles.categoryIcon} /> */}
+          <Text style={styles.cardAmount}>{item.amount} {item.currency}</Text>
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
             <Ionicons name="trash-bin-outline" size={22} color="#00DDA3" />
           </TouchableOpacity>
@@ -254,6 +253,7 @@ const fetchExpenses = async (userId) => {
       </View>
     );
   };
+  
 
   return (
     <>
@@ -268,13 +268,13 @@ const fetchExpenses = async (userId) => {
     </View>
 
       <View style={styles.boxContainer}>
-        <LinearGradient colors={['#00DDcf', '#00DDA3']} style={styles.boxGradient}>
+        <LinearGradient colors={['#6AD4DD', '#6AD4DD']} style={styles.boxGradient}>
           <Ionicons name="arrow-up" size={24} color="white" />
           <Text style={styles.boxTitle} onPress={toggleShowLogs}>Income</Text>
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
 
-        <LinearGradient colors={['#B5C5C3', '#B5C5Df']} style={styles.boxGradient}>
+        <LinearGradient colors={['#DF1525', '#DF1525']} style={styles.boxGradient}>
           <Ionicons name="arrow-down" size={24} color="white" />
           <Text style={styles.boxTitle}>Expenses</Text>
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
@@ -317,12 +317,14 @@ const fetchExpenses = async (userId) => {
         />
         
       )}
-      <LinearGradient
+      
+      {/* <LinearGradient
         colors={['transparent', '#33404F']}
         // Add locations for the gradient colors to define where the transition begins
         locations={[0, 1]}
         style={styles.fadeOutContainer}
       />
+       */}
       <TouchableOpacity
         style={styles.fab}
         onPress={() => router.push('addExpense')}
@@ -348,7 +350,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     paddingHorizontal: 16,
-    backgroundColor: '#33404F',
+    backgroundColor: '#2B2D31',
   },
   fadeOutContainer: {
     position: 'absolute',
@@ -369,9 +371,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowOpacity: 0,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 0,
   },
   logItemText: {
     fontSize: 16,
@@ -399,49 +401,48 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
     borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    padding: 16,
     marginVertical: 8,
-    shadowColor: '#fffff0',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    height: height / 7, // Adjust the height of the card based on your screen size
   },
-  cardContent: {
+  cardRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  cardInfo: {
+  cardMiddle: {
     flex: 1,
+    justifyContent: 'center',
+    marginLeft: 16, // Adjust as needed for spacing
+  },
+  cardCategory: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#33404F',
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: '#999',
+  },
+  cardDate: {
+    fontSize: 12,
+    color: '#999',
   },
   cardAmount: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#33404F',
-  },
-  cardCategory: {
-    fontSize: 16,
-    color: '#33404F',
-    marginTop: 4,
-  },
-  cardDate: {
-    fontSize: 14,
-    color: '#33404F',
-    marginTop: 4,
-  },
-  cardDescription: {
-    fontSize: 12,
-    color: '#33404F',
-    marginTop: 4,
+    color: '#333',
+    position: 'absolute', // Position it absolutely to align it in the middle-right
+    left: 200, // Adjust this value to move the amount left or right
+    alignSelf: 'center',
   },
   deleteButton: {
-    marginLeft: 12,
+    position: 'absolute',
+    top: 10,
+    right: 10,
     padding: 10,
   },
   boxContainer: {
@@ -457,7 +458,7 @@ const styles = StyleSheet.create({
     shadowColor: '#fff', // adding shadow for depth
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 0,
   },
   boxTitle: {
     color: 'white',
@@ -490,13 +491,13 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: 70,
+    marginBottom: 240,
   },
   fab: {
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 110, // Adjust this value based on your tab bar height
-    backgroundColor: '#33404F', // Use your app's theme color
+    backgroundColor: '#6AD4DD', // Use your app's theme color
     width: 56,
     height: 56,
     borderRadius: 28,
