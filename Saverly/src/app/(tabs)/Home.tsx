@@ -7,10 +7,13 @@ import { getAuth} from 'firebase/auth';
 import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
 import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../firebaseConfig';
-import { router } from 'expo-router';
+// import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import PageHeader from '../../components/PageHeader';
 import { getExpenseDateAndTime } from '@/services/accountService';
 import AnimatedLoader from "react-native-animated-loader";
+import {filterExpensesByCategory} from "@/services/filterExpensesByCategory";
+import RNPickerSelect from 'react-native-picker-select';
 
 
 
@@ -20,20 +23,19 @@ const cardHeight = height / 6.9; // Height of a single card
 const listHeight = cardHeight * 3; // Height of the list to display only 3 cards
 
 const Home = () => {
+  const router = useRouter();
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [listData, setListData] = useState([]);
   const [userId, setUserId] = useState(null);
   const [logData,setLogData] = useState([]);
   const [showLogs, setShowLogs] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
 
 
   const fetchUserData = async () => {
-    if (isInitialLoad) {
-      setIsLoading(true);
-    }
     try {
       const auth = getAuth();
       const currentUserId = auth.currentUser?.uid;
@@ -50,10 +52,7 @@ const Home = () => {
     } catch (error) {
       console.error("Error fetching user data: ", error);
     } finally {
-      if (isInitialLoad) {
-        setIsLoading(false);
-        setIsInitialLoad(false); // Mark initial load as complete
-      }
+      setIsLoading(false);
     }
   };
   
@@ -198,15 +197,15 @@ const fetchExpenses = async (userId) => {
 
   const category_ionicons = {
     'Food': "fast-food-outline",
-    'Transport': "emoji-transportation",
-    'Utilities': "home",
+    'Transport': "car-outline",
+    'Utilities': "home-outline",
     'Entertainment': "game-controller-outline",
-    'Shopping': "shopping-cart",
-    'Health': "health-and-safety",
+    'Shopping': "cart-outline",
+    'Health': "heart-circle-outline",
     'Other': "question-circle-o",
   };
 
-  const categories = {
+  const category_images = {
     'Food': require("../../assets/food.png"),
     'Transport': require("../../assets/transport.png"),
     'Utilities': require("../../assets/utilities.png"),
@@ -215,6 +214,23 @@ const fetchExpenses = async (userId) => {
     'Health': require("../../assets/health.png"),
     'Other': require("../../assets/others.png"),
   };
+
+  const categories = [
+    'All',
+    'Food',
+    'Transport',
+    'Utilities',
+    'Entertainment',
+    'Shopping',
+    'Health',
+    'Other',
+  ];
+
+  const category_items = categories.map(str => ({
+    label: str,
+    value: str,
+  }));
+
 
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
@@ -264,11 +280,21 @@ const fetchExpenses = async (userId) => {
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
         </LinearGradient>
       </View>
+      <View>
+        <RNPickerSelect
+          // style={pickerSelectStyles}
+          value={selectedCategory} // Default selected value to the current month
+          onValueChange={(value) => {
+            setSelectedCategory(value);
+          }}
+          items={ category_items }
+        />
+      </View>
 
       <View style={styles.divider} />
 
       <FlatList
-        data={listData}
+        data={filterExpensesByCategory(listData, selectedCategory)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
 

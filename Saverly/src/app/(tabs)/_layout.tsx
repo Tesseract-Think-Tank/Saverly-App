@@ -7,7 +7,7 @@ import AccountsScreen from './Accounts';
 import ChatScreen from './Chat';
 import SettingsScreen from './Settings';
 import MonthlyPaymentsScreen from '../(hidden)/Month';
-
+import AccountsStackNavigator from './AccountStackNavigator';
 type TabIconProps = {
   name: 'Overview' | 'Accounts' | 'Settings' | 'Chat';
   focused: boolean;
@@ -81,7 +81,7 @@ const TabLayout: React.FC = () => {
       />
       <Tab.Screen
         name="Accounts"
-        component={AccountsScreen}
+        component={AccountsStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => <TabIcon name="Accounts" focused={focused} />,

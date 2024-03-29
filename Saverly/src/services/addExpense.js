@@ -51,11 +51,10 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
         'USD:GBP': 0.79, 'GBP:USD': 1.27
     };
 
-    const keyForExchangeRate = `${currencyOfExp}:${accountCurrency}`;
+    const keyForExchangeRate = `${currencyOfExp}:RON`;
     const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
 
     const convertedAmount = amount * exchangeRate;
-    
     
     if (convertedAmount > accountBalance) throw new Error("Insufficient funds in the selected account.");
 

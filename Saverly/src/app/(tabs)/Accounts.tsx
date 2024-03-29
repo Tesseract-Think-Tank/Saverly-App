@@ -11,11 +11,12 @@ const { width, height } = Dimensions.get('window');
 
 const CARD_HEIGHT = height * 0.6; // 60% of the screen height
 
-const AccountCard = ({ account }) => (
+const AccountCard = ({ account,onSelectAccount,navigation }) => (
   <View style={styles.cardContainer}>
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{account.type}</Text>
       <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
+
     </View>
   </View>
 );
@@ -117,13 +118,21 @@ const AccountsScreen = ({ navigation }) => {
         const expenses = await fetchExpensesForAccount(account.id);
         return { ...account, expenses };
       }));
+  
       setAccounts(fetchedAccounts);
+      
+      // After accounts are successfully fetched and set, check and update selectedAccount
+      if (fetchedAccounts.length > 0) {
+        setSelectedAccount(fetchedAccounts[0]); // Set the first account as selected
+        setActiveIndex(0); // Ensure the active index is set to 0
+      }
     } catch (error) {
       console.error('Error loading accounts or expenses:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useFocusEffect(
     useCallback(() => {
@@ -135,7 +144,7 @@ const AccountsScreen = ({ navigation }) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const activeIndex = Math.round(contentOffsetX / width);
     setActiveIndex(activeIndex);
-    console.log('Active Index:', activeIndex);
+
   };
 
   return (
@@ -148,7 +157,10 @@ const AccountsScreen = ({ navigation }) => {
         decelerationRate="fast"
         contentContainerStyle={styles.flatListContentContainer}
         data={accounts}
-        renderItem={({ item }) => <AccountCard account={item} />}
+        renderItem={({ item }) => <AccountCard account={item} navigation={navigation} 
+        onSelectAccount={(selectedAccount) => {
+          setSelectedAccount(selectedAccount);
+        }}/>}
         keyExtractor={(item) => item.id.toString()}
         onScroll={handleScroll}
         scrollEventThrottle={16}
@@ -193,14 +205,20 @@ const AccountsScreen = ({ navigation }) => {
             },
           ]}
         >
-          {/* Option 1 Button */}
-          <TouchableOpacity
-            style={styles.optionButton2}
-            onPress={() => router.push('addExpense')}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
-          </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.optionButton2}
+        onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
+        activeOpacity={0.7}
+>
+  <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+</TouchableOpacity>
+<TouchableOpacity
+        style={styles.optionButton3}
+        onPress={() => navigation.navigate('addFundsScreen', { selectedAccount: selectedAccount })}
+        activeOpacity={0.7}
+>
+  <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+</TouchableOpacity>
 
           {/* Option 2 Button */}
           <TouchableOpacity
@@ -239,6 +257,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },
+  },
+  addButtonText: {
+    color: 'white', // White color for the text
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   cardContainer: {
     width: width, // each card spans the full width
@@ -332,6 +355,22 @@ const styles = StyleSheet.create({
   optionButton2: {
     position: 'absolute',
     right: 10, // adjust the horizontal position
+    bottom: 80, // adjust the vertical position
+    backgroundColor: '#B5C5C3',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#6C63FF',
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  optionButton3: {
+    position: 'absolute',
+    right: 190, // adjust the horizontal position
     bottom: 80, // adjust the vertical position
     backgroundColor: '#B5C5C3',
     width: 56,
