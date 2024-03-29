@@ -379,6 +379,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
   },
   card: {
+    bottom:40,
     backgroundColor: 'white',
     borderRadius: 20,
     width: width * 0.9, // card takes 90% of screen width
@@ -422,7 +423,7 @@ const styles = StyleSheet.create({
   },
   paginationContainer: {
     position: 'absolute',
-    bottom: 560,
+    bottom: 530,
     flexDirection: 'row',
     alignSelf: 'center',
   },
