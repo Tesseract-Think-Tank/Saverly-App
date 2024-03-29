@@ -406,11 +406,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#B5C5C3',
   },
   expensesList: {
-    bottom:300,
+    paddingBottom:450,
     flex: 1,
     marginTop: 0,
     marginHorizontal: 0,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 20,
     shadowColor: '#000',
