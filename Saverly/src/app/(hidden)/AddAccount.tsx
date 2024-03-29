@@ -53,7 +53,7 @@ const AddAccountScreen = () => {
     style={styles.backButton}
     onPress={() => router.push('Accounts')} // Go back to the previous screen
     >
-    <AntDesign name="left" size={24} color="black" />
+    <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title="Add new Account" /><View style={styles.container}>
       <Image source={require('../../assets/card.png')} style={styles.logo} />

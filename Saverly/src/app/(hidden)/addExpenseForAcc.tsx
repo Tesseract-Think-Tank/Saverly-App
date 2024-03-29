@@ -69,9 +69,9 @@ const AddExpenseForAccScreen = ({route}) => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Home')} // Go back to the previous screen
+    onPress={() => router.back()} // Go back to the previous screen
     >
-    <AntDesign name="left" size={24} color="black" />
+    <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title="Add an expense" />
     <View style={styles.container}>
@@ -106,7 +106,7 @@ const AddExpenseForAccScreen = ({route}) => {
           ))}
         </Picker>
         {loading ? (
-          <ActivityIndicator size="large" color="#00DDA3" />
+          <ActivityIndicator size="large" color="#6AD4DD" />
         ) : (
           <TouchableOpacity
             onPress={handleAddExpense}
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     width: '100%', 
   },
   button: {
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#6AD4DD',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

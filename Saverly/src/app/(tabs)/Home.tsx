@@ -245,14 +245,46 @@ const fetchExpenses = async (userId) => {
             <Text style={styles.cardDescription}>{item.description}</Text>
             <Text style={styles.cardDate}>{date}</Text>
           </View>
-          <Text style={styles.cardAmount}>{item.amount} {item.currency}</Text>
+          <Text style={styles.cardAmount}>{item.amount}</Text>
+          <Text style={styles.cardCurrency}>{item.currency}</Text>
           <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-            <Ionicons name="trash-bin-outline" size={22} color="#00DDA3" />
+            <Ionicons name="trash-bin-outline" size={22} color="#6AD4DD" />
           </TouchableOpacity>
         </View>
       </View>
     );
   };
+  const customPickerStyles = StyleSheet.create({
+    inputIOS: {
+      fontSize: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      width: width * 0.45,
+      borderWidth: 1,
+      borderColor: '#6AD4DD',
+      borderRadius: 10,
+      backgroundColor:'#2B2D31',
+      color: '#fff',// To ensure the text is not covered by the icon
+      top:30,
+    },
+    inputAndroid: {
+      fontSize: 16,
+      paddingHorizontal: 10,
+      width: width * 0.45,
+      paddingVertical: 8,
+      borderWidth: 0.5,
+      borderColor: '#6AD4DD',
+      borderRadius: 8,
+      backgroundColor:'#2B2D31',
+      color: '#fff',
+      top:30,
+    },
+    iconContainer: {
+      top: 30,
+      right: 10,
+      alignSelf:'center',
+    },
+  });
   
 
   return (
@@ -274,21 +306,22 @@ const fetchExpenses = async (userId) => {
           <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
         </LinearGradient>
 
-        <LinearGradient colors={['#DF1525', '#DF1525']} style={styles.boxGradient}>
+        <LinearGradient colors={['#F38430', '#F38430']} style={styles.boxGradient}>
           <Ionicons name="arrow-down" size={24} color="white" />
           <Text style={styles.boxTitle}>Expenses</Text>
           <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
         </LinearGradient>
       </View>
       <View>
-        <RNPickerSelect
-          // style={pickerSelectStyles}
-          value={selectedCategory} // Default selected value to the current month
+      <RNPickerSelect
+          style={customPickerStyles}
+          value={selectedCategory}
           onValueChange={(value) => {
-            setSelectedCategory(value);
-          }}
-          items={ category_items }
-        />
+          setSelectedCategory(value);
+        }}
+      items={category_items}
+/>
+
       </View>
 
       <View style={styles.divider} />
@@ -439,6 +472,13 @@ const styles = StyleSheet.create({
     left: 200, // Adjust this value to move the amount left or right
     alignSelf: 'center',
   },
+  cardCurrency:{
+    fontSize:15,
+    fontWeight:'500',
+    color:'#333',
+    alignSelf:'center',
+    right:90
+  },
   deleteButton: {
     position: 'absolute',
     top: 10,
@@ -473,7 +513,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   listItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     padding: 20,
     marginVertical: 8,
     borderRadius: 5,

@@ -99,7 +99,7 @@ const AddExpenseScreen = () => {
     style={styles.backButton}
     onPress={() => router.push('Home')} // Go back to the previous screen
     >
-    <AntDesign name="left" size={24} color="black" />
+    <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title="Add an expense" />
     <View style={styles.container}>

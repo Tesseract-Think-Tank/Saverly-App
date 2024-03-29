@@ -11,14 +11,14 @@ const Settings = () => {
       <PageHeader title='Month Recap'></PageHeader>
       <MonthlyRecap></MonthlyRecap>
       <TouchableOpacity onPress={() => router.push('Month')} style={styles.buttonexpense}>
-      <View style={[styles.buttonHalf, { backgroundColor: '#00DDA3' }]} />
+      <View style={[styles.buttonHalf, { backgroundColor: '#6AD4DD' }]} />
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Ionicons name="wallet-outline" style={styles.icon1} />
         <Text style={styles.buttonText}>Monthly Expenses</Text>
   </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => router.push('GoalSetting')} style={styles.buttongoal}>
-      <View style={[styles.buttonHalf, { backgroundColor: '#00DDA3' }]} />
+      <View style={[styles.buttonHalf, { backgroundColor: '#6AD4DD' }]} />
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Ionicons name="cash-outline" style={styles.icon2} />
           <Text style={styles.buttonText}>Goal Setting</Text>

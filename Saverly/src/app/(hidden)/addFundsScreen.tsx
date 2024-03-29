@@ -38,7 +38,7 @@ const AddFundsScreen = ({ route, navigation }) => {
     style={styles.backButton}
     onPress={() => router.back()} // Go back to the previous screen
     >
-    <AntDesign name="left" size={24} color="black" />
+    <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title='Add Funds'></PageHeader>
 
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     height:20,
     marginTop: 20,
     width: '40%',
-    backgroundColor:'#00DDA3',
+    backgroundColor:'#6AD4DD',
     borderRadius:25,
     alignItems:'center'
   },
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#33404F', // Set the background color here
   },
   button: {
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#6AD4DD',
     width: '100%',
     padding: 15,
     borderRadius: 10,
