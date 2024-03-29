@@ -1,12 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchUserAccounts } from '../../services/accountService'; // Adjust as necessary
 import { router } from 'expo-router';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import {FIREBASE_AUTH,FIREBASE_DB } from '../../../firebaseConfig';
-import {Animated} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,23 +16,6 @@ const AccountCard = ({ account }) => (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{account.type}</Text>
       <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
-      {/* Expenses List */}
-      <FlatList
-        data={account.expenses}
-        renderItem={({ item }) => {
-          // You might need to adjust the item.dateAndTime handling based on your data structure
-          const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
-          return (
-            <View style={styles.expenseCard}>
-              <Text style={styles.cardAmount}>${item.amount}</Text>
-              <Text style={styles.cardCategory}>{item.category}</Text>
-              <Text style={styles.cardDate}>{date}</Text>
-              <Text style={styles.cardDescription}>{item.description}</Text>
-            </View>
-          );
-        }}
-        keyExtractor={(item) => item.id.toString()}
-      />
     </View>
   </View>
 );
@@ -61,7 +43,6 @@ const AccountsScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState(null);
   const [areButtonsVisible, setAreButtonsVisible] = useState(false);
   const [areOptionsVisible, setAreOptionsVisible] = useState(false);
 
@@ -108,26 +89,25 @@ const AccountsScreen = ({ navigation }) => {
       // Use the 'where' function to query for only the expenses that match the accountId
       const expensesQuery = query(expensesCollectionRef, where("accountId", "==", accountId));
       const expensesSnapshot = await getDocs(expensesQuery);
-  
+
       console.log(`Expenses for account ${accountId}:`);
-  
+
       if (expensesSnapshot.empty) {
         console.log('No matching documents in expenses collection for account:', accountId);
         return [];
       }
-  
+
       const expensesForAccount = expensesSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-  
+
       return expensesForAccount; // Returns only expenses for the given accountId
     } catch (error) {
       console.error("Error fetching expenses for account:", accountId, error);
       throw error; // It's usually better to throw the error so that you can handle it where the function is called
     }
   };
-  
 
   const loadAccounts = async () => {
     setLoading(true);
@@ -150,27 +130,12 @@ const AccountsScreen = ({ navigation }) => {
       loadAccounts();
     }, [])
   );
+
   const handleScroll = (event) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const activeIndex = Math.round(contentOffsetX / width);
     setActiveIndex(activeIndex);
-    console.log('Active Index:', activeIndex); 
-  };
-
-  const renderItem = ({ item }) => {
-    const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
-    return (
-      <View style={styles.card}>
-        <View style={styles.cardContent}>
-          <View style={styles.cardInfo}>
-            <Text style={styles.cardAmount}>${item.amount}</Text>
-            <Text style={styles.cardCategory}>{item.category}</Text>
-            <Text style={styles.cardDate}>{date}</Text>
-            <Text style={styles.cardDescription}>{item.description}</Text>
-          </View>
-        </View>
-      </View>
-    );
+    console.log('Active Index:', activeIndex);
   };
 
   return (
@@ -188,7 +153,26 @@ const AccountsScreen = ({ navigation }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       />
-
+      {/* Expenses List */}
+      {accounts.length > 0 && (
+        <FlatList
+          style={styles.expensesList}
+          data={accounts[activeIndex].expenses}
+          renderItem={({ item }) => {
+            // You might need to adjust the item.dateAndTime handling based on your data structure
+            const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
+            return (
+              <View style={styles.expenseCard}>
+                <Text style={styles.cardAmount}>${item.amount}</Text>
+                <Text style={styles.cardCategory}>{item.category}</Text>
+                <Text style={styles.cardDate}>{date}</Text>
+                <Text style={styles.cardDescription}>{item.description}</Text>
+              </View>
+            );
+          }}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
       {/* Toggle Button */}
       <TouchableOpacity
         style={styles.actionButton}
@@ -287,7 +271,7 @@ const styles = StyleSheet.create({
     zIndex: 10, // Ensure the button stays above other elements
   },
   expenseCard: {
-    backgroundColor: '#FFFFFF', // Light background for the card
+    backgroundColor: '#fff', // Light background for the card
     borderRadius: 8, // Rounded corners
     padding: 16, // Padding inside the card
     marginBottom: 8, // Space between each card
@@ -365,7 +349,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     width: width * 0.9, // card takes 90% of screen width
-    height: CARD_HEIGHT, // card height is 80% of CARD_HEIGHT
+    height: 200, // card height is 80% of CARD_HEIGHT
     justifyContent: 'center', // center the card's content vertically
     alignItems: 'center', // center the card's content horizontally
     marginHorizontal: width * 0.05, // add horizontal margin
@@ -420,6 +404,23 @@ const styles = StyleSheet.create({
   },
   inactiveDot: {
     backgroundColor: '#B5C5C3',
+  },
+  expensesList: {
+    bottom:300,
+    flex: 1,
+    marginTop: 0,
+    marginHorizontal: 0,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
