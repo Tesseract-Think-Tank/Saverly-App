@@ -1,22 +1,37 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchUserAccounts } from '../../services/accountService'; // Adjust as necessary
 import { router } from 'expo-router';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import {FIREBASE_AUTH,FIREBASE_DB } from '../../../firebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
 
 const { width, height } = Dimensions.get('window');
 
 const CARD_HEIGHT = height * 0.6; // 60% of the screen height
 
-const AccountCard = ({ account,onSelectAccount,navigation }) => (
+const AccountCard = ({ account, onSelectAccount, navigation }) => (
   <View style={styles.cardContainer}>
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{account.type}</Text>
       <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
-
+      {/* Expenses List */}
+      <FlatList
+        data={account.expenses}
+        renderItem={({ item }) => {
+          const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
+          return (
+            <View style={styles.expenseCard}>
+              <Text style={styles.cardAmount}>{item.currency} {item.amount}</Text>
+              <Text style={styles.cardCategory}>{item.category}</Text>
+              <Text style={styles.cardDate}>{date}</Text>
+              <Text style={styles.cardDescription}>{item.description}</Text>
+            </View>
+          );
+        }}
+        keyExtractor={(item) => item.id.toString()}
+      />
     </View>
   </View>
 );
@@ -29,9 +44,7 @@ const Pagination = ({ index, total }) => {
         key={i}
         style={[
           styles.dot,
-          index === i
-            ? styles.activeDot
-            : styles.inactiveDot,
+          index === i ? styles.activeDot : styles.inactiveDot,
         ]}
       />
     );
@@ -44,6 +57,7 @@ const AccountsScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
   const [areButtonsVisible, setAreButtonsVisible] = useState(false);
   const [areOptionsVisible, setAreOptionsVisible] = useState(false);
 
@@ -87,11 +101,8 @@ const AccountsScreen = ({ navigation }) => {
   const fetchExpensesForAccount = async (accountId) => {
     try {
       const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
-      // Use the 'where' function to query for only the expenses that match the accountId
       const expensesQuery = query(expensesCollectionRef, where("accountId", "==", accountId));
       const expensesSnapshot = await getDocs(expensesQuery);
-
-      console.log(`Expenses for account ${accountId}:`);
 
       if (expensesSnapshot.empty) {
         console.log('No matching documents in expenses collection for account:', accountId);
@@ -103,10 +114,10 @@ const AccountsScreen = ({ navigation }) => {
         ...doc.data(),
       }));
 
-      return expensesForAccount; // Returns only expenses for the given accountId
+      return expensesForAccount;
     } catch (error) {
       console.error("Error fetching expenses for account:", accountId, error);
-      throw error; // It's usually better to throw the error so that you can handle it where the function is called
+      throw error;
     }
   };
 
@@ -118,13 +129,12 @@ const AccountsScreen = ({ navigation }) => {
         const expenses = await fetchExpensesForAccount(account.id);
         return { ...account, expenses };
       }));
-  
+
       setAccounts(fetchedAccounts);
-      
-      // After accounts are successfully fetched and set, check and update selectedAccount
+
       if (fetchedAccounts.length > 0) {
-        setSelectedAccount(fetchedAccounts[0]); // Set the first account as selected
-        setActiveIndex(0); // Ensure the active index is set to 0
+        setSelectedAccount(fetchedAccounts[0]);
+        setActiveIndex(0);
       }
     } catch (error) {
       console.error('Error loading accounts or expenses:', error);
@@ -132,7 +142,6 @@ const AccountsScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
-  
 
   useFocusEffect(
     useCallback(() => {
@@ -144,7 +153,9 @@ const AccountsScreen = ({ navigation }) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const activeIndex = Math.round(contentOffsetX / width);
     setActiveIndex(activeIndex);
-
+    const selectedAccount = accounts[activeIndex];
+    setSelectedAccount(selectedAccount);
+    console.log('Active Index:', activeIndex);
   };
 
   return (
@@ -165,27 +176,7 @@ const AccountsScreen = ({ navigation }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       />
-      {/* Expenses List */}
-      {accounts.length > 0 && (
-        <FlatList
-          style={styles.expensesList}
-          data={accounts[activeIndex].expenses}
-          renderItem={({ item }) => {
-            // You might need to adjust the item.dateAndTime handling based on your data structure
-            const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
-            return (
-              <View style={styles.expenseCard}>
-                <Text style={styles.cardAmount}>${item.amount}</Text>
-                <Text style={styles.cardCategory}>{item.category}</Text>
-                <Text style={styles.cardDate}>{date}</Text>
-                <Text style={styles.cardDescription}>{item.description}</Text>
-              </View>
-            );
-          }}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      )}
-      {/* Toggle Button */}
+
       <TouchableOpacity
         style={styles.actionButton}
         onPress={toggleButtonsVisibility}
@@ -200,7 +191,7 @@ const AccountsScreen = ({ navigation }) => {
               opacity: opacityAnim,
               transform: [{ translateY: positionAnim.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, -20] // Change based on your UI needs
+                outputRange: [0, -20]
               }) }],
             },
           ]}
@@ -209,26 +200,25 @@ const AccountsScreen = ({ navigation }) => {
         style={styles.optionButton2}
         onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
         activeOpacity={0.7}
->
-  <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
-</TouchableOpacity>
-<TouchableOpacity
+      >
+        <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+      </TouchableOpacity>
+      <TouchableOpacity
         style={styles.optionButton3}
         onPress={() => navigation.navigate('addFundsScreen', { selectedAccount: selectedAccount })}
         activeOpacity={0.7}
->
-  <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
-</TouchableOpacity>
+      >
+        <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+      </TouchableOpacity>
 
-          {/* Option 2 Button */}
-          <TouchableOpacity
-            style={styles.optionButton}
-            onPress={() => router.push('AddAccount')}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="card" size={30} color="#FFF" />
-          </TouchableOpacity>
-        </Animated.View>
+      <TouchableOpacity
+        style={styles.optionButton}
+        onPress={() => router.push('AddAccount')}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="card" size={30} color="#FFF" />
+      </TouchableOpacity>
+      </Animated.View>
       <Pagination index={activeIndex} total={accounts.length} />
     </View>
   );
