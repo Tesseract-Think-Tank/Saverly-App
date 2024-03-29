@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   container: {
     position:'relative',
     paddingTop:30,
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#1e1f22',
     paddingVertical: 16,
     width: width,
     elevation: 4, // For Android
