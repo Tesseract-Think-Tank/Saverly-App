@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#B5C5C3',
   },
   expensesListContainer: {
-    top:300,
+    top:280,
     position: 'absolute',
     bottom: 0,
     left: 0,
