@@ -363,7 +363,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 38, // Button size
     height: 38, // Button size
-    backgroundColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent white
+    // backgroundColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent white
+    backgroundColor: '#6AD4DD',
     borderRadius: 18, // Rounded edges
   },
   container: {
@@ -375,14 +376,14 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   chatBar: {
-    backgroundColor: '#00DDA3', // Purple color for the chat bar
+    backgroundColor: '#1e1f22', // Purple color for the chat bar
     borderRadius: 36,
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
     overflow: 'hidden',
-    width: '97%', // Assuming chat bar takes 90% of container width
+    width: '100%', // Assuming chat bar takes 90% of container width
     zIndex: 1, // Add zIndex to keep chatBar above the menu
   },
   chatBarToggle: {
@@ -437,9 +438,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '97%',
+    width: '100%',
     paddingVertical: 8,
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#1e1f22',
     borderTopLeftRadius: 36,
     borderTopRightRadius: 36,
     zIndex: 2, // Add zIndex to keep menu above the chatBar

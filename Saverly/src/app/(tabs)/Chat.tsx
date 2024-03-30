@@ -24,7 +24,7 @@ const ChatContent: React.FC = () => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-          <AntDesign name="left" size={24} color="black" />
+          <AntDesign name="left" size={24} color="white" />
         </TouchableOpacity>
         <View style={styles.avatarContainer}>
           <View style={styles.avatar}>
@@ -75,7 +75,7 @@ const ChatBox: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#33404F',
+    backgroundColor: '#2B2D31',
   },
   scrollView: {
     flex: 1,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     padding: 25,
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#1e1f22',
     borderBottomWidth: 1,
     borderBottomColor: '#000',
  // Adjust this value to lower the top bar
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
   name: {
     marginLeft: 10,
     fontWeight: 'bold',
+    color: '#fff'
   },
 
   lottie: {
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    backgroundColor: '#33404F',
+    backgroundColor: '#2B2D31',
     padding: 10,
     bottom: 0
   },
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     width: '80%'
   },
   outgoingBubble: {
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#6AD4DD',
     alignSelf: 'flex-end',
     width: '70%'
   },
@@ -173,7 +174,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   buttonContainer: {
-    // padding: 12, // Increase the touchable area by adding padding
     justifyContent: 'center',
     alignItems: 'center',
     top:10,
