@@ -259,7 +259,7 @@ const fetchExpenses = async (userId) => {
       fontSize: 16,
       paddingVertical: 12,
       paddingHorizontal: 10,
-      width: width * 0.45,
+      width: width * 0.1,
       borderWidth: 1,
       borderColor: '#6AD4DD',
       borderRadius: 10,
@@ -272,16 +272,13 @@ const fetchExpenses = async (userId) => {
       paddingHorizontal: 10,
       width: width * 0.45,
       paddingVertical: 8,
-      borderWidth: 0.5,
-      borderColor: '#6AD4DD',
-      borderRadius: 8,
       backgroundColor:'#2B2D31',
       color: '#fff',
       top:30,
     },
     iconContainer: {
-      top: 30,
-      right: 10,
+      top: 40,
+      left: 120,
       alignSelf:'center',
     },
   });
@@ -320,7 +317,11 @@ const fetchExpenses = async (userId) => {
           setSelectedCategory(value);
         }}
       items={category_items}
-/>
+      useNativeAndroidPickerStyle={false}
+      Icon={() => {
+        return <Ionicons name="chevron-down" size={24} color='#fff' />;
+      }}
+      />
 
       </View>
 
@@ -477,7 +478,7 @@ const styles = StyleSheet.create({
     fontWeight:'500',
     color:'#333',
     alignSelf:'center',
-    right:90
+    right:70
   },
   deleteButton: {
     position: 'absolute',
@@ -531,7 +532,7 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: 240,
+    marginBottom: 220,
   },
   fab: {
     position: 'absolute',

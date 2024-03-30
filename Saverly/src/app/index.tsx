@@ -66,9 +66,9 @@ const Login = ({navigation}: any) => {
                     <TouchableOpacity onPress={signIn} style={styles.button}>
                         <Text style={styles.buttonText}>Login</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push('signUp')} style={[styles.button, styles.buttonOutline]}>
-                        <Text style={styles.buttonOutlineText}>Create an account</Text>
-                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('signUp')}>
+                        <Text style={styles.signUpText}>Don't have an account? Sign Up</Text>
+                     </TouchableOpacity>
                 </View>
             )}
         </View>
@@ -128,6 +128,11 @@ const styles = StyleSheet.create({
     },
     buttonOutlineText: {
         color: '##6AD4DD',
+        fontWeight: 'bold',
+    },
+    signUpText: {
+        color: '#6AD4DD',
+        marginTop: 15,
         fontWeight: 'bold',
     },
 });
