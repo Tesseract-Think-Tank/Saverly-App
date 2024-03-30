@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     zIndex:1,
   },
   icon: {
-    color: '#00DDA3',
+    color: '#6AD4DD',
     fontSize: 30,
   },
   backButtonText: {

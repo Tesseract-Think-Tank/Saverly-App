@@ -57,7 +57,7 @@ const SingUp = () => {
                 />
             </View>
             {loading ? (
-                <ActivityIndicator size="large" color="#00DDA3" />
+                <ActivityIndicator size="large" color="#6AD4DD" />
             ) : (
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={handleSignUp} style={[styles.button]}>
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
-        color:'#00DDA3'
+        color:'#6AD4DD'
     },
     inputContainer: {
         width: '80%',
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
     },
     button: {
-        backgroundColor: '#00DDA3',
+        backgroundColor: '#6AD4DD',
         width: '100%',
         padding: 15,
         borderRadius: 10,

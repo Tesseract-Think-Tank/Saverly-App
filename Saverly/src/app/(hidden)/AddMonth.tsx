@@ -85,7 +85,7 @@ const AddMonthlyPaymentScreen = () => {
     style={styles.backButton}
     onPress={() => router.back()} // Go back to the previous screen
     >
-    <AntDesign name="left" size={24} color="black" />
+    <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity><PageHeader title="Add new Monthly Payment"></PageHeader><View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
@@ -143,7 +143,7 @@ const AddMonthlyPaymentScreen = () => {
           <Text style={styles.buttonText}>Add Monthly Payment</Text>
         </TouchableOpacity>
       </View>
-      {loading && <ActivityIndicator size="large" color="#00DDA3" />}
+      {loading && <ActivityIndicator size="large" color="#6AD4DD" />}
     </View></>
   );
 };
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color:'#00DDA3'
+    color:'#6AD4DD'
   },
   inputContainer: {
     width: '80%',
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#6AD4DD',
     width: '100%',
     padding: 15,
     borderRadius: 10,

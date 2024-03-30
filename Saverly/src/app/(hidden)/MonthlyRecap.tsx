@@ -115,27 +115,31 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start', // Change this line
     alignItems: 'center',
-    backgroundColor: '#33404F', // Add this line or adjust the value as needed
+    backgroundColor: '#2B2D31', // Add this line or adjust the value as needed
     position:'relative'
   },
   legendContainer: {
     flexDirection: 'row',
     marginBottom: 10,
+    color:'#fff'
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 10,
     marginBottom:10,
+    color:'#fff'
   },
   legendColor: {
     width: 15,
     height: 15,
     borderRadius: 8,
     marginRight: 5,
+    color:'#fff'
   },
   monthDisplayedText: {
     fontSize: 20,
+    color:'#fff'
   },
 });
 export default MonthlyRecap;

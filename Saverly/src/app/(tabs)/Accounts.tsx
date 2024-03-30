@@ -205,14 +205,14 @@ const AccountsScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
           activeOpacity={0.7}
         >
-          <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+          <Ionicons name="receipt-outline" size={30} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.optionButton3}
           onPress={() => navigation.navigate('addFundsScreen', { selectedAccount: selectedAccount })}
           activeOpacity={0.7}
         >
-          <Ionicons name="alert-circle-outline" size={30} color="#FFF" />
+          <Ionicons name="cash-outline" size={30} color="#FFF" />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -272,9 +272,9 @@ const styles = StyleSheet.create({
   actionButton: {
     position: 'relative', // Position the button over the content
     right: 0, // 30 pixels from the right edge of the screen
-    left:(width-56)/2,
+    left: width-70,
     bottom: 110, // 30 pixels from the bottom edge of the screen
-    backgroundColor: '#00DDA3', // A bright color to stand out
+    backgroundColor: '#6AD4DD', // A bright color to stand out
     width: 56, // The diameter of the FAB
     height: 56, // The diameter of the FAB
     borderRadius: 28, // Half the size of the width/height to create a circle
@@ -332,8 +332,8 @@ const styles = StyleSheet.create({
   },
   optionButton: {
     position: 'absolute',
-    right: 100, // center the button horizontally
-    bottom: 80,
+    left:width+50,
+    bottom: 100,
     backgroundColor: '#B5C5C3',
     width: 56,
     height: 56,
@@ -341,15 +341,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#6C63FF',
+    shadowColor: '#6AD4DD',
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
   },
   optionButton2: {
     position: 'absolute',
-    right: 10, // adjust the horizontal position
-    bottom: 80, // adjust the vertical position
+    left:width+50,
+    bottom: 160, // adjust the vertical position
     backgroundColor: '#B5C5C3',
     width: 56,
     height: 56,
@@ -357,23 +357,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#6C63FF',
+    shadowColor: '#6AD4DD',
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
+
   },
   optionButton3: {
     position: 'absolute',
-    right: 190, // adjust the horizontal position
-    bottom: 80, // adjust the vertical position
+    left:width+50,
+    bottom: 220, // adjust the vertical position
     backgroundColor: '#B5C5C3',
     width: 56,
     height: 56,
     borderRadius: 28,
+    alignSelf:'flex-end',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#6C63FF',
+    shadowColor: '#6AD4DD',
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
@@ -434,7 +436,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   activeDot: {
-    backgroundColor: '#00DDA3',
+    backgroundColor: '#6AD4DD',
   },
   inactiveDot: {
     backgroundColor: '#B5C5C3',
