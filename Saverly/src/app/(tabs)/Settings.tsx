@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 80, // increase the height
     width: 330,
-    left:30,
+    left: (width - 330) / 2,
     top: 100,
     alignItems: 'center', // center the text horizontally
     justifyContent: 'center',
@@ -68,10 +68,10 @@ const styles = StyleSheet.create({
     height: '150%',
     width: '50%',
     position: 'absolute',
-    right: 240,
+    right: 250,
     top: -5,
     bottom:5,
-    borderRadius:40,
+    borderRadius:50,
   },
 });
 

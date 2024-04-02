@@ -17,10 +17,10 @@ import { AntDesign } from '@expo/vector-icons';
 
 const AddExpenseScreen = () => {
   
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('Food');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('RON');
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
