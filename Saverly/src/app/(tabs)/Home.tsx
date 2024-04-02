@@ -289,7 +289,7 @@ const fetchExpenses = async (userId) => {
     
     <View style={styles.balanceContainer}>
       <Text>
-        <Text style={styles.currencyText}>BALANCE: </Text>
+        <Text style={styles.currencyText}>Balance: </Text>
         <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
       </Text>
     </View>
