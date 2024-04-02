@@ -201,18 +201,24 @@ const AccountsScreen = ({ navigation }) => {
         ]}
       >
         <TouchableOpacity
-          style={styles.optionButton2}
-          onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
-          activeOpacity={0.7}
+        style={styles.optionButton2}
+        onPress={() => navigation.navigate('AddExpenseForAcc', { selectedAccount: selectedAccount })}
+        activeOpacity={0.7}
         >
-          <Ionicons name="receipt-outline" size={30} color="#FFF" />
+        <View style={styles.iconContainer}>
+        <Text style={styles.iconText}>Add Expense</Text>
+        <Ionicons name="receipt-outline" size={30} color="#fff" style={{right:3}} />
+        </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.optionButton3}
           onPress={() => navigation.navigate('addFundsScreen', { selectedAccount: selectedAccount })}
           activeOpacity={0.7}
         >
-          <Ionicons name="cash-outline" size={30} color="#FFF" />
+        <View style={styles.iconContainer}>
+        <Text style={styles.iconText}>Add Funds</Text>
+        <Ionicons name="cash-outline" size={30} color="#fff" style={{left:8}} />
+        </View>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -220,7 +226,10 @@ const AccountsScreen = ({ navigation }) => {
           onPress={() => router.push('AddAccount')}
           activeOpacity={0.7}
         >
-          <Ionicons name="card" size={30} color="#FFF" />
+          <View style={styles.iconContainer}>
+        <Text style={styles.iconText}>Add Account</Text>
+        <Ionicons name="card" size={30} color="#fff" />
+        </View>
         </TouchableOpacity>
       </Animated.View>
       <Pagination index={activeIndex} total={accounts.length} />
@@ -229,6 +238,20 @@ const AccountsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 150,
+    right:51,
+  },
+  iconText: {
+    color: '#6AD4DD',
+    fontSize: 20,
+    zIndex:1,
+    right:20,
+    fontWeight:'500',
+  },
   container: {
     flex: 1,
     backgroundColor: '#33404F',
@@ -442,6 +465,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#B5C5C3',
   },
   expensesListContainer: {
+    paddingTop:10,
     top:280,
     position: 'absolute',
     bottom: 0,
