@@ -291,20 +291,20 @@ const Button = ({ icon, onPress }) => (
 const RentMenu = ({ onPressOption, inputText, sendMessage }) => (
   <View style={styles.menu}>
     <MenuButton text="Average monthly rent" onPress={() => {
-      sendMessage(`Average monthly rent in ${inputText}`,'outgoing');
+      (inputText && sendMessage(`Average monthly rent in ${inputText}`,'outgoing'));
       // console.log(`Average monthly rent in ${inputText}`)
       onPressOption(0)}}/>
     <MenuButton text="Average rent in city areas" onPress={() => {
-      sendMessage(`Average rent in city areas in ${inputText}`,'outgoing');
+      (inputText && sendMessage(`Average rent in city areas in ${inputText}`,'outgoing'));
       onPressOption(1)}}/>
     <MenuButton text="Public transport" onPress={() => {
-      sendMessage(`Public transport in ${inputText}`,'outgoing');
+      (inputText && sendMessage(`Public transport in ${inputText}`,'outgoing'));
       onPressOption(2)}}/>
     <MenuButton text="Average student living cost" onPress={() => {
-      sendMessage(`Average student living cost in ${inputText}`,'outgoing');      
+      (inputText && sendMessage(`Average student living cost in ${inputText}`,'outgoing'));      
       onPressOption(3)}}/>
     <MenuButton text="Average cost compared to other cities" onPress={() => {
-      sendMessage(`Average cost compared to other cities, ${inputText}`,'outgoing');
+      (inputText && sendMessage(`Average cost compared to other cities, ${inputText}`,'outgoing'));
       onPressOption(4)}}/>
   </View>
 );
@@ -318,13 +318,13 @@ const FoodMenu = ({ onPressOption, inputText, sendMessage  }) => (
       sendMessage("Low budget meals");
       onPressOption(1)}}/>
     <MenuButton text="Food cheaper than X" onPress={() => {
-      sendMessage(`Food cheaper than ${inputText}`)
+      (inputText && sendMessage(`Food cheaper than ${inputText}`))
       onPressOption(2)}}/>
     <MenuButton text="Week plan to save time/money" onPress={() => {
       sendMessage("Week plan to save time/money");
       onPressOption(3)}}/>
     <MenuButton text="Substitute for ingredient X" onPress={() => {
-      sendMessage(`Substitute for ingredient ${inputText}`)
+      (inputText && sendMessage(`Substitute for ingredient ${inputText}`))
       onPressOption(4)}}/>
   </View>
 );
@@ -332,16 +332,16 @@ const FoodMenu = ({ onPressOption, inputText, sendMessage  }) => (
 const TravelMenu = ({ onPressOption, inputText, sendMessage  }) => (
   <View style={styles.menu}>
     <MenuButton text="Must visit places" onPress={() => {
-      sendMessage(`Must visit places in ${inputText}`)
+      (inputText && sendMessage(`Must visit places in ${inputText}`))
       onPressOption(0)}}/>
     <MenuButton text="Cost-effective traveling" onPress={() => {
       sendMessage("Cost-effective traveling");
       onPressOption(1)}}/>
     <MenuButton text="Affordable/free activities" onPress={() => {
-      sendMessage(`Affordable/free activities in ${inputText}`);
+      (inputText && sendMessage(`Affordable/free activities in ${inputText}`));
       onPressOption(2)}}/>
     <MenuButton text="Perfect time to vist" onPress={() => {
-      sendMessage(`Perfect time to vist ${inputText}`);
+      (inputText && sendMessage(`Perfect time to vist ${inputText}`));
       onPressOption(3)}}/>
     <MenuButton text="Cheap cities in Europe" onPress={() => {
       sendMessage("Cheap cities in Europe");
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   menu: {
     position: 'absolute',
     // left: '5%',
-    top: -235, // Adjusted to touch the chatBar
+    top: -230, // Adjusted to touch the chatBar
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
