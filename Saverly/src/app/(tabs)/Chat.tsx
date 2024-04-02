@@ -24,7 +24,7 @@ const ChatContent: React.FC = () => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-          <AntDesign name="left" size={24} color="white" />
+          <AntDesign name="left" size={24} color="#6AD4DD" />
         </TouchableOpacity>
         <View style={styles.avatarContainer}>
           <View style={styles.avatar}>

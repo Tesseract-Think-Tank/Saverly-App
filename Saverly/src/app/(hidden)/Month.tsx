@@ -77,7 +77,7 @@ const MonthlyPaymentsScreen = ({ }: any) => {
     style={styles.backButton}
     onPress={() => router.push('Settings')} // Go back to the previous screen
   >
-    <AntDesign name="left" size={24} color="black" />
+    <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title="Monthly Expenses" />
     <View style={styles.container}>
