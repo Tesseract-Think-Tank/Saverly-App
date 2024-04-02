@@ -101,7 +101,7 @@ const Home = () => {
                 'GBP:EUR': 1.17, 'EUR:GBP': 0.86,
                 'USD:GBP': 0.79, 'GBP:USD': 1.27
             };
-              const keyForExchangeRate = `${expensecurrency}:RON`;
+              const keyForExchangeRate = `${expensecurrency}:${'RON'}`;
               const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
               expenseAmount = expenseAmount * exchangeRate;
               // Add the expense amount back to the income
@@ -116,6 +116,10 @@ const Home = () => {
               await updateDoc(userDocRef, {
                 expenses: newExpenses,
               });
+              await updateDoc(userDocRef,{
+                income: userData.income+expenseAmount
+              })
+  
               // Delete the expense from Firebase
               await deleteDoc(expenseDocRef);
               console.log('Expense deleted successfully');
@@ -131,7 +135,7 @@ const Home = () => {
       { cancelable: false }
     );
   };
-  
+
 const fetchExpenses = async (userId) => {
   try {
     const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
@@ -201,16 +205,6 @@ const fetchExpenses = async (userId) => {
     'Other': "question-circle-o",
   };
 
-  const category_images = {
-    'Food': require("../../assets/food.png"),
-    'Transport': require("../../assets/transport.png"),
-    'Utilities': require("../../assets/utilities.png"),
-    'Entertainment': require("../../assets/entertainment.png"),
-    'Shopping': require("../../assets/shopping.png"),
-    'Health': require("../../assets/health.png"),
-    'Other': require("../../assets/others.png"),
-  };
-
   const categories = [
     'All',
     'Food',
@@ -259,7 +253,6 @@ const fetchExpenses = async (userId) => {
       paddingHorizontal: 10,
       width: width * 0.1,
       borderWidth: 1,
-      borderColor: '#6AD4DD',
       borderRadius: 10,
       backgroundColor:'#2B2D31',
       color: '#fff',// To ensure the text is not covered by the icon
@@ -289,7 +282,7 @@ const fetchExpenses = async (userId) => {
     
     <View style={styles.balanceContainer}>
       <Text>
-        <Text style={styles.currencyText}>Balance: </Text>
+        <Text style={styles.currencyText}>BALANCE: </Text>
         <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
       </Text>
     </View>
@@ -320,11 +313,7 @@ const fetchExpenses = async (userId) => {
         return <Ionicons name="chevron-down" size={24} color='#fff' />;
       }}
       />
-
       </View>
-
-      <View style={styles.divider} />
-
       <FlatList
         data={filterExpensesByCategory(listData, selectedCategory)}
         renderItem={renderItem}
@@ -336,7 +325,7 @@ const fetchExpenses = async (userId) => {
         <FlatList
           data={logData}
             renderItem={({ item }) => (
-            <View style={styles.logItem}>
+            <View style={styles.card}>
               {/* Display message, amount, and currency */}
               <Text style={styles.logItemText}>
                 {item.message} + {item.balance.toFixed(2)} {item.currency}
@@ -403,7 +392,7 @@ const styles = StyleSheet.create({
     height: height / 20,
   },
   logItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     padding: 20,
     marginVertical: 8,
     borderRadius: 5,
