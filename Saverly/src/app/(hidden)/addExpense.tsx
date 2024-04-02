@@ -103,9 +103,9 @@ const AddExpenseScreen = () => {
   </TouchableOpacity>
     <PageHeader title="Add an expense" />
     <View style={styles.container}>
-      <Text style={styles.title}>Add New Expense</Text>
+      {/* <Text style={styles.title}>Add New Expense</Text> */}
       <View style={styles.inputContainer}>
-
+        <View style={styles.pickerView}>
         <Picker
           selectedValue={category}
           onValueChange={(itemValue) => setCategory(itemValue)}
@@ -114,6 +114,7 @@ const AddExpenseScreen = () => {
             <Picker.Item key={index} label={cat} value={cat} />
           ))}
         </Picker>
+        </View>
         <TextInput
           value={amount}
           onChangeText={setAmount}
@@ -125,6 +126,7 @@ const AddExpenseScreen = () => {
           onChangeText={setDescription}
           placeholder='Description'
           style={styles.input} />
+          <View style={styles.pickerView}>
         <Picker
           selectedValue={currency}
           onValueChange={(itemValue) => setCurrency(itemValue)}
@@ -133,6 +135,8 @@ const AddExpenseScreen = () => {
             <Picker.Item key={index} label={cat} value={cat} />
           ))}
         </Picker>
+        </View>
+        <View style={styles.pickerView}>
         <Picker
           selectedValue={selectedAccount}
           onValueChange={(itemValue) => setSelectedAccount(itemValue)}
@@ -144,6 +148,7 @@ const AddExpenseScreen = () => {
               value={`${account.currency}_${account.type}`} />
           ))}
         </Picker>
+        </View>
         <View style={styles.buttonContainer}>
         {loading ? (
           <ActivityIndicator size="large" color="#6AD4DD" />
@@ -184,15 +189,17 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+    height: 50,
 },
   
   picker: {
     backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderRadius: 100,
-    marginTop: 5,
-    width: '100%', 
+    borderRadius: 10,
+    // marginTop: 5,
+    width: '100%',
+    height: 50,
   },
   buttonContainer: {
     width: '100%',
@@ -218,6 +225,11 @@ button: {
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  pickerView: {
+    borderRadius: 10,
+    marginTop: 5,
+    overflow: 'hidden',
   },
 });
 

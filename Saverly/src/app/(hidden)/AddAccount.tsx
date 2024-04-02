@@ -69,7 +69,8 @@ const AddAccountScreen = () => {
           placeholder='Initial Balance'
           keyboardType='numeric'
           style={styles.input} />
-          <Picker
+        <View style={styles.pickerView}>
+        <Picker
           selectedValue={currency}
           onValueChange={(itemValue) => setCurrency(itemValue)}
           style={styles.picker}>
@@ -77,6 +78,7 @@ const AddAccountScreen = () => {
             <Picker.Item key={index} label={cat} value={cat} />
           ))}
         </Picker>
+        </View>
       </View>
       {loading ? (
         <ActivityIndicator size="large" color="#6AD4DD" />
@@ -130,6 +132,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 10,
         marginTop: 5,
+        height: 50,
     },
     buttonContainer: {
         width: '60%',
@@ -142,7 +145,8 @@ const styles = StyleSheet.create({
       paddingHorizontal: 15,
       paddingVertical: 10,
       borderRadius: 10,
-      marginTop: 5,
+      // marginTop: 5,
+      height: 50,
       width: '100%', 
     },
     button: {
@@ -165,6 +169,11 @@ const styles = StyleSheet.create({
     buttonOutlineText: {
         color: '#6C63FF',
         fontWeight: 'bold',
+    },
+    pickerView: {
+      borderRadius: 10,
+      marginTop: 5,
+      overflow: 'hidden',
     },
 });
 
