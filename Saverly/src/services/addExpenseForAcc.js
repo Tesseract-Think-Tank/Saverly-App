@@ -32,17 +32,19 @@ const addExpenseForAcc = async (accountId, category, amount, description, curren
         'USD:GBP': 0.79, 'GBP:USD': 1.27
     };
 
-    const keyForExchangeRate = `${currencyOfExp}:RON`;
+    const keyForExchangeRate = `${currencyOfExp}:${accountCurrency}`;
+    const keyForExchangeRateToRon = `${currencyOfExp}:RON`;
     const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
-
+    const exchangeRateToRon = exchangeRates[keyForExchangeRateToRon] || 1;
     const convertedAmount = amount * exchangeRate;
-    
+    const convertedToRon = amount * exchangeRateToRon;
     
     if (convertedAmount > accountBalance) throw new Error("Insufficient funds in the selected account.");
 
-    const newExpensesValue = currentExpenses+convertedAmount;
+    const newExpensesValue = currentExpenses+convertedToRon;
    
     const newAccountBalance = accountBalance - convertedAmount;
+    
     const accountRef = doc(FIREBASE_DB, 'users', userId, 'accounts', documentId);
         await updateDoc(accountRef, {
         balance: newAccountBalance

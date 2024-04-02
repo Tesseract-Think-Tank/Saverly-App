@@ -101,7 +101,7 @@ const Home = () => {
                 'GBP:EUR': 1.17, 'EUR:GBP': 0.86,
                 'USD:GBP': 0.79, 'GBP:USD': 1.27
             };
-              const keyForExchangeRate = `${expensecurrency}:${'RON'}`;
+              const keyForExchangeRate = `${expensecurrency}:RON`;
               const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
               expenseAmount = expenseAmount * exchangeRate;
               // Add the expense amount back to the income
@@ -116,10 +116,6 @@ const Home = () => {
               await updateDoc(userDocRef, {
                 expenses: newExpenses,
               });
-              await updateDoc(userDocRef,{
-                income: userData.income+expenseAmount
-              })
-  
               // Delete the expense from Firebase
               await deleteDoc(expenseDocRef);
               console.log('Expense deleted successfully');
@@ -135,7 +131,7 @@ const Home = () => {
       { cancelable: false }
     );
   };
-
+  
 const fetchExpenses = async (userId) => {
   try {
     const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');

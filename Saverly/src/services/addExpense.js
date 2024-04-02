@@ -33,7 +33,7 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
     const accountData = accountSnap.data();
     const accountBalance = accountData.balance || 0;
     const accountIdForExpense = accountData.id;
-    
+    //const accountCurrency = accountData.currency;
     const userDocRef = doc(FIREBASE_DB,'users',userId);
     const userDocSnapshot = await getDoc(userDocRef);
     if (!userDocSnapshot.exists()) {
@@ -51,14 +51,17 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
         'USD:GBP': 0.79, 'GBP:USD': 1.27
     };
 
-    const keyForExchangeRate = `${currencyOfExp}:RON`;
+    const keyForExchangeRate = `${currencyOfExp}:${accountCurrency}`;
+    const keyForExhangeRateRon = `${currencyOfExp}:RON`;
     const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
+    const exchangeToRon = exchangeRates[keyForExhangeRateRon] || 1;
 
     const convertedAmount = amount * exchangeRate;
-    
+    const convertedToRon = amount * exchangeToRon;
+    console.log(convertedAmount);
     if (convertedAmount > accountBalance) throw new Error("Insufficient funds in the selected account.");
 
-    const newExpensesValue = currentExpenses+convertedAmount;
+    const newExpensesValue = currentExpenses+convertedToRon;
    
     const newAccountBalance = accountBalance - convertedAmount;
     const accountRef = doc(FIREBASE_DB, 'users', userId, 'accounts', accountId);
