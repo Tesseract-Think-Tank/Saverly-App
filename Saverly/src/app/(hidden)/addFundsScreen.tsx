@@ -36,35 +36,49 @@ const AddFundsScreen = ({ route, navigation }) => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.back()} // Go back to the previous screen
+    onPress={() => router.push('Accounts')} // Go back to the previous screen
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title='Add Funds'></PageHeader>
 
-    <View style={{ flex: 1, justifyContent: 'center',alignItems:'center', backgroundColor:'#2B2D31'}}>
+    <View style={styles.container}>
+    <View style={styles.inputContainer}> 
       <TextInput
         value={amount}
         onChangeText={setAmount}
         placeholder='Amount'
         keyboardType='numeric'
         style={styles.input} />
-      <Picker
-        selectedValue={currency}
-        onValueChange={(itemValue) => setCurrency(itemValue)}
-        style={styles.picker}>
-        {currencies.map((cat, index) => (
-          <Picker.Item key={index} label={cat} value={cat} />
-        ))}
-      </Picker>
+      <View style={styles.pickerView}>
+        <Picker
+          selectedValue={currency}
+          onValueChange={(itemValue) => setCurrency(itemValue)}
+          style={styles.picker}>
+          {currencies.map((cat, index) => (
+            <Picker.Item key={index} label={cat} value={cat} />
+          ))}
+        </Picker>
+      </View>
       <TouchableOpacity style={styles.button} onPress={handleAddFunds}>
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>
-    </View></>
+    </View>
+    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2B2D31',
+  },
+  inputContainer: {
+    width: '80%',
+  },
   buttonContainer: {
     height:20,
     marginTop: 20,
@@ -76,7 +90,7 @@ const styles = StyleSheet.create({
   
   button: {
     backgroundColor: '#6AD4DD',
-    width: '80%',
+    width: '100%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -90,7 +104,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingHorizontal: 15,
         paddingVertical: 10,
-        width:'80%',
+        width:'100%',
+        height: 50,
         borderRadius: 10,
         marginTop: 5,
       },
@@ -99,8 +114,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
-        marginTop: 5,
-        width: '80%', 
+        // marginTop: 5,
+        width: '100%',
+        height: 50,
       },
       backButton: {
         position: 'absolute',
@@ -109,6 +125,11 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         zIndex:1,
+      },
+      pickerView: {
+        borderRadius: 10,
+        marginTop: 5,
+        overflow: 'hidden',
       },
 });
 export default AddFundsScreen;

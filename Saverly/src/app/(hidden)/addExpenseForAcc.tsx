@@ -69,14 +69,14 @@ const AddExpenseForAccScreen = ({route}) => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.back()} // Go back to the previous screen
+    onPress={() => router.push('Accounts')} // Go back to the previous screen
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title="Add an expense" />
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-
+        <View style={styles.pickerView}>
         <Picker
           selectedValue={category}
           onValueChange={(itemValue) => setCategory(itemValue)}
@@ -85,6 +85,7 @@ const AddExpenseForAccScreen = ({route}) => {
             <Picker.Item key={index} label={cat} value={cat} />
           ))}
         </Picker>
+        </View>
         <TextInput
           value={amount}
           onChangeText={setAmount}
@@ -96,6 +97,7 @@ const AddExpenseForAccScreen = ({route}) => {
           onChangeText={setDescription}
           placeholder='Description'
           style={styles.input} />
+        <View style={styles.pickerView}>
         <Picker
           selectedValue={currency}
           onValueChange={(itemValue) => setCurrency(itemValue)}
@@ -104,6 +106,7 @@ const AddExpenseForAccScreen = ({route}) => {
             <Picker.Item key={index} label={cat} value={cat} />
           ))}
         </Picker>
+        </View>
         {loading ? (
           <ActivityIndicator size="large" color="#6AD4DD" />
         ) : (
@@ -142,13 +145,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+    height: 50,
   },
   picker: {
     backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 5,
+    // marginTop: 5,
+    height: 50,
     width: '100%', 
   },
   button: {
@@ -170,6 +175,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  pickerView: {
+    borderRadius: 10,
+    marginTop: 5,
+    overflow: 'hidden',
   },
 });
 

@@ -12,7 +12,7 @@ import { getAccounts } from '@/services/addExpense';
 const AddMonthlyPaymentScreen = () => {
   const [businessName, setBusinessName] = useState('');
   const [cost, setCost] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('RON');
   const [date, setDate] = useState(new Date()); // Initialize date state with current date
   const [cardHolderName, setCardHolderName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -99,7 +99,8 @@ const AddMonthlyPaymentScreen = () => {
           placeholder='Amount'
           keyboardType='numeric'
           style={styles.input} />
-          <Picker
+        <View style={styles.pickerView}>
+        <Picker
           selectedValue={currency}
           onValueChange={(itemValue) => setCurrency(itemValue)}
           style={styles.picker}>
@@ -107,6 +108,7 @@ const AddMonthlyPaymentScreen = () => {
             <Picker.Item key={index} label={cat} value={cat} />
           ))}
         </Picker>
+        </View>
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
           <Text style={styles.input}>
             {date.toDateString()}
@@ -120,8 +122,10 @@ const AddMonthlyPaymentScreen = () => {
             onChange={(event, selectedDate) => {
               setShowDatePicker(false);
               setDate(selectedDate || date); // Update date state with selected date or keep the previous date
-            } } />
+            }}
+            style={styles.datePicker} />
         )}
+        <View style={styles.pickerView}>
         <Picker
           selectedValue={cardHolderName}
           onValueChange={(itemValue) => setCardHolderName(itemValue)}
@@ -133,6 +137,7 @@ const AddMonthlyPaymentScreen = () => {
               value={`${account.currency}_${account.type}`} />
           ))}
         </Picker>
+        </View>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -170,14 +175,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
+    height: 50,
   },
   picker: {
-    backgroundColor: '#B5C5C3',
+    backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 5,
+    // marginTop: 5,
+    height: 50,
     width: '100%', 
+  },
+  datePicker: {
+    height: 60,
   },
   buttonContainer: {
     width: '60%',
@@ -203,6 +213,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     zIndex:1,
+  },
+  pickerView: {
+    borderRadius: 10,
+    marginTop: 5,
+    overflow: 'hidden',
   },
 });
 
