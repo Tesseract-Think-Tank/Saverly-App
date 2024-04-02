@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import {signUp} from '../services/authService';
 import { router } from 'expo-router';
-// import Saverly_Logo from '../../assets/saverly_logo.svg';
+import Logo from "../assets/saverly.svg";
 
 
 const SingUp = () => {
@@ -36,8 +36,8 @@ const SingUp = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/login.png')} style={styles.logo} />
-            {/* <Saverly_Logo width={300} height={300}/> */}
+            {/* <Image source={require('../assets/login.png')} style={styles.logo} /> */}
+            <View style={styles.logoView}><Logo /></View>
             <Text style={styles.title}>Create an account!</Text>
             <View style={styles.inputContainer}>
                 <TextInput
@@ -63,6 +63,9 @@ const SingUp = () => {
                     <TouchableOpacity onPress={handleSignUp} style={[styles.button]}>
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/')}>
+                        <Text style={styles.logInText}>Already have an account? Log In</Text>
+                    </TouchableOpacity>
                 </View>
             )}
         </View>
@@ -80,6 +83,9 @@ const styles = StyleSheet.create({
         width: 250,
         height: 250,
         marginBottom: 20,
+    },
+    logoView: {
+        marginBottom: 70,
     },
     title: {
         fontSize: 24,
@@ -122,6 +128,11 @@ const styles = StyleSheet.create({
     },
     buttonOutlineText: {
         color: '#6C63FF',
+        fontWeight: 'bold',
+    },
+    logInText: {
+        color: '#6AD4DD',
+        marginTop: 15,
         fontWeight: 'bold',
     },
 });
