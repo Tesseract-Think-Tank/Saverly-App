@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity,
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { router } from 'expo-router';
-// import Saverly_Logo from '../../assets/saverly_logo.svg';
+import Logo from "../assets/saverly.svg";
 
 
 const Login = ({navigation}: any) => {
@@ -39,8 +39,9 @@ const Login = ({navigation}: any) => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/login.png')} style={styles.logo} />
-            {/* <Saverly_Logo width={300} height={300}/> */}
+            {/* <Image source={require('../assets/login.png')} style={styles.logo} /> */}
+            {/* <Logo width={1000} height={400}/> */}
+            <View style={styles.logoView}><Logo /></View>
             <Text style={styles.title}>Welcome!</Text>
             <View style={styles.inputContainer}>
                 <TextInput
@@ -68,7 +69,7 @@ const Login = ({navigation}: any) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => router.push('signUp')}>
                         <Text style={styles.signUpText}>Don't have an account? Sign Up</Text>
-                     </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
             )}
         </View>
@@ -82,11 +83,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#2B2D31',
     },
-    logo: {
-        width: 170,
-        height: 170,
-        marginBottom: 20,
+    logoView: {
+        marginBottom: 70,
     },
+    // logo: {
+    //     width: 170,
+    //     height: 170,
+    //     marginBottom: 20,
+    // },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
