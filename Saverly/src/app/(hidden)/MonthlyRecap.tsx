@@ -32,7 +32,7 @@ const customPickerStyles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor:'#2B2D31',
     color: '#fff',// To ensure the text is not covered by the icon
-    top:30,
+    // top:30,
   },
   inputAndroid: {
     fontSize: 16,
@@ -41,13 +41,16 @@ const customPickerStyles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor:'#131416',
     color: '#fff',
-    top:30,
+    // top:30,
     borderRadius: 10,
   },
   iconContainer: {
-    top: 40,
-    left: 120,
-    alignSelf:'center',
+    top: 10,
+    right: 10,
+    // alignSelf:'center',
+    // width: 50,
+    // height: 50,
+    // backgroundColor: '#00FF00',
   },
 });
 
@@ -130,7 +133,7 @@ const MonthlyRecap = () => {
           </View>
         ))}
       </View>
-      <View>
+      <View style={{top: 30}}>
         <RNPickerSelect
           style={customPickerStyles}
           value={selectedMonth} // Default selected value to the current month
@@ -140,7 +143,7 @@ const MonthlyRecap = () => {
           items={months}
           useNativeAndroidPickerStyle={false}
           Icon={() => {
-          return <Ionicons name="chevron-down" size={24} color='#fff' />;
+          return <Ionicons name="chevron-down" size={25} color='#fff' />;
       }}
       />
       </View>

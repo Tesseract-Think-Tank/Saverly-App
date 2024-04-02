@@ -6,6 +6,7 @@ import { Ionicons, AntDesign } from '@expo/vector-icons';
 import AnimatedLoader from "react-native-animated-loader";
 import { ChatProvider, useChat } from '../../services/chatContext'; // Adjust the import path as needed
 import { TypingAnimation } from 'react-native-typing-animation';
+import { router } from 'expo-router';
 
 // We'll create a new component that consumes the context
 const ChatContent: React.FC = () => {
@@ -23,7 +24,7 @@ const ChatContent: React.FC = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+        <TouchableOpacity onPress={() => router.push('Home')} style={styles.button}>
           <AntDesign name="left" size={24} color="#6AD4DD" />
         </TouchableOpacity>
         <View style={styles.avatarContainer}>
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'flex-start',
     padding: 25,
     backgroundColor: '#1e1f22',
     borderBottomWidth: 1,
@@ -106,10 +108,12 @@ const styles = StyleSheet.create({
   
   avatarContainer: {
       flexDirection: 'row',
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      flex: 1,
-      paddingRight: 55,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      paddingRight: 100,
       top:10,
   },
 
@@ -186,8 +190,10 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 50,
+    width: 100,
+    height: 50,
     top:10,
+    alignSelf: 'flex-start',
     // Ensure the button itself does not grow larger, only its touchable area does
   },
 });

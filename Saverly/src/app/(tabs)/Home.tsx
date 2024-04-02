@@ -256,7 +256,7 @@ const fetchExpenses = async (userId) => {
       borderRadius: 10,
       backgroundColor:'#2B2D31',
       color: '#fff',// To ensure the text is not covered by the icon
-      top:30,
+      // top:10,
     },
     inputAndroid: {
       fontSize: 16,
@@ -265,10 +265,10 @@ const fetchExpenses = async (userId) => {
       paddingVertical: 8,
       backgroundColor:'#2B2D31',
       color: '#fff',
-      top:30,
+      // top:10,
     },
     iconContainer: {
-      top: 40,
+      top: 10,
       left: 120,
       alignSelf:'center',
     },

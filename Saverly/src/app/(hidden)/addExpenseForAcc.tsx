@@ -18,10 +18,10 @@ import { AntDesign } from '@expo/vector-icons';
 const AddExpenseForAccScreen = ({route}) => {
   
   const {selectedAccount} = route.params || {};
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('Food');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('RON');
   const [loading, setLoading] = useState(false);
   console.log(selectedAccount.id);
   const categories = [

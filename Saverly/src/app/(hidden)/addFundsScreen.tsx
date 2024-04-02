@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 const AddFundsScreen = ({ route, navigation }) => {
   const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState('USD'); // Default or user's preference
+  const [currency, setCurrency] = useState('RON'); // Default or user's preference
 
   const { selectedAccount } = route.params;
   const accountId = selectedAccount.id;

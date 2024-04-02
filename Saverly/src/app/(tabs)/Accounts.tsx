@@ -230,8 +230,8 @@ const AccountsScreen = ({ navigation }) => {
         activeOpacity={0.7}
         >
         <View style={styles.iconContainer}>
-        <Text style={styles.iconText}>Add Expense</Text>
-        <Ionicons name="receipt-outline" size={30} color="#fff" style={{right:3}} />
+        <Text style={styles.iconText}>Add Expense  </Text>
+        <Ionicons name="receipt-outline" size={30} color="#fff" style={{right:10}} />
         </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -240,8 +240,8 @@ const AccountsScreen = ({ navigation }) => {
           activeOpacity={0.7}
         >
         <View style={styles.iconContainer}>
-        <Text style={styles.iconText}>Add Funds</Text>
-        <Ionicons name="cash-outline" size={30} color="#fff" style={{left:8}} />
+        <Text style={styles.iconText}>Add Funds  </Text>
+        <Ionicons name="cash-outline" size={30} color="#fff" style={{right:10}} />
         </View>
         </TouchableOpacity>
 
@@ -251,8 +251,8 @@ const AccountsScreen = ({ navigation }) => {
           activeOpacity={0.7}
         >
           <View style={styles.iconContainer}>
-        <Text style={styles.iconText}>Add Account</Text>
-        <Ionicons name="card" size={30} color="#fff" />
+        <Text style={styles.iconText}>Add Account  </Text>
+        <Ionicons name="card" size={30} color="#fff" style={{right:10}} />
         </View>
         </TouchableOpacity>
       </Animated.View>
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     width: 150,
     right:51,
   },

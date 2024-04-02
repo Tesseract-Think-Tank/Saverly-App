@@ -17,7 +17,7 @@ const currencies = [
 const AddAccountScreen = () => {
   const [type, setType] = useState('');
   const [balance, setBalance] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('RON');
   const [loading, setLoading] = useState(false);
 
   const handleAddAccount = async () => {
