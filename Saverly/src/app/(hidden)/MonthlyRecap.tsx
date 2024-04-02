@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import PieChart from 'react-native-pie-chart';
 import RNPickerSelect from 'react-native-picker-select';
 import { getCategoryPrices } from '../../services/expenseCategories';
+import { Ionicons } from '@expo/vector-icons';
+
+const { width, height } = Dimensions.get('window');
 
 const fetchData = async (monthName) => {
   try {
@@ -18,8 +21,40 @@ const fetchData = async (monthName) => {
   }
 };
 
+const customPickerStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    width: width * 0.1,
+    borderWidth: 1,
+    borderColor: '#6AD4DD',
+    borderRadius: 10,
+    backgroundColor:'#2B2D31',
+    color: '#fff',// To ensure the text is not covered by the icon
+    top:30,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    width: width * 0.45,
+    paddingVertical: 8,
+    backgroundColor:'#131416',
+    color: '#fff',
+    top:30,
+    borderRadius: 10,
+  },
+  iconContainer: {
+    top: 40,
+    left: 120,
+    alignSelf:'center',
+  },
+});
+
+
+
 const prepareChartData = (data) => {
-  const colors = ['#9CA3AF','#008F75','#7E9AC8', '#5C6973', '#F2F2F2', '#A6D3E0', '#2E4C5A', '#D1D5DB'];
+  const colors = ['#6AD4DD','#9b5fe0','#16a4d8', '#8bd346', '#f9a52c', '#d64e12', '#F7418F', '#4CCD99'];
   const legends = Object.keys(data);
   const series = Object.values(data);
   const sliceColor = colors.slice(0, series.length);
@@ -91,20 +126,23 @@ const MonthlyRecap = () => {
         {legends.map((legend, index) => (
           <View key={index} style={styles.legendItem}>
             <View style={[styles.legendColor, { backgroundColor: sliceColor[index] }]} />
-            <Text>{legend}</Text>
+            <Text style={styles.text}>{legend}</Text>
           </View>
         ))}
       </View>
       <View>
-        <Text style={styles.monthDisplayedText}>{selectedMonth}</Text>
         <RNPickerSelect
-          // style={pickerSelectStyles}
+          style={customPickerStyles}
           value={selectedMonth} // Default selected value to the current month
           onValueChange={(value) => {
             setSelectedMonth(value);
           }}
           items={months}
-        />
+          useNativeAndroidPickerStyle={false}
+          Icon={() => {
+          return <Ionicons name="chevron-down" size={24} color='#fff' />;
+      }}
+      />
       </View>
     </View>
   );
@@ -113,33 +151,44 @@ const MonthlyRecap = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start', // Change this line
-    alignItems: 'center',
-    backgroundColor: '#2B2D31', // Add this line or adjust the value as needed
-    position:'relative'
+    justifyContent: 'center', // Centralizes the content vertically
+    alignItems: 'center', // Centralizes the content horizontally
+    backgroundColor: '#2B2D31', // Matches the dark theme of the app
+    paddingTop: 20, // Adds a space on the top
   },
   legendContainer: {
     flexDirection: 'row',
-    marginBottom: 10,
-    color:'#fff'
+    justifyContent: 'center', // Centralizes the legend items
+    flexWrap: 'wrap', // Ensures the legend items wrap
+    marginTop: 20, // Adds a space above the legend container
+    paddingHorizontal: 20, // Adds horizontal padding within the container
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 10,
-    marginBottom:10,
-    color:'#fff'
+    padding: 8, // Adjust padding for each legend item
+    margin: 4, // Adds a slight margin around each item
+    backgroundColor: '#131416', // Matches the dark theme of the app
+
+    borderRadius: 15, // Rounded corners for the legend items
   },
   legendColor: {
-    width: 15,
-    height: 15,
-    borderRadius: 8,
-    marginRight: 5,
-    color:'#fff'
+    width: 20,
+    height: 20,
+    borderRadius: 10, // Circular shape
+    marginRight: 10,
+    color: '#fff', // Ensures the text is not covered by the icon
   },
   monthDisplayedText: {
-    fontSize: 20,
-    color:'#fff'
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    paddingVertical: 20, // Adds vertical padding to the text
+
   },
+  text: {
+    color: '#fff', // White text color
+  },
+  
 });
 export default MonthlyRecap;

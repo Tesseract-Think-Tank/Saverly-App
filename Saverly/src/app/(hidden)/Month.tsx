@@ -81,13 +81,13 @@ const MonthlyPaymentsScreen = ({ }: any) => {
   </TouchableOpacity>
     <PageHeader title="Monthly Expenses" />
     <View style={styles.container}>
-      <ScrollView style={styles.container} contentContainerStyle={{ backgroundColor: '#33404F' }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ backgroundColor: '#2B2D31' }}>
         {loading ? <Text>Loading monthly payments...</Text> : monthlyPayments.map((payment: MonthlyPayment) => (
           <MonthlyPaymentCard key={payment.businessName} monthlyPayment={payment} removePayment={removePayment} />
         ))}
       </ScrollView>
       <TouchableOpacity
-        style={styles.addButton}
+        style={styles.fab}
         onPress={() => router.push('AddMonth')}
         activeOpacity={0.7} // Optional: reduce the opacity on touch
       >
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor:'#33404F'
+    backgroundColor:'#2B2D31'
   },
   card: {
     marginTop:100,
@@ -114,21 +114,21 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
   },
-  addButton: {
-    position: 'absolute', // Position over your other content
-    right: (width - 56) / 2, // 30 units from the right
-    bottom: 60, // 30 units from the bottom
-    backgroundColor: '#B5C5C3', // Replace with the color of your choice
-    width: 56, // Diameter of the FAB
-    height: 56, // Diameter of the FAB
-    borderRadius: 28, // Half the size of width & height to make it perfectly round
-    justifyContent: 'center', // Center the '+' icon vertically
-    alignItems: 'center', // Center the '+' icon horizontally
-    shadowColor: '#89CFF3', // Shadow Color
-    shadowOpacity: 0.5, // Shadow Opacity
-    shadowRadius: 5, // Shadow Radius
-    shadowOffset: { height: 5, width: 5 }, // Shadow Offset
-    elevation: 6, // This adds a shadow on Android
+  fab: {
+    position: 'absolute',
+    right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
+    bottom: 110, // Adjust this value based on your tab bar height
+    backgroundColor: '#6AD4DD', // Use your app's theme color
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#333',
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    shadowOffset: { width: 5, height: 5 },
   },
   backButton: {
     position: 'absolute',

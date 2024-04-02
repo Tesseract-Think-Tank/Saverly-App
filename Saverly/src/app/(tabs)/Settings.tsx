@@ -1,9 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
 import { router } from 'expo-router';
 import MonthlyRecap from '../(hidden)/MonthlyRecap';
 import { Ionicons } from '@expo/vector-icons';
 import PageHeader from '../../components/PageHeader';
+
+const { width } = Dimensions.get('window');
 
 const Settings = () => {
   return (
@@ -15,27 +17,21 @@ const Settings = () => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Ionicons name="wallet-outline" style={styles.icon1} />
         <Text style={styles.buttonText}>Monthly Expenses</Text>
-  </View>
+        </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push('GoalSetting')} style={styles.buttongoal}>
-      <View style={[styles.buttonHalf, { backgroundColor: '#6AD4DD' }]} />
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Ionicons name="cash-outline" style={styles.icon2} />
-          <Text style={styles.buttonText}>Goal Setting</Text>
-          </View>
-      </TouchableOpacity>
+      
     </View>
   )
 }
 const styles = StyleSheet.create({
   buttonexpense: {
     position:'absolute',
-    backgroundColor: '#B5C5C3',
+    backgroundColor: '#fff',
     padding: 10,
     height: 80, // increase the height
     width: 330,
     left:30,
-    bottom: 250, // move the button lower
+    top: 100,
     alignItems: 'center', // center the text horizontally
     justifyContent: 'center',
     borderRadius: 10, // add borderRadius property
@@ -47,7 +43,7 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 80, // increase the height
     width: 330,
-    left:30,
+    left: (width - 330) / 2,
     bottom: 150, // move the button lower
     alignItems: 'center', // center the text horizontally
     justifyContent: 'center',
