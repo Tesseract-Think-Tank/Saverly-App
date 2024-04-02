@@ -42,7 +42,7 @@ const AddFundsScreen = ({ route, navigation }) => {
   </TouchableOpacity>
     <PageHeader title='Add Funds'></PageHeader>
 
-    <View style={{ flex: 1, justifyContent: 'center',alignItems:'center', backgroundColor:'#33404F'}}>
+    <View style={{ flex: 1, justifyContent: 'center',alignItems:'center', backgroundColor:'#2B2D31'}}>
       <TextInput
         value={amount}
         onChangeText={setAmount}
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+    marginTop:40,
   },
   buttonText: {
     color: 'white',
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
       },
       picker: {
-        backgroundColor: '#B5C5C3',
+        backgroundColor: '#fff',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,

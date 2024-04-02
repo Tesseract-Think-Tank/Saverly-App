@@ -79,7 +79,7 @@ const AddAccountScreen = () => {
         </Picker>
       </View>
       {loading ? (
-        <ActivityIndicator size="large" color="#00DDA3" />
+        <ActivityIndicator size="large" color="#6AD4DD" />
       ) : (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#33404F',
+        backgroundColor: '#2B2D31',
     },
     logo: {
         width: 250,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
     },
     picker: {
-      backgroundColor: '#B5C5C3',
+      backgroundColor: '#fff',
       paddingHorizontal: 15,
       paddingVertical: 10,
       borderRadius: 10,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
       width: '100%', 
     },
     button: {
-        backgroundColor: '#00DDA3',
+        backgroundColor: '#6AD4DD',
         width: '100%',
         padding: 15,
         borderRadius: 10,
