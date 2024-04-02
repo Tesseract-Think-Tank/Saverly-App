@@ -144,8 +144,9 @@ const AddExpenseScreen = () => {
               value={`${account.currency}_${account.type}`} />
           ))}
         </Picker>
+        <View style={styles.buttonContainer}>
         {loading ? (
-          <ActivityIndicator size="large" color="#00DDA3" />
+          <ActivityIndicator size="large" color="#6AD4DD" />
         ) : (
           <TouchableOpacity
             onPress={handleAddExpense}
@@ -154,6 +155,7 @@ const AddExpenseScreen = () => {
             <Text style={styles.buttonText}>Add Expense</Text>
           </TouchableOpacity>
         )}
+        </View>
       </View>
     </View></>
   );
@@ -165,39 +167,46 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#33404F',
+    backgroundColor: '#2B2D31',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color:'#6AD4DD'
   },
   inputContainer: {
     width: '80%',
   },
   input: {
-    backgroundColor: '#B5C5C3',
+    backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
-  },
+},
+  
   picker: {
-    backgroundColor: '#B5C5C3',
+    backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 100,
     marginTop: 5,
     width: '100%', 
   },
-  button: {
-    backgroundColor: '#00DDA3',
+  buttonContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+},
+button: {
+    backgroundColor: '#6AD4DD',
+    width: '80%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 10,
-    zIndex:3,
-  },
+},
   backButton: {
     position: 'absolute',
     top:20,

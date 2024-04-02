@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -150,10 +150,18 @@ const AccountsScreen = ({ navigation }) => {
     setSelectedAccount(selectedAccount);
     console.log('Active Index:', activeIndex);
   };
-
+  const FoggyBackground = ({ visible, onPress }) => {
+    const [overlayOpacity, setOverlayOpacity] = useState(0);
+  
+    useEffect(() => {
+      setOverlayOpacity(visible ? 1 : 0);
+    }, [visible]);
+  
+   
+  };
   return (
     <><PageHeader title='Accounts'></PageHeader>
-    <View style={styles.container}>
+    <View style={[styles.container, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
       <FlatList
         horizontal
         pagingEnabled
@@ -175,9 +183,9 @@ const AccountsScreen = ({ navigation }) => {
             renderItem={({ item }) => {
               const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
               return (
-                <View style={styles.card}>
+                <View style={[styles.card, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
         <View style={styles.cardRow}>
-          <View style={styles.circle_for_expenses}>
+          <View style={[styles.circle_for_expenses,areButtonsVisible ? { backgroundColor: 'rgba(0, 0, 128, 0.5)' } : null]}>
           <Ionicons name={category_ionicons[item.category]} size={30} color="black" />
           </View>
           <View style={styles.cardMiddle}>
@@ -249,8 +257,9 @@ const AccountsScreen = ({ navigation }) => {
         </TouchableOpacity>
       </Animated.View>
       <Pagination index={activeIndex} total={accounts.length} />
-    </View></>
-  );
+    </View>
+  </>
+);
 };
 
 const styles = StyleSheet.create({
@@ -360,6 +369,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
+    zIndex:1000,
   },
   optionButton2: {
     position: 'absolute',
@@ -390,7 +400,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left:width+50,
     bottom: 220, // adjust the vertical position
-    backgroundColor: '#2B2D31',
+    backgroundColor: '#B5C5C3',
     width: 56,
     height: 56,
     borderRadius: 28,
