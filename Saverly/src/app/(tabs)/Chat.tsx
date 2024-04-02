@@ -158,17 +158,20 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   bubbleText: {
-    fontSize: 14,
+    fontSize: 15,
   },
   incomingBubble: {
     backgroundColor: '#ccc',
     alignSelf: 'flex-start',
-    width: '80%'
+    // width: '80%',
+    maxWidth: '80%'
   },
   outgoingBubble: {
+    flex: 1,
     backgroundColor: '#6AD4DD',
     alignSelf: 'flex-end',
-    width: '70%'
+    // width: '70%',
+    maxWidth: '80%'
   },
   lower: {
     marginTop: 15,
