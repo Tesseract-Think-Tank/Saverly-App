@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -14,7 +14,7 @@ const CARD_HEIGHT = height * 0.6; // 60% of the screen height
 
 const AccountCard = ({ account, onSelectAccount, navigation }) => (
   <View style={styles.cardContainer}>
-    <View style={styles.card}>
+    <View style={styles.card2}>
       <Text style={styles.cardTitle}>{account.type}</Text>
       <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
     </View>
@@ -133,7 +133,15 @@ const AccountsScreen = ({ navigation }) => {
       loadAccounts();
     }, [])
   );
-
+  const category_ionicons = {
+    'Food': "fast-food-outline",
+    'Transport': "car-outline",
+    'Utilities': "home-outline",
+    'Entertainment': "game-controller-outline",
+    'Shopping': "cart-outline",
+    'Health': "heart-circle-outline",
+    'Other': "question-circle-o",
+  };
   const handleScroll = (event) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const activeIndex = Math.round(contentOffsetX / width);
@@ -142,9 +150,18 @@ const AccountsScreen = ({ navigation }) => {
     setSelectedAccount(selectedAccount);
     console.log('Active Index:', activeIndex);
   };
-
+  const FoggyBackground = ({ visible, onPress }) => {
+    const [overlayOpacity, setOverlayOpacity] = useState(0);
+  
+    useEffect(() => {
+      setOverlayOpacity(visible ? 1 : 0);
+    }, [visible]);
+  
+   
+  };
   return (
-    <><PageHeader title='Accounts'></PageHeader><View style={styles.container}>
+    <><PageHeader title='Accounts'></PageHeader>
+    <View style={[styles.container, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
       <FlatList
         horizontal
         pagingEnabled
@@ -161,22 +178,29 @@ const AccountsScreen = ({ navigation }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16} />
       {selectedAccount && (
-        <View style={styles.expensesListContainer}>
           <FlatList
             data={selectedAccount.expenses}
             renderItem={({ item }) => {
               const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
               return (
-                <View style={styles.expenseCard}>
-                  <Text style={styles.cardAmount}>{item.currency} {item.amount}</Text>
-                  <Text style={styles.cardCategory}>{item.category}</Text>
-                  <Text style={styles.cardDate}>{date}</Text>
-                  <Text style={styles.cardDescription}>{item.description}</Text>
-                </View>
+                <View style={[styles.card, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
+        <View style={styles.cardRow}>
+          <View style={[styles.circle_for_expenses,areButtonsVisible ? { backgroundColor: 'rgba(0, 0, 128, 0.5)' } : null]}>
+          <Ionicons name={category_ionicons[item.category]} size={30} color="black" />
+          </View>
+          <View style={styles.cardMiddle}>
+            <Text style={styles.cardCategory}>{item.category}</Text>
+            <Text style={styles.cardDescription}>{item.description}</Text>
+            <Text style={styles.cardDate}>{date}</Text>
+          </View>
+          <Text style={styles.cardAmount}>{item.amount}</Text>
+          <Text style={styles.cardCurrency}>{item.currency}</Text>
+        </View>
+      </View>
               );
             } }
-            keyExtractor={(item) => item.id.toString()} />
-        </View>
+            keyExtractor={(item) => item.id.toString()} 
+            style={styles.list}/>
       )}
 
       <TouchableOpacity
@@ -233,8 +257,9 @@ const AccountsScreen = ({ navigation }) => {
         </TouchableOpacity>
       </Animated.View>
       <Pagination index={activeIndex} total={accounts.length} />
-    </View></>
-  );
+    </View>
+  </>
+);
 };
 
 const styles = StyleSheet.create({
@@ -254,7 +279,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#33404F',
+    backgroundColor: '#2B2D31',
   },
   flatListContentContainer: {
     paddingTop: 0, // space from the top of the screen
@@ -325,34 +350,10 @@ const styles = StyleSheet.create({
     elevation: 5, // Elevation for Android
     marginHorizontal: 16, // Horizontal margin
   },
-  cardContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  cardInfo: {
-    flex: 1,
-  },
-  cardAmount: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#33404F',
-  },
-  cardCategory: {
-    fontSize: 16,
-    color: '#33404F',
-    marginTop: 4,
-  },
-  cardDate: {
-    fontSize: 14,
-    color: '#33404F',
-    marginTop: 4,
-  },
-  cardDescription: {
-    fontSize: 12,
-    color: '#33404F',
-    marginTop: 4,
-  },
+  
+  
+  
+  
   optionButton: {
     position: 'absolute',
     left:width+50,
@@ -368,6 +369,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
+    zIndex:1000,
   },
   optionButton2: {
     position: 'absolute',
@@ -386,6 +388,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
 
   },
+  circle_for_expenses:{
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2, // Half of the size to create a circle
+    backgroundColor: '#6AD4DD', // Change the background color as needed
+    justifyContent: 'center', // Center the content horizontally
+    alignItems: 'center',
+},
   optionButton3: {
     position: 'absolute',
     left:width+50,
@@ -403,7 +413,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 5 },
   },
-  card: {
+  card2: {
     bottom:40,
     backgroundColor: 'white',
     borderRadius: 20,
@@ -471,7 +481,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#fff',
+    backgroundColor: '#2B2D31',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 0,
@@ -483,6 +493,58 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 16,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cardMiddle: {
+    flex: 1,
+    justifyContent: 'center',
+    marginLeft: 16, // Adjust as needed for spacing
+  },
+  cardCategory: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#33404F',
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: '#999',
+  },
+  cardDate: {
+    fontSize: 12,
+    color: '#999',
+  },
+  cardAmount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    position: 'absolute', // Position it absolutely to align it in the middle-right
+    left: 200, // Adjust this value to move the amount left or right
+    alignSelf: 'center',
+  },
+  cardCurrency:{
+    fontSize:15,
+    fontWeight:'500',
+    color:'#333',
+    alignSelf:'center',
+    right:70
+  },
+  list: {
+    marginTop: 0,
+    marginBottom: 180,
   },
 });
 
