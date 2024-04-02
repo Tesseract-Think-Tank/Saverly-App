@@ -239,7 +239,9 @@ const fetchExpenses = async (userId) => {
     return (
       <View style={styles.card}>
         <View style={styles.cardRow}>
+          <View style={styles.circle_for_expenses}>
           <Ionicons name={category_ionicons[item.category]} size={30} color="black" />
+          </View>
           <View style={styles.cardMiddle}>
             <Text style={styles.cardCategory}>{item.category}</Text>
             <Text style={styles.cardDescription}>{item.description}</Text>
@@ -379,6 +381,14 @@ const fetchExpenses = async (userId) => {
 };
 
 const styles = StyleSheet.create({
+  circle_for_expenses:{
+        width: 50,
+        height: 50,
+        borderRadius: 50 / 2, // Half of the size to create a circle
+        backgroundColor: '#6AD4DD', // Change the background color as needed
+        justifyContent: 'center', // Center the content horizontally
+        alignItems: 'center',
+  },
   container: {
     flex: 1,
     paddingTop: 10,
@@ -548,6 +558,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 5,
     shadowOffset: { width: 5, height: 5 },
+  },
+  expensesListContainer: {
+    paddingTop:10,
+    top:280,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 0,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   categoryIcon: {
     width: 50,
