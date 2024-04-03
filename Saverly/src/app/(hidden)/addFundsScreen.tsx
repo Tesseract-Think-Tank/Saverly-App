@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import updateAccountBalance from '../../services/addFunds';
 import { Picker } from '@react-native-picker/picker';
 import { StyleSheet } from 'react-native';
 import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import backgroundStyles from "@/services/background";
+
+
 const AddFundsScreen = ({ route, navigation }) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('RON'); // Default or user's preference
@@ -42,7 +45,11 @@ const AddFundsScreen = ({ route, navigation }) => {
   </TouchableOpacity>
     <PageHeader title='Add Funds'></PageHeader>
 
-    <View style={styles.container}>
+    <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <View style={styles.container}>
     <View style={styles.inputContainer}> 
       <TextInput
         value={amount}
@@ -65,6 +72,8 @@ const AddFundsScreen = ({ route, navigation }) => {
       </TouchableOpacity>
     </View>
     </View>
+    </ImageBackground>
+    </View>
     </>
   );
 };
@@ -74,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2B2D31',
+    // backgroundColor: '#2B2D31',
   },
   inputContainer: {
     width: '80%',

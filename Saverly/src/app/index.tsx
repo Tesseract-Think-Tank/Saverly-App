@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { router } from 'expo-router';
 import Logo from "../assets/saverly.svg";
+import backgroundStyles from "@/services/background";
 
 
 const Login = ({navigation}: any) => {
@@ -38,6 +39,10 @@ const Login = ({navigation}: any) => {
     };
 
     return (
+        <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
         <View style={styles.container}>
             {/* <Image source={require('../assets/login.png')} style={styles.logo} /> */}
             {/* <Logo width={1000} height={400}/> */}
@@ -73,6 +78,8 @@ const Login = ({navigation}: any) => {
                 </View>
             )}
         </View>
+        </ImageBackground>
+        </View>
     );
 };
 
@@ -81,7 +88,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2B2D31',
+        // backgroundColor: '#2B2D31',
     },
     logoView: {
         marginBottom: 70,

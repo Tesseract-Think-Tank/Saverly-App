@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Animated, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchUserAccounts } from '../../services/accountService'; // Adjust as necessary
@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
 import PageHeader from '@/components/PageHeader';
+import backgroundStyles from "@/services/background";
 
 const { width, height } = Dimensions.get('window');
 
@@ -161,7 +162,11 @@ const AccountsScreen = ({ navigation }) => {
   };
   return (
     <><PageHeader title='Accounts'></PageHeader>
-    <View style={[styles.container, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
+    <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <View style={[styles.container, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
       <FlatList
         horizontal
         pagingEnabled
@@ -258,6 +263,8 @@ const AccountsScreen = ({ navigation }) => {
       </Animated.View>
       <Pagination index={activeIndex} total={accounts.length} />
     </View>
+  </ImageBackground>
+  </View>
   </>
 );
 };
@@ -279,7 +286,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#2B2D31',
+    // backgroundColor: '#2B2D31',
   },
   flatListContentContainer: {
     paddingTop: 0, // space from the top of the screen

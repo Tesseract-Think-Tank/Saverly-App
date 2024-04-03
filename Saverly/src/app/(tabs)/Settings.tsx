@@ -1,15 +1,22 @@
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ImageBackground } from 'react-native'
 import React from 'react'
 import { router } from 'expo-router';
 import MonthlyRecap from '../(hidden)/MonthlyRecap';
 import { Ionicons } from '@expo/vector-icons';
 import PageHeader from '../../components/PageHeader';
+import backgroundStyles from "@/services/background";
+
 
 const { width } = Dimensions.get('window');
 
 const Settings = () => {
   return (
     <View className='flex-1'>
+      <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <View style={styles.container}>
       <PageHeader title='Month Recap'></PageHeader>
       <MonthlyRecap></MonthlyRecap>
       <TouchableOpacity onPress={() => router.push('Month')} style={styles.buttonexpense}>
@@ -19,11 +26,19 @@ const Settings = () => {
         <Text style={styles.buttonText}>Monthly Expenses</Text>
         </View>
       </TouchableOpacity>
-      
+      </View>
+    </ImageBackground>
+    </View>
     </View>
   )
 }
 const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      // backgroundColor: '#2B2D31',
+  },
   buttonexpense: {
     position:'absolute',
     backgroundColor: '#fff',

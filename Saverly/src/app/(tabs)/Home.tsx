@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, FlatList, Animated, Alert, Image, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -18,6 +18,7 @@ import 'react-native-reanimated'
 import 'react-native-gesture-handler'
 import { MotiView } from 'moti'
 import { Skeleton } from 'moti/skeleton'
+import backgroundStyles from "@/services/background";
 
 
 
@@ -258,7 +259,7 @@ const fetchExpenses = async (userId) => {
       width: width * 0.1,
       borderWidth: 1,
       borderRadius: 10,
-      backgroundColor:'#2B2D31',
+      // backgroundColor:'#2B2D31',
       color: '#fff',// To ensure the text is not covered by the icon
       // top:10,
     },
@@ -267,7 +268,7 @@ const fetchExpenses = async (userId) => {
       paddingHorizontal: 10,
       width: width * 0.45,
       paddingVertical: 8,
-      backgroundColor:'#2B2D31',
+      // backgroundColor:'#2B2D31',
       color: '#fff',
       // top:10,
     },
@@ -282,7 +283,11 @@ const fetchExpenses = async (userId) => {
   return (
     <>
     <PageHeader title="Home" />
-    <SafeAreaView style={styles.container}>
+    <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <SafeAreaView style={styles.container}>
 
 
     <View style={styles.balanceContainer}>
@@ -404,7 +409,10 @@ const fetchExpenses = async (userId) => {
           >
             <Text>Loading...</Text>
       </AnimatedLoader> */}
-    </SafeAreaView></>
+    </SafeAreaView>
+    </ImageBackground>
+    </View>
+    </>
   );
 };
 
@@ -421,7 +429,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     paddingHorizontal: 16,
-    backgroundColor: '#2B2D31',
+    // backgroundColor: '#2B2D31',
   },
   fadeOutContainer: {
     position: 'absolute',

@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', // Centralizes the content vertically
     alignItems: 'center', // Centralizes the content horizontally
-    backgroundColor: '#2B2D31', // Matches the dark theme of the app
+    // backgroundColor: '#2B2D31', // Matches the dark theme of the app
     paddingTop: 20, // Adds a space on the top
   },
   legendContainer: {

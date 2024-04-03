@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 import { fetchUserMonthlyPayments, removeMonthlyPayment, MonthlyPayment } from '../../services/monthlyPaymentService'; // Adjust the import path as necessary
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -7,6 +7,8 @@ import { router } from 'expo-router';
 import TabLayout from '../(tabs)/_layout'
 import { AntDesign } from '@expo/vector-icons';
 import PageHeader from '@/components/PageHeader';
+import backgroundStyles from "@/services/background";
+
 
 const { width } = Dimensions.get('window');
 
@@ -80,8 +82,13 @@ const MonthlyPaymentsScreen = ({ }: any) => {
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title="Monthly Expenses" />
-    <View style={styles.container}>
-      <ScrollView style={styles.container} contentContainerStyle={{ backgroundColor: '#2B2D31' }}>
+    <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <View style={styles.container}>
+      {/* <ScrollView style={styles.container2} contentContainerStyle={{ backgroundColor: '#2B2D31' }}> */}
+      <ScrollView style={styles.container2}>
         {loading ? <Text>Loading monthly payments...</Text> : monthlyPayments.map((payment: MonthlyPayment) => (
           <MonthlyPaymentCard key={payment.businessName} monthlyPayment={payment} removePayment={removePayment} />
         ))}
@@ -93,7 +100,10 @@ const MonthlyPaymentsScreen = ({ }: any) => {
       >
         <Ionicons name='add' size={24} color="white" />
       </TouchableOpacity>
-    </View></> 
+    </View>
+    </ImageBackground>
+    </View>
+    </> 
   );
 };
 
@@ -101,10 +111,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor:'#2B2D31'
+    // backgroundColor:'#2B2D31'
+  },
+  container2: {
+    marginTop:100,
+    flex: 1,
+    padding: 10,
+    // backgroundColor:'#2B2D31'
   },
   card: {
-    marginTop:100,
+    marginTop:10,
     backgroundColor: '#FFF',
     padding: 20,
     marginVertical: 8,

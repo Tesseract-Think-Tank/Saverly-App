@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import {signUp} from '../services/authService';
 import { router } from 'expo-router';
 import Logo from "../assets/saverly.svg";
+import backgroundStyles from "@/services/background";
 
 
 const SingUp = () => {
@@ -35,6 +36,10 @@ const SingUp = () => {
 
 
     return (
+        <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
         <View style={styles.container}>
             {/* <Image source={require('../assets/login.png')} style={styles.logo} /> */}
             <View style={styles.logoView}><Logo /></View>
@@ -69,6 +74,8 @@ const SingUp = () => {
                 </View>
             )}
         </View>
+        </ImageBackground>
+        </View>
     );
 };
 
@@ -77,7 +84,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2B2D31',
+        // backgroundColor: '#2B2D31',
     },
     logo: {
         width: 250,
