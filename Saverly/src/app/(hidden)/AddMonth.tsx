@@ -86,7 +86,8 @@ const AddMonthlyPaymentScreen = () => {
     onPress={() => router.back()} // Go back to the previous screen
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
-  </TouchableOpacity><PageHeader title="Add new Monthly Payment"></PageHeader><View style={styles.container}>
+  </TouchableOpacity><PageHeader title="Add new Monthly Payment"></PageHeader>
+  <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           value={businessName}

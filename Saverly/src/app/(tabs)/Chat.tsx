@@ -188,6 +188,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 50,
     top:10,
+<<<<<<< Updated upstream
+=======
+    right:25,
+    alignSelf: 'flex-start',
+>>>>>>> Stashed changes
     // Ensure the button itself does not grow larger, only its touchable area does
   },
 });
