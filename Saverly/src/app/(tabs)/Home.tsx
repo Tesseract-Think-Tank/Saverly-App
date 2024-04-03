@@ -14,6 +14,10 @@ import { getExpenseDateAndTime } from '@/services/accountService';
 import AnimatedLoader from "react-native-animated-loader";
 import {filterExpensesByCategory} from "@/services/filterExpensesByCategory";
 import RNPickerSelect from 'react-native-picker-select';
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
+import { MotiView } from 'moti'
+import { Skeleton } from 'moti/skeleton'
 
 
 
@@ -279,26 +283,41 @@ const fetchExpenses = async (userId) => {
     <>
     <PageHeader title="Home" />
     <SafeAreaView style={styles.container}>
-    
+
+
     <View style={styles.balanceContainer}>
-      <Text>
+      {/* <Text> */}
+      <View className='flex-row'>
         <Text style={styles.currencyText}>BALANCE: </Text>
-        <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
-      </Text>
+        {isLoading ? (
+          <Skeleton width={width * 0.4} height={30} />
+        ) : (
+          <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
+        )}
+        {/* <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text> */}
+      {/* </Text> */}
+      </View>
     </View>
 
       <View style={styles.boxContainer}>
-        <LinearGradient colors={['#6AD4DD', '#6AD4DD']} style={styles.boxGradient}>
-          <Ionicons name="arrow-up" size={24} color="white" />
-          <Text style={styles.boxTitle} onPress={toggleShowLogs}>Income</Text>
-          <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
-        </LinearGradient>
-
-        <LinearGradient colors={['#F38430', '#F38430']} style={styles.boxGradient}>
-          <Ionicons name="arrow-down" size={24} color="white" />
-          <Text style={styles.boxTitle}>Expenses</Text>
-          <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
-        </LinearGradient>
+        {isLoading ? (
+          <Skeleton width={width * 0.45} height={155} radius={20} />
+        ) : (
+          <LinearGradient colors={['#6AD4DD', '#6AD4DD']} style={styles.boxGradient}>
+            <Ionicons name="arrow-up" size={24} color="white" />
+            <Text style={styles.boxTitle} onPress={toggleShowLogs}>Income</Text>
+            <Text style={styles.boxValue}>{income.toFixed(2)} RON</Text>
+          </LinearGradient>
+        )}
+        {isLoading ? (
+          <Skeleton width={width * 0.45} height={155} radius={20}/>
+        ) : (
+          <LinearGradient colors={['#F38430', '#F38430']} style={styles.boxGradient}>
+            <Ionicons name="arrow-down" size={24} color="white" />
+            <Text style={styles.boxTitle}>Expenses</Text>
+            <Text style={styles.boxValue}>{expenses.toFixed(2)} RON</Text>
+          </LinearGradient>
+        )}
       </View>
       <View>
       <RNPickerSelect
@@ -314,13 +333,27 @@ const fetchExpenses = async (userId) => {
       }}
       />
       </View>
+      {isLoading ? (
+      <>
+        <View style={{ marginBottom: 10, marginTop: 5 }}>
+          <Skeleton width={width - 32} height={cardHeight - 16} radius={10} />
+        </View>
+        <View style={{ marginBottom: 10 }}>
+          <Skeleton width={width - 32} height={cardHeight - 16} radius={10} />
+        </View>
+        <View style={{ marginBottom: 10 }}>
+          <Skeleton width={width - 32} height={cardHeight - 16} radius={10} />
+        </View>
+      </>
+    ) : (
       <FlatList
         data={filterExpensesByCategory(listData, selectedCategory)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-
         style={[styles.list, { height: listHeight }]}
       />
+    )}
+
       {showLogs && (
         <FlatList
           data={logData}
@@ -353,7 +386,16 @@ const fetchExpenses = async (userId) => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
-      <AnimatedLoader
+
+      {/* <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('TestSkel')}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="add" size={30} color="#FFF" />
+      </TouchableOpacity> */}
+    
+      {/* <AnimatedLoader
             visible={isLoading} // Keep visible true because we are conditionally rendering this whole component
             overlayColor="rgba(150,150,150,0.95)"
             source={require("../../assets/white_dots.json")}
@@ -361,7 +403,7 @@ const fetchExpenses = async (userId) => {
             speed={1}
           >
             <Text>Loading...</Text>
-      </AnimatedLoader>
+      </AnimatedLoader> */}
     </SafeAreaView></>
   );
 };
@@ -474,6 +516,16 @@ const styles = StyleSheet.create({
     color:'#333',
     alignSelf:'center',
     right:70
+  },
+  cardSkeleton: {
+    // backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 16,
+    marginVertical: 8,
+    // shadowColor: '#000',
+    // shadowOpacity: 0.1,
+    // shadowRadius: 4,
+    elevation: 3,
   },
   deleteButton: {
     position: 'absolute',

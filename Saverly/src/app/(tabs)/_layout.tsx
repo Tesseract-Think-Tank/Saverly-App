@@ -8,6 +8,8 @@ import ChatScreen from './Chat';
 import SettingsScreen from './Settings';
 import MonthlyPaymentsScreen from '../(hidden)/Month';
 import AccountsStackNavigator from './AccountStackNavigator';
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
 type TabIconProps = {
   name: 'Overview' | 'Accounts' | 'Settings' | 'Chat';
   focused: boolean;
