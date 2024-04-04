@@ -23,7 +23,7 @@ const category_images = {
   'Flight Radar': require("../../assets/plane3.png"),
 };
 const MonthlyPaymentCard = ({ monthlyPayment, removePayment }: { monthlyPayment: MonthlyPayment, removePayment: (businessName: string) => void }) => (
-  <View style={styles.card}>
+  <View style={styles.card2}>
   <View style={styles.cardRow}>
     <View style={styles.circle_for_expenses}>
     <Image source={category_images[monthlyPayment.businessName]} style={styles.image} />
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'#2B2D31'
   },
   card: {
-    marginTop:10,
+    marginTop:0,
     backgroundColor: '#FFF',
     padding: 20,
     marginVertical: 8,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Center the content horizontally
     alignItems: 'center',
 },
-card: {
+card2: {
   backgroundColor: '#ffffff',
   borderRadius: 10,
   padding: 16,
