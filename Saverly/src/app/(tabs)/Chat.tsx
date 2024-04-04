@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpacity, Platform, ImageBackground } from 'react-native';
 import ChatBar from '@/components/ChatBar'; // Ensure this path is correct
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
@@ -7,6 +7,8 @@ import AnimatedLoader from "react-native-animated-loader";
 import { ChatProvider, useChat } from '../../services/chatContext'; // Adjust the import path as needed
 import { TypingAnimation } from 'react-native-typing-animation';
 import { router } from 'expo-router';
+import backgroundStyles from "@/services/background";
+
 
 // We'll create a new component that consumes the context
 const ChatContent: React.FC = () => {
@@ -19,7 +21,11 @@ const ChatContent: React.FC = () => {
   
 
   return (
-    <KeyboardAvoidingView
+    <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
@@ -60,6 +66,8 @@ const ChatContent: React.FC = () => {
         <ChatBar />
       </View>
     </KeyboardAvoidingView>
+    </ImageBackground>
+    </View>
   );
 };
 
@@ -76,7 +84,7 @@ const ChatBox: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2B2D31',
+    // backgroundColor: '#2B2D31',
   },
   scrollView: {
     flex: 1,
@@ -101,7 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 25,
     backgroundColor: '#1e1f22',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderBottomColor: '#000',
  // Adjust this value to lower the top bar
   },

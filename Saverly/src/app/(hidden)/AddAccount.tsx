@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, Image, ImageBackground } from 'react-native';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../../firebaseConfig';
 import { fetchDataForUser } from '../../services/firebaseServices';
@@ -8,6 +8,9 @@ import { router } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import PageHeader from '@/components/PageHeader';
 import { Picker } from '@react-native-picker/picker';
+import backgroundStyles from "@/services/background";
+
+
 const currencies = [
   'RON',
   'USD',
@@ -55,7 +58,12 @@ const AddAccountScreen = () => {
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
-    <PageHeader title="Add new Account" /><View style={styles.container}>
+    <PageHeader title="Add new Account" />
+    <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <View style={styles.container}>
       <Image source={require('../../assets/card.png')} style={styles.logo} />
       <View style={styles.inputContainer}>
         <TextInput
@@ -93,7 +101,10 @@ const AddAccountScreen = () => {
           </TouchableOpacity>
         </View>
       )}
-    </View></>
+    </View>
+    </ImageBackground>
+    </View>
+    </>
   );
 };
 
@@ -102,7 +113,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2B2D31',
+        // backgroundColor: '#2B2D31',
     },
     logo: {
         width: 250,

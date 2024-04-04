@@ -7,6 +7,7 @@ import {
   Alert,
   TouchableOpacity,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
@@ -14,6 +15,8 @@ import {addExpenseForAcc} from '../../services/addExpenseForAcc';
 import { router } from 'expo-router';
 import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
+import backgroundStyles from "@/services/background";
+
 
 const AddExpenseForAccScreen = ({route}) => {
   
@@ -74,7 +77,11 @@ const AddExpenseForAccScreen = ({route}) => {
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
     <PageHeader title="Add an expense" />
-    <View style={styles.container}>
+    <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <View style={styles.container}>
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker
@@ -118,7 +125,10 @@ const AddExpenseForAccScreen = ({route}) => {
           </TouchableOpacity>
         )}
       </View>
-    </View></>
+    </View>
+    </ImageBackground>
+    </View>
+    </>
   );
 };
 
@@ -128,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2B2D31',
+    // backgroundColor: '#2B2D31',
   },
   title: {
     fontSize: 24,
