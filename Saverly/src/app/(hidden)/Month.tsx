@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Dimensions,Image as RNImage } from 'react-native';
 import { fetchUserMonthlyPayments, removeMonthlyPayment, MonthlyPayment } from '../../services/monthlyPaymentService'; // Adjust the import path as necessary
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -7,20 +7,37 @@ import { router } from 'expo-router';
 import TabLayout from '../(tabs)/_layout'
 import { AntDesign } from '@expo/vector-icons';
 import PageHeader from '@/components/PageHeader';
-
+type ImageProps = React.ComponentProps<typeof RNImage>;
+const Image: React.ComponentType<ImageProps> = RNImage;
 const { width } = Dimensions.get('window');
-
+const category_images = {
+  'Youtube': require("../../assets/youtube-removebg-preview.png"),
+  'Youtube Music': require("../../assets/youtube-music.png"),
+  'Spotify': require("../../assets/spotify.png"),
+  'Netflix': require("../../assets/netflix.png"),
+  'Apple Music': require("../../assets/health.png"),
+  'Moovit': require("../../assets/moovit2.png"),
+  'Disney Plus': require("../../assets/disney_2.png"),
+  'Flight Radar': require("../../assets/plane3.png"),
+};
 const MonthlyPaymentCard = ({ monthlyPayment, removePayment }: { monthlyPayment: MonthlyPayment, removePayment: (businessName: string) => void }) => (
   <View style={styles.card}>
-    <Text style={styles.cardTitle}>{monthlyPayment.businessName}</Text>
-    <Text>{`Amount: ${monthlyPayment.cost} ${monthlyPayment.currency}`}</Text>
-    <Text>{`Payment every month on ${monthlyPayment.date}`}</Text>
+  <View style={styles.cardRow}>
+    <View style={styles.circle_for_expenses}>
+    <Image source={category_images[monthlyPayment.businessName]} style={styles.image} />
+    </View>
+    <View style={styles.cardMiddle}>
+      <Text style={styles.cardCategory}>{monthlyPayment.businessName}</Text>
+      <Text style={styles.cardDescription}>Payment every month on {monthlyPayment.date}</Text>
+    </View>
+    <Text style={styles.cardAmount}>{monthlyPayment.cost}</Text>
+    <Text style={styles.cardCurrency}>{monthlyPayment.currency}</Text>
     <TouchableOpacity onPress={() => removePayment(monthlyPayment.businessName)} style={styles.removeButton}>
-      <Ionicons name="trash-bin-outline" style={styles.icon}/>
+      <Ionicons name="trash-bin-outline" size={22} color="#6AD4DD" />
     </TouchableOpacity>
   </View>
+</View>
 );
-
 const MonthlyPaymentsScreen = ({ }: any) => {
   const [monthlyPayments, setMonthlyPayments] = useState<MonthlyPayment[]>([]);
   const [loading, setLoading] = useState(false);
@@ -103,17 +120,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor:'#2B2D31'
   },
-  card: {
-    marginTop:100,
-    backgroundColor: '#FFF',
-    padding: 20,
-    marginVertical: 8,
-    borderRadius: 10,
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-  },
+  
   fab: {
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
@@ -164,6 +171,68 @@ const styles = StyleSheet.create({
     color: 'white', // Adjust the color as necessary
     fontWeight: 'bold',
   },
+  circle_for_expenses:{
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2, // Half of the size to create a circle
+    backgroundColor: '#6AD4DD', // Change the background color as needed
+    justifyContent: 'center', // Center the content horizontally
+    alignItems: 'center',
+},
+card: {
+  backgroundColor: '#ffffff',
+  borderRadius: 10,
+  padding: 16,
+  marginVertical: 8,
+  shadowColor: '#000',
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+  elevation: 3,
+},
+cardRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+},
+cardMiddle: {
+  flex: 1,
+  justifyContent: 'center',
+  marginLeft: 16, // Adjust as needed for spacing
+},
+cardCategory: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  color: '#33404F',
+},
+cardDescription: {
+  fontSize: 14,
+  color: '#999',
+},
+cardDate: {
+  fontSize: 12,
+  color: '#999',
+},
+cardAmount: {
+  top:5,
+  fontSize: 20,
+  fontWeight: 'bold',
+  color: '#333',
+  position: 'absolute', // Position it absolutely to align it in the middle-right
+  left: 200, // Adjust this value to move the amount left or right
+  alignSelf: 'center',
+},
+cardCurrency:{
+  bottom:7,
+  fontSize:15,
+  fontWeight:'500',
+  color:'#333',
+  alignSelf:'center',
+  right:65
+},
+image: {
+  width: 30,
+  height: 30,
+},
 });
 
 export default MonthlyPaymentsScreen;
