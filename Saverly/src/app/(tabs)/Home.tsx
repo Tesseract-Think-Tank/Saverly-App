@@ -288,15 +288,15 @@ const fetchExpenses = async (userId) => {
     <View style={styles.balanceContainer}>
       {/* <Text> */}
       <View className='flex-row'>
-        <Text style={styles.currencyText}>BALANCE: </Text>
-        {isLoading ? (
-          <Skeleton width={width * 0.4} height={30} />
-        ) : (
-          <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
-        )}
-        {/* <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text> */}
-      {/* </Text> */}
-      </View>
+  <Text>
+    <Text style={styles.currencyText}>BALANCE: </Text>
+    {isLoading ? (
+      <Skeleton width={width * 0.4} height={30} />
+    ) : (
+      <Text style={styles.balanceText}>{balance.toFixed(2)} RON</Text>
+    )}
+  </Text>
+</View>
     </View>
 
       <View style={styles.boxContainer}>
@@ -579,7 +579,7 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 0,
-    marginBottom: 220,
+    marginBottom: 250,
   },
   fab: {
     position: 'absolute',

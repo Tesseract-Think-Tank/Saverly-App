@@ -543,8 +543,8 @@ const styles = StyleSheet.create({
     right:70
   },
   list: {
-    marginTop: 0,
-    marginBottom: 180,
+    marginTop: 25,
+    marginBottom: 140,
   },
 });
 
