@@ -206,9 +206,9 @@ const AccountsScreen = ({ navigation }) => {
             } }
             keyExtractor={(item) => item.id.toString()} 
             ListEmptyComponent={() => (
-              <View style={styles.card}>
+              <View style={[styles.card, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
                 <View style={styles.cardRow}>
-                <View style={styles.circle_for_expenses}>
+                <View style={[styles.circle_for_expenses,areButtonsVisible ? { backgroundColor: 'rgba(0, 0, 128, 0.5)' } : null]}>
                 <Ionicons name="eye-off-outline" size={22} color="black" />
                 </View>
                 <View style={styles.cardMiddle}>
