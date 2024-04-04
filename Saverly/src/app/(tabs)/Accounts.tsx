@@ -205,6 +205,18 @@ const AccountsScreen = ({ navigation }) => {
               );
             } }
             keyExtractor={(item) => item.id.toString()} 
+            ListEmptyComponent={() => (
+              <View style={styles.card}>
+                <View style={styles.cardRow}>
+                <View style={styles.circle_for_expenses}>
+                <Ionicons name="eye-off-outline" size={22} color="black" />
+                </View>
+                <View style={styles.cardMiddle}>
+                <Text style={styles.cardCategory}>No expenses found for this account</Text>
+                </View>
+                </View>
+              </View>
+            )}
             style={styles.list}/>
       )}
 
