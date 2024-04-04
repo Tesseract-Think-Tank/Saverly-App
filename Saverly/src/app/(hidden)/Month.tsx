@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     marginLeft: 250,
     marginTop:15,
     position:'absolute',
-    left:20,
+    left:40,
   },
   removeButtonText: {
     color: 'white', // Adjust the color as necessary
