@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'#2B2D31'
   },
   container2: {
-    marginTop:100,
+    marginTop:10,
     flex: 1,
     padding: 10,
     // backgroundColor:'#2B2D31'
