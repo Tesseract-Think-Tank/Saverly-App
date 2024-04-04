@@ -265,6 +265,7 @@ const AccountsScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.optionButton}
           onPress={() => router.push('AddAccount')}
+          // onPress={() => navigation.navigate('AddAccount')}
           activeOpacity={0.7}
         >
           <View style={styles.iconContainer}>

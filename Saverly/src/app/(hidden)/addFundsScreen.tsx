@@ -8,6 +8,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import backgroundStyles from "@/services/background";
 
+import FundsSVG from '@/assets/money-68.svg'
+
 
 const AddFundsScreen = ({ route, navigation }) => {
   const [amount, setAmount] = useState('');
@@ -50,7 +52,10 @@ const AddFundsScreen = ({ route, navigation }) => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
-    <View style={styles.inputContainer}> 
+    {/* <View>   */}
+      <FundsSVG height={230} width={230} /> 
+    {/* </View> */}
+    <View style={styles.inputContainer}>
       <TextInput
         value={amount}
         onChangeText={setAmount}
@@ -86,6 +91,8 @@ const styles = StyleSheet.create({
     // backgroundColor: '#2B2D31',
   },
   inputContainer: {
+    marginTop: 20,
+    marginBottom: '50%',
     width: '80%',
   },
   buttonContainer: {
