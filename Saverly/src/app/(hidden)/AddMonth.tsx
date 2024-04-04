@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ImageBackground } from 'react-native';
 import { addMonthlyPayment, fetchUserMonthlyPayments } from '../../services/monthlyPaymentService';
 import { MonthlyPayment } from '../../services/monthlyPaymentService';
 import { router } from 'expo-router';
@@ -9,6 +9,9 @@ import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import { getAccounts } from '@/services/addExpense';
+import backgroundStyles from "@/services/background";
+
+
 const AddMonthlyPaymentScreen = () => {
   const [businessName, setBusinessName] = useState('');
   const [cost, setCost] = useState('');
@@ -87,7 +90,11 @@ const AddMonthlyPaymentScreen = () => {
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity><PageHeader title="Add new Monthly Payment"></PageHeader>
-  <View style={styles.container}>
+  <View style={backgroundStyles.containerWithBGColor}>
+        <ImageBackground
+        source={require('@/assets/backgroundWoodPattern.png')}
+        style={backgroundStyles.background}>
+        <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           value={businessName}
@@ -115,6 +122,7 @@ const AddMonthlyPaymentScreen = () => {
             {date.toDateString()}
           </Text>
         </TouchableOpacity>
+        <View style={styles.datePickerView}>
         {showDatePicker && (
           <DatePicker
             value={date}
@@ -126,6 +134,7 @@ const AddMonthlyPaymentScreen = () => {
             }}
             style={styles.datePicker} />
         )}
+        </View>
         <View style={styles.pickerView}>
         <Picker
           selectedValue={cardHolderName}
@@ -150,7 +159,10 @@ const AddMonthlyPaymentScreen = () => {
         </TouchableOpacity>
       </View>
       {loading && <ActivityIndicator size="large" color="#6AD4DD" />}
-    </View></>
+    </View>
+    </ImageBackground>
+    </View>
+    </>
   );
 };
 
@@ -159,7 +171,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#33404F',
+    // backgroundColor: '#33404F',
   },
   title: {
     fontSize: 24,
@@ -188,7 +200,7 @@ const styles = StyleSheet.create({
     width: '100%', 
   },
   datePicker: {
-    height: 60,
+    height: 50,
   },
   buttonContainer: {
     width: '60%',
@@ -218,6 +230,11 @@ const styles = StyleSheet.create({
   pickerView: {
     borderRadius: 10,
     marginTop: 5,
+    overflow: 'hidden',
+  },
+  datePickerView: {
+    borderRadius: 10,
+    // marginTop: 5,
     overflow: 'hidden',
   },
 });
