@@ -12,15 +12,42 @@ import backgroundStyles from "@/services/background";
 const { width, height } = Dimensions.get('window');
 
 const CARD_HEIGHT = height * 0.6; // 60% of the screen height
+const cards_images = {
+  'Revolut': require("../../assets/Revolut3_cleanup.png"),
+  'Raiffeisen': require("../../assets/raiffeisen_cleanup.png"),
+  'Raiffeisen Gold': require("../../assets/raiffeisen_gold_cleanup.png"),
+  'Normal': require("../../assets/normal_card2.png")
+};
+const AccountCard = ({ account, onSelectAccount, navigation }) => {
+  let cardImage;
 
-const AccountCard = ({ account, onSelectAccount, navigation }) => (
-  <View style={styles.cardContainer}>
-    <View style={styles.card2}>
-      <Text style={styles.cardTitle}>{account.type}</Text>
-      <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
+  if (account.type === 'Revolut') {
+    cardImage = cards_images['Revolut'];
+  } else if (account.type === 'Raiffeisen') {
+    cardImage = cards_images['Raiffeisen'];
+  } else if (account.type === 'Raiffeisen Gold') {
+    cardImage = cards_images['Raiffeisen Gold'];
+  } else {
+    cardImage = cards_images['Normal'];
+  }
+
+  return (
+    <View style={styles.cardContainer}>
+      <View style={styles.card2}>
+        <ImageBackground source={cardImage} style={styles.imageBackground}>
+          {cardImage === cards_images['Normal'] && (
+            <Text style={styles.cardTitle}>{account.type}</Text>
+          )}
+          {cardImage === cards_images['Raiffeisen'] ? (
+            <Text style={styles.cardBalance2}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
+          ) : (
+            <Text style={styles.cardBalance}>{`Balance: ${account.balance.toFixed(2)} ${account.currency}`}</Text>
+          )}
+        </ImageBackground>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const Pagination = ({ index, total }) => {
   let dots = [];
@@ -202,7 +229,7 @@ const AccountsScreen = ({ navigation }) => {
           <Text style={styles.cardCurrency}>{item.currency}</Text>
         </View>
       </View>
-              );
+            );
             } }
             keyExtractor={(item) => item.id.toString()} 
             ListEmptyComponent={() => (
@@ -433,11 +460,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
   },
   card2: {
-    bottom:40,
-    backgroundColor: 'white',
+    bottom:50,
     borderRadius: 20,
     width: width * 0.9, // card takes 90% of screen width
-    height: 200, // card height is 80% of CARD_HEIGHT
+    height: 300, // card height is 80% of CARD_HEIGHT
     justifyContent: 'center', // center the card's content vertically
     alignItems: 'center', // center the card's content horizontally
     marginHorizontal: width * 0.05, // add horizontal margin
@@ -452,12 +478,23 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    left:20,
+    marginTop:50,
+    color: '#fff',
   },
   cardBalance: {
+    position:'absolute',
     fontSize: 20,
-    color: '#555',
-    marginTop: 10,
+    color: 'white',
+    marginTop: 60,
+    left:20,
+  },
+  cardBalance2: {
+    position:'absolute',
+    fontSize: 20,
+    color: 'black',
+    marginTop: 60,
+    left:20,
   },
   addButton: {
     position: 'relative',
@@ -564,6 +601,14 @@ const styles = StyleSheet.create({
   list: {
     marginTop: 25,
     marginBottom: 140,
+  },
+  imageBackground: {
+    flex: 1,
+    resizeMode: 'cover',
+    borderRadius: 20,
+    width: '100%',
+    justifyContent: 'center',
+    height:200,
   },
 });
 
