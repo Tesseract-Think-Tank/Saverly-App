@@ -16,6 +16,7 @@ const initializeUserDetails = async (userId, email) => {
             type: 'Cash',
             balance: 0,
             currency: 'RON',
+            id: 'defaultAccountId',
         });
     } catch (error) {
         throw new Error(`Error initializing user details: ${error.message}`);
