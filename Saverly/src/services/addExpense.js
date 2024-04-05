@@ -26,7 +26,7 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
     const q = query(accountsRef, where("currency", "==", accountCurrency), where("type", "==", accountType));
     const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.empty) throw new Error('[1]Account not found.');
+    if (querySnapshot.empty) throw new Error('Account not found.');
     
     const accountSnap = querySnapshot.docs[0];
     const accountId = accountSnap.id; 
@@ -84,6 +84,8 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
       
     return true; 
 };
+
+// nu mai da undo BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 const removeExpense = async (category, description, currency, amount) => {
     const userId = FIREBASE_AUTH.currentUser?.uid;
     if (!userId) throw new Error('No user is signed in.');

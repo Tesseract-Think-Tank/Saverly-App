@@ -176,7 +176,7 @@ const AccountsScreen = ({ navigation }) => {
     setActiveIndex(activeIndex);
     const selectedAccount = accounts[activeIndex];
     setSelectedAccount(selectedAccount);
-    console.log('Active Index:', activeIndex);
+    // console.log('Active Index:', activeIndex);
   };
   const FoggyBackground = ({ visible, onPress }) => {
     const [overlayOpacity, setOverlayOpacity] = useState(0);
