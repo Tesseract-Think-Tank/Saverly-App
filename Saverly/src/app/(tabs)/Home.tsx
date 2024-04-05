@@ -5,7 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { getAuth} from 'firebase/auth';
 import { fetchDataForUser } from '../../services/firebaseServices'; // Adjust the import path according to your project structure
-import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../firebaseConfig';
 // import { router } from 'expo-router';
 import { useRouter } from 'expo-router';
@@ -110,7 +110,7 @@ const Home = () => {
               const exchangeRate = exchangeRates[keyForExchangeRate] || 1; 
               expenseAmount = expenseAmount * exchangeRate;
               // Add the expense amount back to the income
-              setIncome((prevIncome) => prevIncome + expenseAmount);
+              // setIncome((prevIncome) => prevIncome + expenseAmount); // ^^^^^^^^^^
               // Fetch the user's expenses data
               const userData = await fetchDataForUser(userId);
               // Subtract the expense amount from the total expenses
@@ -121,10 +121,63 @@ const Home = () => {
               await updateDoc(userDocRef, {
                 expenses: newExpenses,
               });
-              await updateDoc(userDocRef,{
-                income: userData.income+expenseAmount
-              })
-  
+              // await updateDoc(userDocRef,{
+              //   income: userData.income+expenseAmount
+              // })
+
+
+              // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+              const accountId = expenseDocSnapshot.data().accountId;
+
+              // Now, accountId should be something like "xtXVMfOm...Vm"
+              // Log it to verify
+              console.log(`The account ID from the expense document: ${accountId}`);
+
+              // Obtain a reference to the account document using the accountId
+              // Note: This assumes that the accountId matches the 'id' field in your account documents
+              const accountsCollectionRef = collection(FIREBASE_DB, 'users', userId, 'accounts');
+              const accountQuery = query(accountsCollectionRef, where('id', '==', accountId));
+              const querySnapshot = await getDocs(accountQuery);
+
+              // Check if the account exists
+              if (querySnapshot.empty) {
+                console.log('No matching account found');
+                return;
+              }
+
+              // Assuming there is one account per ID, take the first document
+              const accountDocSnapshot = querySnapshot.docs[0];
+              const accountDocData = accountDocSnapshot.data();
+              
+              // Retrieve the current balance of the account
+              let accountBalance = accountDocData.balance;
+              const accountCurrency = accountDocSnapshot.data().currency;
+
+              // Convert expense amount to account's currency if they are different
+              // if (expensecurrency !== accountCurrency) {
+              //   const exchangeKey = `${expensecurrency}:${accountCurrency}`;
+              //   const accountExchangeRate = exchangeRates[exchangeKey] || 1; 
+              //   expenseAmount = expenseAmount * accountExchangeRate;
+              // }
+
+              // Add the expense amount back to the account's balance
+              accountBalance += expenseAmount;
+              
+            console.log(`Deleted expense ${expenseAmount}`)
+
+              const accountDocRef = accountDocSnapshot.ref;
+
+              console.log(`New balance: ${accountBalance}`)
+              // Update the account document with the new balance
+              await updateDoc(accountDocRef, {
+                balance: accountBalance,
+              });
+
+              // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
               // Delete the expense from Firebase
               await deleteDoc(expenseDocRef);
               console.log('Expense deleted successfully');
