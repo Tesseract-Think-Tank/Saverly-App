@@ -112,7 +112,7 @@ const AddExpenseScreen = () => {
         style={backgroundStyles.background}>
         <View style={styles.container}>
       {/* <Text style={styles.title}>Add New Expense</Text> */}
-      <ExpenseSVG height={200} width={200}/>
+      <ExpenseSVG height={180} width={200}/>
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker

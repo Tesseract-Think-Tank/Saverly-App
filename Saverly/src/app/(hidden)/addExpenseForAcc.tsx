@@ -17,6 +17,9 @@ import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
 import backgroundStyles from "@/services/background";
 
+import ExpenseSVG from '@/assets/online-payment-1-62.svg'
+
+
 
 const AddExpenseForAccScreen = ({route}) => {
   
@@ -82,6 +85,7 @@ const AddExpenseForAccScreen = ({route}) => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
+        <ExpenseSVG height={180} width={200}/>
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker
@@ -117,12 +121,14 @@ const AddExpenseForAccScreen = ({route}) => {
         {loading ? (
           <ActivityIndicator size="large" color="#6AD4DD" />
         ) : (
+          <View className='justify-center items-center'>
           <TouchableOpacity
             onPress={handleAddExpense}
             style={styles.button}
             disabled={loading}>
             <Text style={styles.buttonText}>Add Expense</Text>
           </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>
@@ -148,6 +154,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
+    marginBottom: '40%',
   },
   input: {
     backgroundColor: '#fff',
@@ -173,6 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 40,
     zIndex:3,
+    width: '80%',
   },
   backButton: {
     position: 'absolute',

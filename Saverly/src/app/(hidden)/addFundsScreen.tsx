@@ -72,9 +72,11 @@ const AddFundsScreen = ({ route, navigation }) => {
           ))}
         </Picker>
       </View>
+      <View className='justify-center items-center'>
       <TouchableOpacity style={styles.button} onPress={handleAddFunds}>
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>
+      </View>
     </View>
     </View>
     </ImageBackground>
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
   
   button: {
     backgroundColor: '#6AD4DD',
-    width: '100%',
+    width: '80%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
