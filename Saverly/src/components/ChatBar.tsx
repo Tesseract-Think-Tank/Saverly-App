@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, TextInput, TouchableOpacity, StyleSheet, Animated, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 // import { useNavigation } from '@react-navigation/native';
@@ -14,7 +15,7 @@ const ChatBar = () => {
   const [conversationHistory, setConversationHistory] = useState([
     {
       role: "system",
-      content: "Your name is SaveBot, you are a friendly but professional  financial advisor. Your goal is to help students save money by providing suggestions on how to budget their money. You should keep your messages short (under 50 words if possible), as they should look like real messages between people around the age 20."
+      content: "Your name is SaveBot, you are a friendly but professional  financial advisor. Your goal is to help students save money by providing suggestions on how to budget their money. The currency is always 'RON' You should keep your messages short (if possible), as they should look like real messages between people around the age 20."
     }
   ]);
 
@@ -36,6 +37,31 @@ const ChatBar = () => {
 
     addSystemMessage();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchDataAndUpdateHistory = async () => {
+        const userDataString = await fetchUserDataAsString();
+        console.log(userDataString);
+  
+        setConversationHistory(prevHistory => {
+          // Check if the newly fetched data is different from the existing data at index 1
+          if (prevHistory[1] && prevHistory[1].content !== userDataString) {
+            // If it is different, return a new array with the updated data
+            return prevHistory.map((item, index) => 
+              index === 1 ? {...item, content: userDataString} : item
+            );
+          }
+          // If the data is the same, return the previous history without changes
+          return prevHistory;
+        });
+      };
+  
+      fetchDataAndUpdateHistory();
+    }, [])
+  );
+  
+  
 
   // Animated values
   const opacityAnim = useState(new Animated.Value(0))[0]; // Initial opacity is 0 to hide the buttons

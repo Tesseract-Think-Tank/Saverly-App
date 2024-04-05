@@ -8,13 +8,10 @@ import AccountsScreen from './Accounts';
 import ChatScreen from './Chat';
 import SettingsScreen from './Settings';
 import MonthlyPaymentsScreen from '../(hidden)/Month';
-import AccountsStackNavigator from './AccountStackNavigator';
+import {AccountsStackNavigator, HomeStackNavigator, MonthStackNavigator } from '../../components/StackNavigators';
 
-import AddExpenseScreen from '../(hidden)/addExpense';
-import AddAccountScreen from '../(hidden)/AddAccount';
-import AddExpenseForAccScreen from '../(hidden)/addExpenseForAcc';
-import AddMonthlyPaymentScreen from '../(hidden)/AddMonth';
-import AddFundsScreen from '../(hidden)/addFundsScreen';
+
+
 
 
 import 'react-native-reanimated'
@@ -83,7 +80,7 @@ const TabLayout: React.FC = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => <TabIcon name="Overview" focused={focused} />,
@@ -107,7 +104,7 @@ const TabLayout: React.FC = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={MonthStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => <TabIcon name="Settings" focused={focused} />,

@@ -14,7 +14,6 @@ async function question_food_1(history){
 }
 async function question_food_2(history){
     const prompt2 =  `What are the type of dish that are low budget?Give me some delicious examples,i need 5 examples
-    the answer you give should be in romanian and i want to see the cost in ron
     `
 
     const updatedHistory = history.concat([
@@ -25,7 +24,7 @@ async function question_food_2(history){
 }
 
 async function question_food_3(userInput, history) {
-    const prompt3 = `I have this amount of money ${userInput}, give me 5 examples of dishes that I could cook. Please provide an answer in Romanian.`;
+    const prompt3 = `I have this amount of money ${userInput}, give me 5 examples of dishes that I could cook.`;
 
     // Append the user's query to the history before making the request
     const updatedHistory = history.concat([
@@ -38,7 +37,7 @@ async function question_food_3(userInput, history) {
 
 async function question_food_4(history){
     const prompt4 =  `How can I plan meals for the week to save time and money?.
-    Please provide an answer in romanian.Maximum 100 words and then give 5 examples.
+    Maximum 100 words and then give 5 examples.
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt4 }
@@ -49,7 +48,7 @@ async function question_food_4(history){
 async function question_food_5(userInput, history){
     const prompt5 =  `Can you recommend substitutes for certain ingredients if I don't have them?
     I dont't have this ingredient ${userInput}.
-    Please provide an answer in romanian.Maximum 100 words
+    Maximum 100 words
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt5 }

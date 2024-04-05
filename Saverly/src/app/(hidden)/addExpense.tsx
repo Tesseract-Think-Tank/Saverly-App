@@ -19,7 +19,7 @@ import backgroundStyles from "@/services/background";
 
 import ExpenseSVG from '@/assets/online-payment-1-62.svg'
 
-const AddExpenseScreen = () => {
+const AddExpenseScreen = ({ navigation }) => {
   
   const [category, setCategory] = useState('Food');
   const [amount, setAmount] = useState('');
@@ -94,14 +94,17 @@ const AddExpenseScreen = () => {
     } finally {
       setLoading(false);
     }
-    router.push('Home');
+    // router.push('Home');
+    navigation.navigate('HomeMain')
   };
 
   return (
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Home')} // Go back to the previous screen
+    // onPress={() => router.push('Home')} // Go back to the previous screen
+    onPress={() => navigation.navigate('HomeMain')}
+
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
@@ -112,7 +115,7 @@ const AddExpenseScreen = () => {
         style={backgroundStyles.background}>
         <View style={styles.container}>
       {/* <Text style={styles.title}>Add New Expense</Text> */}
-      <ExpenseSVG height={180} width={200}/>
+      <ExpenseSVG height={200} width={200}/>
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker
@@ -159,16 +162,16 @@ const AddExpenseScreen = () => {
         </Picker>
         </View>
         <View style={styles.buttonContainer}>
-        {loading ? (
+        {/* {loading ? (
           <ActivityIndicator size="large" color="#6AD4DD" />
-        ) : (
+        ) : ( */}
           <TouchableOpacity
             onPress={handleAddExpense}
             style={styles.button}
             disabled={loading}>
             <Text style={styles.buttonText}>Add Expense</Text>
           </TouchableOpacity>
-        )}
+        {/* )} */}
         </View>
       </View>
     </View>
@@ -194,6 +197,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
+    paddingBottom: '47%',
   },
   input: {
     backgroundColor: '#fff',

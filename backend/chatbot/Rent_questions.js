@@ -8,7 +8,7 @@ async function question_rent_1(userInput, history){
             3. A 3-bedroom apartment.
             4. Average apartmenet.
             5. Cheapest rent avalible.
-    Bullet Point style.
+    use this format, specify the apartment type.
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt1 }
@@ -21,7 +21,7 @@ async function question_rent_2(userInput, history){
             1. Lowest cost areas in the city.
             2. Medium cost areas in the city.
             3. Highest cost areas in the city.
-        use this format there shouldnt be anything more than just the name of the area.
+        use this format, specify the area type.
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt2 }
@@ -31,7 +31,7 @@ async function question_rent_2(userInput, history){
 
 async function question_rent_3(userInput, history){
     const prompt3 =  `Tell me how is public transportation in the city, and does it impact housing choices?${userInput}.
-    Please provide an answer in romanian with a cost of the ticket on every transportation for students.Maximum 100 words
+    Please provide an answer with a cost of the ticket on every transportation for students.Maximum 100 words
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt3 }
@@ -41,7 +41,7 @@ async function question_rent_3(userInput, history){
 
 async function question_rent_4(userInput, history){
     const prompt4 =  `What is the average cost of living in the city for students?${userInput}.
-    Please provide an answer in romanian.Maximum 100 words
+    Maximum 100 words
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt4 }
@@ -50,7 +50,7 @@ async function question_rent_4(userInput, history){
 }
 async function question_rent_5(userInput, history){
     const prompt5 =  `How does the overall cost of living compare to other cities?${userInput}.
-    Please provide an answer in romanian.Maximum 100 words
+    Maximum 100 words
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt5 }

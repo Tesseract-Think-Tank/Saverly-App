@@ -8,7 +8,7 @@ async function question_travel_1(userInput, history){
             4. g
             5. i
         where a,c,e,g,i are the places
-        the answer you give should be in romanian and if these places have an enter fee say how much 
+        if these places have an enter fee say how much 
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt1 }
@@ -18,7 +18,7 @@ async function question_travel_1(userInput, history){
 }
 async function question_travel_2(history){
     const prompt2 =  `What is the most cost-effective way to travel?
-        the answer should be in romanian and maximum 100 words.
+     maximum 100 words.
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt2 }
@@ -34,7 +34,7 @@ async function question_travel_3(userInput, history){
     3.
     4.
     5.
-    Please provide an answer in romanian .Maximum 100 words
+    Maximum 100 words
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt3 }
@@ -44,7 +44,7 @@ async function question_travel_3(userInput, history){
 
 async function question_travel_4(userInput, history){
     const prompt4 =  `When is the perfect time to visit ${userInput}.
-    Please provide an answer in romanian.Maximum 100 words
+    Maximum 100 words
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt4 }
@@ -53,7 +53,7 @@ async function question_travel_4(userInput, history){
 }
 async function question_travel_5(history){
     const prompt5 =  `What are some cheap cities in Europe that i can visit?.
-    Please provide an answer in romanian.Maximum 100 words and give 3 examples
+    Maximum 100 words and give 3 examples
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt5 }

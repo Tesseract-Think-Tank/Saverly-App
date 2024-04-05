@@ -27,7 +27,7 @@ const { width, height } = Dimensions.get('window');
 const cardHeight = height / 6.9; // Height of a single card
 const listHeight = cardHeight * 3; // Height of the list to display only 3 cards
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const router = useRouter();
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
@@ -439,7 +439,8 @@ const fetchExpenses = async (userId) => {
        */}
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => router.push('addExpense')}
+        // onPress={() => router.push('addExpense')}
+        onPress={() => navigation.navigate('AddExpenseHome')}
         activeOpacity={0.7}
       >
         <Ionicons name="add" size={30} color="#FFF" />
