@@ -9,7 +9,7 @@ import backgroundStyles from "@/services/background";
 
 const { width } = Dimensions.get('window');
 
-const Settings = () => {
+const Settings = ({ navigation }) => {
   return (
     <View className='flex-1'>
       <View style={backgroundStyles.containerWithBGColor}>
@@ -19,7 +19,11 @@ const Settings = () => {
         <View style={styles.container}>
       <PageHeader title='Month Recap'></PageHeader>
       <MonthlyRecap></MonthlyRecap>
-      <TouchableOpacity onPress={() => router.push('Month')} style={styles.buttonexpense}>
+      <TouchableOpacity 
+        style={styles.buttonexpense}
+        // onPress={() => router.push('Month')} 
+        onPress={() => navigation.navigate("AddMonthExp")}
+      >
       <View style={[styles.buttonHalf, { backgroundColor: '#6AD4DD' }]} />
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Ionicons name="wallet-outline" style={styles.icon1} />

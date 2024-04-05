@@ -160,7 +160,7 @@ const AddMonthlyPaymentScreen = () => {
           <Text style={styles.buttonText}>Add Monthly Payment</Text>
         </TouchableOpacity>
       </View>
-      {loading && <ActivityIndicator size="large" color="#6AD4DD" />}
+      {/* {loading && <ActivityIndicator size="large" color="#6AD4DD" />} */}
       </View>
     </View>
     </ImageBackground>
