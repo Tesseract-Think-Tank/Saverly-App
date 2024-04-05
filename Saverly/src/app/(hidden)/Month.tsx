@@ -26,7 +26,11 @@ const MonthlyPaymentCard = ({ monthlyPayment, removePayment }: { monthlyPayment:
   <View style={styles.card2}>
   <View style={styles.cardRow}>
     <View style={styles.circle_for_expenses}>
-    <Image source={category_images[monthlyPayment.businessName]} style={styles.image} />
+      {category_images[monthlyPayment.businessName] ? (
+        <Image source={category_images[monthlyPayment.businessName]} style={styles.image} />
+      ) : (
+        <Ionicons name="calendar-clear-outline" size={22} color="#000" />
+      )}
     </View>
     <View style={styles.cardMiddle}>
       <Text style={styles.cardCategory}>{monthlyPayment.businessName}</Text>
@@ -106,9 +110,30 @@ const MonthlyPaymentsScreen = ({ }: any) => {
         <View style={styles.container}>
       {/* <ScrollView style={styles.container2} contentContainerStyle={{ backgroundColor: '#2B2D31' }}> */}
       <ScrollView style={styles.container2}>
-        {loading ? <Text>Loading monthly payments...</Text> : monthlyPayments.map((payment: MonthlyPayment) => (
-          <MonthlyPaymentCard key={payment.businessName} monthlyPayment={payment} removePayment={removePayment} />
-        ))}
+      {loading ? (
+  <Text>Loading monthly payments...</Text>
+) : monthlyPayments.length === 0 ? (
+  <View style={styles.card}>
+  <View style={styles.cardRow}>
+  <View style={styles.circle_for_expenses}>
+  <Ionicons name="eye-off-outline" size={22} color="black" />
+  </View>
+  <View style={styles.cardMiddle}>
+  <Text style={styles.cardCategory}>No expenses found for this account</Text>
+  </View>
+  </View>
+</View>
+) : (
+  <ScrollView style={styles.container2}>
+    {monthlyPayments.map((payment: MonthlyPayment) => (
+      <MonthlyPaymentCard
+        key={payment.businessName}
+        monthlyPayment={payment}
+        removePayment={removePayment}
+      />
+    ))}
+  </ScrollView>
+)}
       </ScrollView>
       <TouchableOpacity
         style={styles.fab}
