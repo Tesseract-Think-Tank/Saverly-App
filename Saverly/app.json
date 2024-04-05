@@ -16,6 +16,17 @@
       ]
     ],
     "name": "Saverly",
-    "slug": "Saverly"
+    "slug": "Saverly",
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "f14ed643-64fb-4093-b5f8-f40c81acc968"
+      }
+    },
+    "android": {
+      "package": "com.tesseractr.Saverly"
+    }
   }
 }
