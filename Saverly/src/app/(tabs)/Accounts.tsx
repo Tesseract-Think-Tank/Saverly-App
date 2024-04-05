@@ -470,11 +470,11 @@ const styles = StyleSheet.create({
     marginHorizontal: width * 0.05, // add horizontal margin
     padding: 20,
     // Shadow properties can be adjusted as needed
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 6,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 5 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 6,
+    // elevation: 6,
   },
   cardTitle: {
     fontSize: 24,
