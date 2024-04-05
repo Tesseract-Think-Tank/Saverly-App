@@ -8,7 +8,7 @@ import AccountsScreen from './Accounts';
 import ChatScreen from './Chat';
 import SettingsScreen from './Settings';
 import MonthlyPaymentsScreen from '../(hidden)/Month';
-import AccountsStackNavigator, { HomeStackNavigator, MonthStackNavigator } from './AccountStackNavigator';
+import {AccountsStackNavigator, HomeStackNavigator, MonthStackNavigator } from '../../components/StackNavigators';
 
 
 

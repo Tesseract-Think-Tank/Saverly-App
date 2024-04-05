@@ -1,12 +1,12 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import AccountsScreen from './Accounts';
-import AddExpenseForAccScreen from './../(hidden)//addExpenseForAcc'; // make sure to import the screen
-import AddFundsScreen from '../(hidden)/addFundsScreen';
-import AddAccountScreen from '../(hidden)/AddAccount';
-import AddExpenseScreen from '../(hidden)/addExpense';
-import Home from './Home';
-import Settings from './Settings';
-import AddMonthlyPaymentScreen from '../(hidden)/AddMonth';
+import AccountsScreen from '../app/(tabs)/Accounts';
+import AddExpenseForAccScreen from '../app/(hidden)/addExpenseForAcc'; // make sure to import the screen
+import AddFundsScreen from '../app/(hidden)/addFundsScreen';
+import AddAccountScreen from '../app/(hidden)/AddAccount';
+import AddExpenseScreen from '../app/(hidden)/addExpense';
+import Home from '../app/(tabs)/Home';
+import Settings from '../app/(tabs)/Settings';
+import AddMonthlyPaymentScreen from '../app/(hidden)/AddMonth';
 
 const AccountsStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -65,6 +65,4 @@ function MonthStackNavigator() {
   );
 }
 
-export default AccountsStackNavigator;
-
-export {HomeStackNavigator, MonthStackNavigator}
+export {AccountsStackNavigator, HomeStackNavigator, MonthStackNavigator}
