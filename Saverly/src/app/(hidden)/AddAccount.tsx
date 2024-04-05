@@ -10,6 +10,8 @@ import PageHeader from '@/components/PageHeader';
 import { Picker } from '@react-native-picker/picker';
 import backgroundStyles from "@/services/background";
 
+import AccountSVG from '@/assets/credit-card-1-16.svg'
+
 
 const currencies = [
   'RON',
@@ -64,7 +66,9 @@ const AddAccountScreen = () => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
-      <Image source={require('../../assets/card.png')} style={styles.logo} />
+      {/* <Image source={require('../../assets/card.png')} style={styles.logo} /> */}
+      <AccountSVG height={250} width={250}/>
+
       <View style={styles.inputContainer}>
         <TextInput
           value={type}
@@ -87,7 +91,6 @@ const AddAccountScreen = () => {
           ))}
         </Picker>
         </View>
-      </View>
       {loading ? (
         <ActivityIndicator size="large" color="#6AD4DD" />
       ) : (
@@ -101,6 +104,7 @@ const AddAccountScreen = () => {
           </TouchableOpacity>
         </View>
       )}
+      </View>
     </View>
     </ImageBackground>
     </View>
@@ -128,6 +132,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: '80%',
+        marginBottom: 150,
     },
     backButton: {
       position: 'absolute',
@@ -146,7 +151,7 @@ const styles = StyleSheet.create({
         height: 50,
     },
     buttonContainer: {
-        width: '60%',
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 40,
@@ -162,7 +167,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#6AD4DD',
-        width: '100%',
+        width: '80%',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',

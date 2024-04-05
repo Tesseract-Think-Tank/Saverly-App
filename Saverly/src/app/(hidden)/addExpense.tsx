@@ -17,6 +17,8 @@ import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
 import backgroundStyles from "@/services/background";
 
+import ExpenseSVG from '@/assets/online-payment-1-62.svg'
+
 const AddExpenseScreen = () => {
   
   const [category, setCategory] = useState('Food');
@@ -110,6 +112,7 @@ const AddExpenseScreen = () => {
         style={backgroundStyles.background}>
         <View style={styles.container}>
       {/* <Text style={styles.title}>Add New Expense</Text> */}
+      <ExpenseSVG height={180} width={200}/>
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker

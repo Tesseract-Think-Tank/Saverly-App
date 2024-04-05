@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator, BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomFabBar } from 'rn-wave-bottom-bar';
 import HomeScreen from './Home';
@@ -8,6 +9,14 @@ import ChatScreen from './Chat';
 import SettingsScreen from './Settings';
 import MonthlyPaymentsScreen from '../(hidden)/Month';
 import AccountsStackNavigator from './AccountStackNavigator';
+
+import AddExpenseScreen from '../(hidden)/addExpense';
+import AddAccountScreen from '../(hidden)/AddAccount';
+import AddExpenseForAccScreen from '../(hidden)/addExpenseForAcc';
+import AddMonthlyPaymentScreen from '../(hidden)/AddMonth';
+import AddFundsScreen from '../(hidden)/addFundsScreen';
+
+
 import 'react-native-reanimated'
 import 'react-native-gesture-handler'
 type TabIconProps = {
@@ -16,6 +25,7 @@ type TabIconProps = {
 };
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const TabIcon: React.FC<TabIconProps> = ({ name, focused }) => {
   const iconName: any = (() => {

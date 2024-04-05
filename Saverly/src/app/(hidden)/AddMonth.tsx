@@ -11,6 +11,8 @@ import { Picker } from '@react-native-picker/picker';
 import { getAccounts } from '@/services/addExpense';
 import backgroundStyles from "@/services/background";
 
+import MonthPaySVG from '@/assets/calendar-31.svg'
+
 
 const AddMonthlyPaymentScreen = () => {
   const [businessName, setBusinessName] = useState('');
@@ -95,6 +97,7 @@ const AddMonthlyPaymentScreen = () => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
+      <MonthPaySVG height={200} width={200} />
       <View style={styles.inputContainer}>
         <TextInput
           value={businessName}
@@ -148,8 +151,7 @@ const AddMonthlyPaymentScreen = () => {
           ))}
         </Picker>
         </View>
-      </View>
-      <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={handleAddMonthlyPayment}
           style={styles.button}
@@ -159,6 +161,7 @@ const AddMonthlyPaymentScreen = () => {
         </TouchableOpacity>
       </View>
       {loading && <ActivityIndicator size="large" color="#6AD4DD" />}
+      </View>
     </View>
     </ImageBackground>
     </View>
@@ -181,6 +184,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
+    marginBottom: '35%',
   },
   input: {
     backgroundColor: '#fff',
@@ -203,14 +207,13 @@ const styles = StyleSheet.create({
     height: 50,
   },
   buttonContainer: {
-    width: '60%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
   },
   button: {
     backgroundColor: '#6AD4DD',
-    width: '100%',
+    width: '80%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
