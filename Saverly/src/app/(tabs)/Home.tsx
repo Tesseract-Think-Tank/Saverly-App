@@ -304,7 +304,7 @@ const fetchExpenses = async (userId) => {
       </View>
     );
   };
-  const customPickerStyles = StyleSheet.create({
+  const categoryPickerStyles = StyleSheet.create({
     inputIOS: {
       fontSize: 16,
       paddingVertical: 12,
@@ -318,7 +318,7 @@ const fetchExpenses = async (userId) => {
     },
     inputAndroid: {
       fontSize: 16,
-      paddingHorizontal: 10,
+      paddingHorizontal: 30,
       width: width * 0.45,
       paddingVertical: 8,
       // backgroundColor:'#2B2D31',
@@ -327,10 +327,36 @@ const fetchExpenses = async (userId) => {
     },
     iconContainer: {
       top: 10,
-      left: 120,
+      left: 140,
       alignSelf:'center',
     },
   });
+
+  const monthPickerStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingLeft: 34, // Make room for the icon on the left
+        paddingRight: 10, // Existing padding
+        width: width * 0.1,
+        borderWidth: 1,
+        borderRadius: 10,
+        color: '#fff',
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingVertical: 8,
+        paddingLeft: 148, // Make room for the icon on the left
+        paddingRight: 10, // Existing padding
+        width: width * 0.45,
+        color: '#fff',
+    },
+    iconContainer: {
+      top: 10,
+      left: 32,
+      alignSelf:'center',
+    },
+});
   
 
   return (
@@ -347,7 +373,7 @@ const fetchExpenses = async (userId) => {
       {/* <Text> */}
       <View className='flex-row'>
   <Text>
-    <Text style={styles.currencyText}>BALANCE: </Text>
+    <Text style={styles.currencyText}>Balance: </Text>
     {isLoading ? (
       <Skeleton width={width * 0.4} height={30} />
     ) : (
@@ -377,9 +403,9 @@ const fetchExpenses = async (userId) => {
           </LinearGradient>
         )}
       </View>
-      <View>
+      <View className='flex-row'>
       <RNPickerSelect
-          style={customPickerStyles}
+          style={categoryPickerStyles}
           value={selectedCategory}
           onValueChange={(value) => {
           setSelectedCategory(value);
@@ -390,6 +416,19 @@ const fetchExpenses = async (userId) => {
         return <Ionicons name="chevron-down" size={24} color='#fff' />;
       }}
       />
+       <RNPickerSelect
+          style={monthPickerStyles}
+          value={selectedCategory}
+          onValueChange={(value) => {
+          setSelectedCategory(value);
+        }}
+      items={category_items}
+      useNativeAndroidPickerStyle={false}
+      Icon={() => {
+        return <Ionicons name="chevron-down" size={24} color='#fff' />;
+      }}
+      />
+
       </View>
       {isLoading ? (
       <>
