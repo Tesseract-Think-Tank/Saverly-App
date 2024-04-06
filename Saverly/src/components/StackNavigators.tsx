@@ -7,6 +7,7 @@ import AddExpenseScreen from '../app/(hidden)/addExpense';
 import Home from '../app/(tabs)/Home';
 import Settings from '../app/(tabs)/Settings';
 import AddMonthlyPaymentScreen from '../app/(hidden)/AddMonth';
+import MonthlyPaymentsScreen from '@/app/(hidden)/Month';
 
 const AccountsStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -59,7 +60,7 @@ function MonthStackNavigator() {
       />
       <MonthStack.Screen
         name="AddMonthExp"
-        component={AddMonthlyPaymentScreen}
+        component={MonthlyPaymentsScreen}
       />
     </MonthStack.Navigator>      
   );
