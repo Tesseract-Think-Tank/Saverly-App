@@ -19,7 +19,7 @@ const currencies = [
   'EUR',
   'GBP'
 ];
-const AddAccountScreen = () => {
+const AddAccountScreen = ({ navigation }) => {
   const [type, setType] = useState('');
   const [balance, setBalance] = useState('');
   const [currency, setCurrency] = useState('RON');
@@ -42,13 +42,17 @@ const AddAccountScreen = () => {
 
       await fetchUserAccounts();
       
-      router.back; // Navigate back to the previous screen
+      // router.back; // Navigate back to the previous screen
+      navigation.navigate('AccountsMain')
+
     } catch (error: any) {
       console.error('Error adding account:', error);
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
-      router.push('Accounts');
+      // router.push('Accounts');
+      navigation.navigate('AccountsMain')
+
     }
   };
 
@@ -56,7 +60,8 @@ const AddAccountScreen = () => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Accounts')} // Go back to the previous screen
+    // onPress={() => router.push('Accounts')} // Go back to the previous screen
+    onPress={() => navigation.navigate('AccountsMain')}
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>

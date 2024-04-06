@@ -8,6 +8,8 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../../firebaseConfig';
 import PageHeader from '@/components/PageHeader';
 import backgroundStyles from "@/services/background";
+import { getExpenseDateAndTime } from '@/services/accountService';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -73,6 +75,8 @@ const AccountsScreen = ({ navigation }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [areButtonsVisible, setAreButtonsVisible] = useState(false);
   const [areOptionsVisible, setAreOptionsVisible] = useState(false);
+  const [listData, setListData] = useState([]);
+
 
   const userId = FIREBASE_AUTH.currentUser?.uid;
 
@@ -113,24 +117,71 @@ const AccountsScreen = ({ navigation }) => {
 
   const fetchExpensesForAccount = async (accountId) => {
     try {
+  
       const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
       const expensesQuery = query(expensesCollectionRef, where("accountId", "==", accountId));
       const expensesSnapshot = await getDocs(expensesQuery);
-
+  
       if (expensesSnapshot.empty) {
         console.log('No matching documents in expenses collection for account:', accountId);
         return [];
       }
-
-      const expensesForAccount = expensesSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      return expensesForAccount;
+  
+      // Fetch each expense's dateAndTime using getExpenseDateAndTime
+      const expensesDataPromises = expensesSnapshot.docs.map(async (doc) => {
+        const dateAndTime = await getExpenseDateAndTime(doc.id);
+        return {
+          id: doc.id,
+          ...doc.data(),
+          dateAndTime: dateAndTime || null, // Convert Firestore Timestamp to JavaScript Date object if not null
+        };
+      });
+  
+      let expensesForAccount = await Promise.all(expensesDataPromises);
+  
+      // Filter out any expenses without a valid dateAndTime and sort them by dateAndTime in descending order
+      const sortedExpensesData = expensesForAccount
+        .filter((item) => item.dateAndTime !== null)
+        .sort((a, b) => b.dateAndTime - a.dateAndTime);
+      return sortedExpensesData;
     } catch (error) {
       console.error("Error fetching expenses for account:", accountId, error);
       throw error;
+    }
+  };
+  
+  
+
+  const fetchExpenses = async (accountId) => {
+    try {
+      const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
+      const expensesQuery = query(expensesCollectionRef, where("accountId", "==", accountId));
+      const expensesSnapshot = await getDocs(expensesQuery);
+      if (expensesSnapshot.empty) {
+        setListData([]);
+        return;
+      }
+  
+      // Fetch each expense's date and time individually (inefficient)
+      const expensesDataPromises = expensesSnapshot.docs.map(async (doc) => {
+        const dateAndTime = await getExpenseDateAndTime(doc.id);
+        return {
+          id: doc.id,
+          ...doc.data(),
+          dateAndTime: dateAndTime || null, // Fallback to null if dateAndTime couldn't be fetched
+        };
+      });
+  
+      const newExpensesData = await Promise.all(expensesDataPromises);
+  
+      // Filter and sort as before
+      const sortedExpensesData = newExpensesData
+        .filter((item) => item.dateAndTime !== null)
+        .sort((a, b) => b.dateAndTime - a.dateAndTime);
+  
+      setListData(sortedExpensesData);
+    } catch (error) {
+      console.error("Error fetching expenses: ", error);
     }
   };
 
@@ -193,7 +244,7 @@ const AccountsScreen = ({ navigation }) => {
         <ImageBackground
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
-        <View style={[styles.container, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
+      <View style={[styles.container, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
       <FlatList
         horizontal
         pagingEnabled
@@ -212,10 +263,13 @@ const AccountsScreen = ({ navigation }) => {
       {selectedAccount && (
           <FlatList
             data={selectedAccount.expenses}
+            style = {styles.list}
+            contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start' }}
             renderItem={({ item }) => {
               const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
               return (
-                <View style={[styles.card, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
+                <View style={[styles.commonCardStyle, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
+          
         <View style={styles.cardRow}>
           <View style={[styles.circle_for_expenses,areButtonsVisible ? { backgroundColor: 'rgba(0, 0, 128, 0.5)' } : null]}>
           <Ionicons name={category_ionicons[item.category]} size={30} color="black" />
@@ -233,18 +287,18 @@ const AccountsScreen = ({ navigation }) => {
             } }
             keyExtractor={(item) => item.id.toString()} 
             ListEmptyComponent={() => (
-              <View style={[styles.card, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
+              <View style={[styles.commonCardStyle, areButtonsVisible ? { backgroundColor: '#000' } : null]}>
                 <View style={styles.cardRow}>
-                <View style={[styles.circle_for_expenses,areButtonsVisible ? { backgroundColor: 'rgba(0, 0, 128, 0.5)' } : null]}>
-                <Ionicons name="eye-off-outline" size={22} color="black" />
-                </View>
-                <View style={styles.cardMiddle}>
-                <Text style={styles.cardCategory}>No expenses found for this account</Text>
-                </View>
+                  <View style={[styles.circle_for_expenses, areButtonsVisible ? { backgroundColor: 'rgba(0, 0, 128, 0.5)' } : null]}>
+                    <Ionicons name="eye-off-outline" size={22} color="black" />
+                  </View>
+                  <View style={styles.cardMiddle}>
+                    <Text style={styles.cardCategory}>No expenses found for this account</Text>
+                  </View>
                 </View>
               </View>
             )}
-            style={styles.list}/>
+          />
       )}
 
       <TouchableOpacity
@@ -330,6 +384,7 @@ const styles = StyleSheet.create({
   },
   flatListContentContainer: {
     paddingTop: 0, // space from the top of the screen
+    
   },
   fab: {
     position: 'relative',
@@ -354,7 +409,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: width, // each card spans the full width
-    height: CARD_HEIGHT, // set height of the card
+    height: 300, // set height of the card
     paddingTop: 60, // add padding to the top of the card
     alignItems: 'center',
   },
@@ -396,6 +451,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84, // Shadow blur radius
     elevation: 5, // Elevation for Android
     marginHorizontal: 16, // Horizontal margin
+    
   },
   
   
@@ -442,6 +498,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6AD4DD', // Change the background color as needed
     justifyContent: 'center', // Center the content horizontally
     alignItems: 'center',
+    
 },
   optionButton3: {
     position: 'absolute',
@@ -532,8 +589,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#B5C5C3',
   },
   expensesListContainer: {
-    paddingTop:10,
-    top:280,
+    // paddingTop:100,
+    // top:280,
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -550,6 +607,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    
   },
   card: {
     backgroundColor: '#ffffff',
@@ -570,6 +628,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginLeft: 16, // Adjust as needed for spacing
+    
   },
   cardCategory: {
     fontSize: 16,
@@ -600,8 +659,9 @@ const styles = StyleSheet.create({
     right:70
   },
   list: {
-    marginTop: 25,
-    marginBottom: 140,
+    top:-150,
+    minHeight: 100,
+    height:200
   },
   imageBackground: {
     flex: 1,
@@ -610,6 +670,18 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     height:200,
+  },
+  commonCardStyle: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 16,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginHorizontal: 16, // Add horizontal margin if needed
+    
   },
 });
 
