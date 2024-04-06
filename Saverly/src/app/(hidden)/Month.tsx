@@ -152,7 +152,7 @@ const MonthlyPaymentsScreen = ({ }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 0,
     // backgroundColor:'#2B2D31'
   },
   container2: {
@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 },
 card2: {
+  // width: '100%',
   backgroundColor: '#ffffff',
   borderRadius: 10,
   padding: 16,
@@ -256,6 +257,7 @@ cardCategory: {
   color: '#33404F',
 },
 cardDescription: {
+  paddingTop: 5,
   fontSize: 14,
   color: '#999',
 },
@@ -269,7 +271,7 @@ cardAmount: {
   fontWeight: 'bold',
   color: '#333',
   position: 'absolute', // Position it absolutely to align it in the middle-right
-  left: 200, // Adjust this value to move the amount left or right
+  left: 210, // Adjust this value to move the amount left or right
   alignSelf: 'center',
 },
 cardCurrency:{
@@ -278,7 +280,7 @@ cardCurrency:{
   fontWeight:'500',
   color:'#333',
   alignSelf:'center',
-  right:65
+  right:55
 },
 image: {
   width: 30,

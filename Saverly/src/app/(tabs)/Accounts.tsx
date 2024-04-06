@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
   cardBalance2: {
     position:'absolute',
     fontSize: 20,
-    color: 'black',
+    color: '#fff',
     marginTop: 60,
     left:20,
   },
