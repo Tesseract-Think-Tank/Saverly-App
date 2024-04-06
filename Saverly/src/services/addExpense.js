@@ -85,7 +85,6 @@ const addExpense = async (accountCurrency, accountType, category, amount, descri
     return true; 
 };
 
-// nu mai da undo BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 const removeExpense = async (category, description, currency, amount) => {
     const userId = FIREBASE_AUTH.currentUser?.uid;
     if (!userId) throw new Error('No user is signed in.');
