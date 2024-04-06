@@ -21,7 +21,7 @@ import ExpenseSVG from '@/assets/online-payment-1-62.svg'
 
 
 
-const AddExpenseForAccScreen = ({route}) => {
+const AddExpenseForAccScreen = ({route, navigation}) => {
   
   const {selectedAccount} = route.params || {};
   const [category, setCategory] = useState('Food');
@@ -68,14 +68,17 @@ const AddExpenseForAccScreen = ({route}) => {
     } finally {
       setLoading(false);
     }
-    router.push('Accounts');
+    // router.push('Accounts');
+    navigation.navigate('AccountsMain')
+
   };
 
   return (
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Accounts')} // Go back to the previous screen
+    // onPress={() => router.push('Accounts')} // Go back to the previous screen
+    onPress={() => navigation.navigate('AccountsMain')}
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>

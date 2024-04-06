@@ -16,12 +16,17 @@ async function question_rent_1(userInput, history){
     return await create_response(prompt1, updatedHistory);
 }
 async function question_rent_2(userInput, history){
-    const prompt2 =  `Estimate the average monthly rent in euros for the following types of properties in ${userInput}. 
+    const prompt2 =  `Estimate the average monthly rent in euros for the following types of properties in ${userInput}.
+    A 1-bedroom apartment.
+            2. A 2-bedroom apartment.
+            3. A 3-bedroom apartment.
+            4. Average apartmenet.
+            5. Cheapest rent avalible. 
     Please provide a separate estimate for each type and:
             1. Lowest cost areas in the city.
             2. Medium cost areas in the city.
             3. Highest cost areas in the city.
-        use this format, specify the area type.
+        use this format, specify the area type and the name of the area.
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt2 }

@@ -41,7 +41,8 @@ const AddFundsScreen = ({ route, navigation }) => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Accounts')} // Go back to the previous screen
+    // onPress={() => router.push('Accounts')} // Go back to the previous screen
+    onPress={() => navigation.navigate('AccountsMain')}
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
