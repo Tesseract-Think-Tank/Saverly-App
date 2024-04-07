@@ -28,7 +28,15 @@ export async function SendNotification(notificationMessage) {
         body: JSON.stringify(message),
     });
 }
-
+export async function schedulePushNotificationAdd(notificationMessage) {
+    await Notifications.scheduleNotificationAsync({
+        content: {
+            title: "Scheduled Notification set",
+            body: "A notification will appear every month for "+notificationMessage,
+        },
+        trigger: { seconds: 1 },
+    });
+}
 
 export async function schedulePushNotification(ScheduleDate, notificationMessage) {
     await Notifications.scheduleNotificationAsync({
@@ -39,6 +47,7 @@ export async function schedulePushNotification(ScheduleDate, notificationMessage
         trigger: { date: ScheduleDate },
     });
 }
+
 
   // Function to get Expo push token
     async function getExpoPushToken() {

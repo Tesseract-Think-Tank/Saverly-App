@@ -3,7 +3,7 @@ import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator,
 import { addMonthlyPayment, fetchUserMonthlyPayments } from '../../services/monthlyPaymentService';
 import { MonthlyPayment } from '../../services/monthlyPaymentService';
 import { router } from 'expo-router';
-import { scheduleMonthlyNotifications } from '../../services/Notifications';
+import { scheduleMonthlyNotifications,schedulePushNotificationAdd } from '../../services/Notifications';
 import DatePicker from '@react-native-community/datetimepicker';
 import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
@@ -92,6 +92,7 @@ const AddMonthlyPaymentScreen = ( { navigation }) => {
       notificationDate.setSeconds(0);
       monthlyPayment.setDate(date.toDateString);
       scheduleMonthlyNotifications(notificationDate, monthlyPayment.getBusinessName());
+      schedulePushNotificationAdd(monthlyPayment.getBusinessName());
       await fetchUserMonthlyPayments();
       // router.back(); // Navigate back to the previous screen
       navigation.navigate('MonthExp')
