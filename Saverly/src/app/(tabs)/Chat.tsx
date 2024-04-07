@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   // Update your button style to remove the margins and adjust padding if necessary
   button: {
     position: 'absolute',
-    top:20,
+    top:30,
     left:20,
     padding: 10,
     borderRadius: 5,
