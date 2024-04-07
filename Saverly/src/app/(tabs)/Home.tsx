@@ -486,31 +486,26 @@ const fetchExpenses = async (userId) => {
 />
     )}
 
-      {showLogs && (
-        <FlatList
-          data={logData}
-            renderItem={({ item }) => (
-            <View style={styles.card}>
-              {/* Display message, amount, and currency */}
-              <Text style={styles.logItemText}>
-                {item.message} + {item.balance.toFixed(2)} {item.currency}
-              </Text>
-            </View>
-        )}
-        
-          keyExtractor={(item) => item.id.toString()}
-          style={styles.list}
-        />
-        
+{showLogs && (
+  <View style={styles.logsContainer}>
+    <FlatList
+      data={logData}
+      renderItem={({ item }) => (
+        <View style={styles.logItem}>
+          <Text style={styles.logItemText}>
+            {item.message} + {item.balance.toFixed(2)} {item.currency}
+          </Text>
+        </View>
       )}
-      
-      {/* <LinearGradient
-        colors={['transparent', '#33404F']}
-        // Add locations for the gradient colors to define where the transition begins
-        locations={[0, 1]}
-        style={styles.fadeOutContainer}
-      />
-       */}
+      keyExtractor={(item) => item.id.toString()}
+      scrollEnabled={true} // Ensure scrolling is enabled
+      nestedScrollEnabled={true} // If nested inside another scrollable component
+    />
+  </View>
+)}
+
+
+      {(!showLogs &&
       <TouchableOpacity
         style={styles.fab}
         // onPress={() => router.push('addExpense')}
@@ -519,24 +514,7 @@ const fetchExpenses = async (userId) => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
-
-      {/* <TouchableOpacity
-        style={styles.fab}
-        onPress={() => router.push('TestSkel')}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="add" size={30} color="#FFF" />
-      </TouchableOpacity> */}
-    
-      {/* <AnimatedLoader
-            visible={isLoading} // Keep visible true because we are conditionally rendering this whole component
-            overlayColor="rgba(150,150,150,0.95)"
-            source={require("../../assets/white_dots.json")}
-            animationStyle={styles.lottie}
-            speed={1}
-          >
-            <Text>Loading...</Text>
-      </AnimatedLoader> */}
+      )}
     </SafeAreaView>
     </ImageBackground>
     </View>
@@ -569,23 +547,32 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     height: height / 20,
   },
+  logsContainer: {
+    marginBottom: 300,
+    flexGrow: 1, // Allows the container to expand for its content, up to its maximum height
+    maxHeight: '20%', // Adjust based on your layout; ensures the list doesn't take up the entire screen
+    margin: 10, // Gives some space around the container for better appearance
+    padding: 10, // Padding inside the container for the FlatList
+    backgroundColor: '#fff', // Background color for visibility
+    // borderColor: 'red',
+    // borderWidth: 10,
+    borderRadius: 10, // Rounded corners for aesthetics
+    shadowColor: '#000', // Shadow for depth
+    shadowOffset: { width: 0, height: 2 }, // Shadow positioning
+    shadowOpacity: 0.23, // Shadow visibility
+    shadowRadius: 2.62, // Shadow blur radius
+    elevation: 4, // Elevation for Android for shadow effect
+  },
   logItem: {
-    backgroundColor: '#000',
-    padding: 20,
-    marginVertical: 8,
-    borderRadius: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0,
-    shadowRadius: 2,
-    elevation: 0,
+    backgroundColor: '#f2f2f2', // Light grey for items, adjust as needed
+    padding: 10, // Padding inside each log item
+    borderRadius: 5, // Rounded corners for log items
+    marginVertical: 5, // Margin between items
   },
-  logItemText: {
-    fontSize: 16,
-    color: '#333',
-  },
+logItemText: {
+  fontSize: 16,
+  color: '#333', // Dark text color for contrast
+},
   divider: {
     borderBottomColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent black for a subtle look
     borderBottomWidth: 1, // Thickness of the divider line
