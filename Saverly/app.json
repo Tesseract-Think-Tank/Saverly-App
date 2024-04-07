@@ -3,6 +3,7 @@
     "scheme": "acme",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
+    "icon": "./src/assets/icon.png",
     "web": {
       "output": "static",
       "bundler": "metro"
@@ -22,7 +23,7 @@
         "origin": "https://n"
       },
       "eas": {
-        "projectId": "f14ed643-64fb-4093-b5f8-f40c81acc968"
+        "projectId": "980674ae-b7e0-4e0f-82c9-54cbe791212e"
       }
     },
     "android": {

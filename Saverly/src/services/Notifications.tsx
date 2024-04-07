@@ -31,7 +31,7 @@ export async function SendNotification(notificationMessage) {
 export async function schedulePushNotificationAdd(notificationMessage) {
     await Notifications.scheduleNotificationAsync({
         content: {
-            title: "Scheduled Notification set",
+            title: "Scheduled Notification Set",
             body: "A notification will appear every month for "+notificationMessage,
         },
         trigger: { seconds: 1 },
