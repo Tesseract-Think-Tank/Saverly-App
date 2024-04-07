@@ -93,7 +93,7 @@ const AddFundsScreen = ({ route, navigation }) => {
           ))}
         </Picker>
       </View>
-      <View className='justify-center items-center'>
+      <View style={styles.containerButon}>
       <TouchableOpacity style={styles.button} onPress={handleAddFunds}>
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>
@@ -169,6 +169,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 5,
         overflow: 'hidden',
+      },
+      containerButon: {
+        alignItems: 'center',   
       },
 });
 export default AddFundsScreen;

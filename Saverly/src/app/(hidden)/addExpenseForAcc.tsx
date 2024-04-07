@@ -146,7 +146,7 @@ const AddExpenseForAccScreen = ({route, navigation}) => {
         {loading ? (
           <ActivityIndicator size="large" color="#6AD4DD" />
         ) : (
-          <View className='justify-center items-center'>
+          <View style={styles.containerButon}>
           <TouchableOpacity
             onPress={handleAddExpense}
             style={styles.button}
@@ -170,6 +170,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: '#2B2D31',
+  },
+  containerButon: {
+    alignItems: 'center',   
   },
   title: {
     fontSize: 24,
