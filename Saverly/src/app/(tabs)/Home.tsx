@@ -19,7 +19,7 @@ import 'react-native-gesture-handler'
 import { MotiView } from 'moti'
 import { Skeleton } from 'moti/skeleton'
 import backgroundStyles from "@/services/background";
-
+import {filterExpensesByMonth} from "@/services/filterExpensesByMonth";
 
 
 const { width, height } = Dimensions.get('window');
@@ -37,7 +37,7 @@ const Home = ({ navigation }) => {
   const [showLogs, setShowLogs] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
-
+  const [selectedMonth,setSelectedMonth] = useState("April");
 
 
   const fetchUserData = async () => {
@@ -274,11 +274,30 @@ const fetchExpenses = async (userId) => {
     'Other',
   ];
 
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
   const category_items = categories.map(str => ({
     label: str,
     value: str,
   }));
 
+  const month_items = months.map(str =>({
+    label:str,
+    value:str,
+  }));
 
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
@@ -418,11 +437,11 @@ const fetchExpenses = async (userId) => {
       />
        <RNPickerSelect
           style={monthPickerStyles}
-          value={selectedCategory}
+          value={selectedMonth}
           onValueChange={(value) => {
-          setSelectedCategory(value);
+          setSelectedMonth(value);
         }}
-      items={category_items}
+      items={month_items}
       useNativeAndroidPickerStyle={false}
       Icon={() => {
         return <Ionicons name="chevron-down" size={24} color='#fff' />;
@@ -444,11 +463,23 @@ const fetchExpenses = async (userId) => {
       </>
     ) : (
       <FlatList
-        data={filterExpensesByCategory(listData, selectedCategory)}
+        data={filterExpensesByMonth(filterExpensesByCategory(listData, selectedCategory), selectedMonth)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         style={[styles.list, { height: listHeight }]}
-      />
+        ListEmptyComponent={() => (
+          <View style={styles.commonCardStyle}>
+          <View style={styles.cardRow}>
+            <View style={styles.circle_for_expenses}>
+              <Ionicons name="eye-off-outline" size={22} color="black" />
+            </View>
+            <View style={styles.cardMiddle}>
+              <Text style={styles.cardCategory}>No expenses found</Text>
+            </View>
+          </View>
+        </View>
+  )}
+/>
     )}
 
       {showLogs && (
@@ -732,8 +763,19 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-  }
-  
+  },
+  commonCardStyle: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 16,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginHorizontal: 16, // Add horizontal margin if needed
+    
+  },
 });
 
 export default Home;
