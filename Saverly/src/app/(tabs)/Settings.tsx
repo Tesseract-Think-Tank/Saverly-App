@@ -22,7 +22,7 @@ const Settings = ({ navigation }) => {
       <TouchableOpacity 
         style={styles.buttonexpense}
         // onPress={() => router.push('Month')} 
-        onPress={() => navigation.navigate("AddMonthExp")}
+        onPress={() => navigation.navigate("MonthExp")}
       >
       <View style={[styles.buttonHalf, { backgroundColor: '#6AD4DD' }]} />
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
