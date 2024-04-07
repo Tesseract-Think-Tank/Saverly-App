@@ -18,6 +18,7 @@ const cards_images = {
   'Revolut': require("../../assets/Revolut3_cleanup.png"),
   'Raiffeisen': require("../../assets/raiffeisen_cleanup.png"),
   'Raiffeisen Gold': require("../../assets/raiffeisen_gold_cleanup.png"),
+  'ING': require("../../assets/ING.jpg"),
   'Normal': require("../../assets/normal_card2.png")
 };
 const AccountCard = ({ account, onSelectAccount, navigation }) => {
@@ -29,7 +30,9 @@ const AccountCard = ({ account, onSelectAccount, navigation }) => {
     cardImage = cards_images['Raiffeisen'];
   } else if (account.type === 'Raiffeisen Gold') {
     cardImage = cards_images['Raiffeisen Gold'];
-  } else {
+  } else if (account.type === 'ING') {
+    cardImage = cards_images['ING'];
+  }else {
     cardImage = cards_images['Normal'];
   }
 
