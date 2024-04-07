@@ -345,6 +345,7 @@ const fetchExpenses = async (userId) => {
       // top:10,
     },
     iconContainer: {
+
       top: 10,
       left: 140,
       alignSelf:'center',
@@ -363,14 +364,17 @@ const fetchExpenses = async (userId) => {
         color: '#fff',
     },
     inputAndroid: {
-        fontSize: 16,
-        paddingVertical: 8,
-        paddingLeft: 148, // Make room for the icon on the left
-        paddingRight: 10, // Existing padding
-        width: width * 0.45,
-        color: '#fff',
-    },
+
+      fontSize: 16,
+      paddingVertical: 8,
+      paddingHorizontal: 10, // Adjust as necessary
+      width: width * 0.45,
+      color: '#fff',
+      textAlign: 'right', // Align text to the right
+  },
     iconContainer: {
+
+      width: 40,
       top: 10,
       left: 32,
       alignSelf:'center',
