@@ -44,7 +44,7 @@ const MonthlyPaymentCard = ({ monthlyPayment, removePayment }: { monthlyPayment:
   </View>
 </View>
 );
-const MonthlyPaymentsScreen = ({ }: any) => {
+const MonthlyPaymentsScreen = ({ navigation }: any) => {
   const [monthlyPayments, setMonthlyPayments] = useState<MonthlyPayment[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -98,7 +98,8 @@ const MonthlyPaymentsScreen = ({ }: any) => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Settings')} // Go back to the previous screen
+    // onPress={() => router.push('Settings')} // Go back to the previous screen
+    onPress={() => navigation.navigate('MonthMain')}
   >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
@@ -137,7 +138,8 @@ const MonthlyPaymentsScreen = ({ }: any) => {
       </ScrollView>
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => router.push('AddMonth')}
+        // onPress={() => router.push('AddMonth')}
+        onPress={() => navigation.navigate('AddMonthExp')}
         activeOpacity={0.7} // Optional: reduce the opacity on touch
       >
         <Ionicons name='add' size={24} color="white" />

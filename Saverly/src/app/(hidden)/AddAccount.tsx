@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, Image, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, Image, ImageBackground, Keyboard } from 'react-native';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../../firebaseConfig';
 import { fetchDataForUser } from '../../services/firebaseServices';
@@ -24,6 +24,7 @@ const AddAccountScreen = ({ navigation }) => {
   const [balance, setBalance] = useState('');
   const [currency, setCurrency] = useState('RON');
   const [loading, setLoading] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const handleAddAccount = async () => {
     if (!type || !balance || !currency) {
@@ -56,6 +57,22 @@ const AddAccountScreen = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <>
     <TouchableOpacity
@@ -72,8 +89,9 @@ const AddAccountScreen = ({ navigation }) => {
         style={backgroundStyles.background}>
         <View style={styles.container}>
       {/* <Image source={require('../../assets/card.png')} style={styles.logo} /> */}
-      <AccountSVG height={250} width={250}/>
-
+      {!isKeyboardVisible && (
+        <AccountSVG height={250} width={250}/>
+      )}
       <View style={styles.inputContainer}>
         <TextInput
           value={type}
