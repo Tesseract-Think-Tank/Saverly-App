@@ -491,7 +491,7 @@ const fetchExpenses = async (userId) => {
     <FlatList
       data={logData}
       renderItem={({ item }) => (
-        <View style={styles.logItem}>
+        <View style={styles.commonCardStyle}>
           <Text style={styles.logItemText}>
             {item.message} + {item.balance.toFixed(2)} {item.currency}
           </Text>
@@ -548,22 +548,21 @@ const styles = StyleSheet.create({
     height: height / 20,
   },
   logsContainer: {
-    marginBottom: 300,
+    height: 285,
+    // marginBottom: 300,
+    top: -250,
     flexGrow: 1, // Allows the container to expand for its content, up to its maximum height
-    maxHeight: '20%', // Adjust based on your layout; ensures the list doesn't take up the entire screen
+    // maxHeight: '30%', // Adjust based on your layout; ensures the list doesn't take up the entire screen
     margin: 10, // Gives some space around the container for better appearance
-    padding: 10, // Padding inside the container for the FlatList
-    backgroundColor: '#fff', // Background color for visibility
+    // padding: 10, // Padding inside the container for the FlatList
+    // backgroundColor: '#fff', // Background color for visibility
+    backgroundColor: 'transparent',
     // borderColor: 'red',
     // borderWidth: 10,
     borderRadius: 10, // Rounded corners for aesthetics
-    shadowColor: '#000', // Shadow for depth
-    shadowOffset: { width: 0, height: 2 }, // Shadow positioning
-    shadowOpacity: 0.23, // Shadow visibility
-    shadowRadius: 2.62, // Shadow blur radius
-    elevation: 4, // Elevation for Android for shadow effect
   },
   logItem: {
+    
     backgroundColor: '#f2f2f2', // Light grey for items, adjust as needed
     padding: 10, // Padding inside each log item
     borderRadius: 5, // Rounded corners for log items
@@ -574,6 +573,7 @@ logItemText: {
   color: '#333', // Dark text color for contrast
 },
   divider: {
+    
     borderBottomColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent black for a subtle look
     borderBottomWidth: 1, // Thickness of the divider line
     marginTop: height/50, // Spacing above the line
@@ -593,6 +593,7 @@ logItemText: {
     color: '#ffffff',
   },
   card: {
+    
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 16,
@@ -603,6 +604,7 @@ logItemText: {
     elevation: 3,
   },
   cardRow: {
+    
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -641,6 +643,7 @@ logItemText: {
     right:70
   },
   cardSkeleton: {
+    
     // backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 16,
@@ -661,6 +664,7 @@ logItemText: {
     justifyContent: 'space-between',
   },
   boxGradient: {
+    
     borderRadius: 20,
     padding: 16,
     width: width * 0.45, // adjusted for better responsiveness
@@ -678,6 +682,7 @@ logItemText: {
     marginTop: 8,
   },
   boxValue: {
+    
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
@@ -705,6 +710,7 @@ logItemText: {
     marginBottom: 250,
   },
   fab: {
+    
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 110, // Adjust this value based on your tab bar height
@@ -721,6 +727,7 @@ logItemText: {
     shadowOffset: { width: 5, height: 5 },
   },
   expensesListContainer: {
+    
     paddingTop:10,
     top:280,
     position: 'absolute',
@@ -756,6 +763,7 @@ logItemText: {
     right: 0,
   },
   commonCardStyle: {
+    
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 16,
