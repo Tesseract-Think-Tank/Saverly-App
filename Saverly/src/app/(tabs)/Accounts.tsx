@@ -33,6 +33,8 @@ const AccountCard = ({ account, onSelectAccount, navigation }) => {
     cardImage = cards_images['Raiffeisen Gold'];
   } else if (account.type === 'ING') {
     cardImage = cards_images['ING'];
+  }else if (account.type === 'Cash') {
+      cardImage = cards_images['Cash'];
   }else {
     cardImage = cards_images['Normal'];
   }
