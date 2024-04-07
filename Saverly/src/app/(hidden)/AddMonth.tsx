@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ImageBackground } from 'react-native';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ImageBackground, Keyboard } from 'react-native';
 import { addMonthlyPayment, fetchUserMonthlyPayments } from '../../services/monthlyPaymentService';
 import { MonthlyPayment } from '../../services/monthlyPaymentService';
 import { router } from 'expo-router';
@@ -24,6 +24,25 @@ const AddMonthlyPaymentScreen = () => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false); // State to control date picker visibility
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+
   const currencies = [
     'RON',
     'USD',
@@ -97,7 +116,9 @@ const AddMonthlyPaymentScreen = () => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
-      <MonthPaySVG height={200} width={200} />
+        {!isKeyboardVisible && (
+          <MonthPaySVG height={200} width={200} />
+        )}
       <View style={styles.inputContainer}>
         <TextInput
           value={businessName}
