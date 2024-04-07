@@ -19,6 +19,7 @@ const cards_images = {
   'Raiffeisen': require("../../assets/raiffeisen_cleanup.png"),
   'Raiffeisen Gold': require("../../assets/raiffeisen_gold_cleanup.png"),
   'ING': require("../../assets/ING.png"),
+  'Cash': require("../../assets/card_cash.png"),
   'Normal': require("../../assets/normal_card2.png")
 };
 const AccountCard = ({ account, onSelectAccount, navigation }) => {
@@ -42,7 +43,7 @@ const AccountCard = ({ account, onSelectAccount, navigation }) => {
     <View style={styles.cardContainer}>
       <View style={styles.card2}>
         <ImageBackground source={cardImage} style={styles.imageBackground}>
-          {cardImage === cards_images['Normal'] && (
+          {(cardImage === cards_images['Normal'] || cardImage === cards_images['Cash']) && (
             <Text style={styles.cardTitle}>{account.type}</Text>
           )}
           {cardImage === cards_images['Raiffeisen'] ? (
