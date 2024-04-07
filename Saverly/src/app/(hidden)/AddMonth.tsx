@@ -14,7 +14,7 @@ import backgroundStyles from "@/services/background";
 import MonthPaySVG from '@/assets/calendar-31.svg'
 
 
-const AddMonthlyPaymentScreen = () => {
+const AddMonthlyPaymentScreen = ( { navigation }) => {
   const [businessName, setBusinessName] = useState('');
   const [cost, setCost] = useState('');
   const [currency, setCurrency] = useState('RON');
@@ -93,13 +93,15 @@ const AddMonthlyPaymentScreen = () => {
       monthlyPayment.setDate(date.toDateString);
       scheduleMonthlyNotifications(notificationDate, monthlyPayment.getBusinessName());
       await fetchUserMonthlyPayments();
-      router.back(); // Navigate back to the previous screen
+      // router.back(); // Navigate back to the previous screen
+      navigation.navigate('MonthExp')
     } catch (error) {
       console.error('Error adding monthly payment:', error);
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
-      router.push('Month');
+      // router.push('Month');
+      navigation.navigate('MonthExp')
     }
   };
 
@@ -107,7 +109,8 @@ const AddMonthlyPaymentScreen = () => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.back()} // Go back to the previous screen
+    // onPress={() => router.back()} // Go back to the previous screen
+    onPress={() => navigation.navigate('MonthExp')}
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity><PageHeader title="Add new Monthly Payment"></PageHeader>

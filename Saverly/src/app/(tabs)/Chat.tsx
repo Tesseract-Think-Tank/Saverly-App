@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       marginLeft: 'auto',
       marginRight: 'auto',
-      paddingRight: 100,
+      paddingRight: 10,
       top:10,
   },
 
@@ -196,13 +196,12 @@ const styles = StyleSheet.create({
   
   // Update your button style to remove the margins and adjust padding if necessary
   button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-    height: 50,
-    top:10,
-    alignSelf: 'flex-start',
-    // Ensure the button itself does not grow larger, only its touchable area does
+    position: 'absolute',
+    top:20,
+    left:20,
+    padding: 10,
+    borderRadius: 5,
+    zIndex:1,
   },
 });
 

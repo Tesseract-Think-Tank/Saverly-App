@@ -1,7 +1,6 @@
-// userDataUtils.js
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { FIREBASE_DB } from '../../firebaseConfig'; // Make sure this path matches your project structure
+import { FIREBASE_DB } from '../../firebaseConfig';
 
 export const fetchUserDataAsString = async () => {
   const auth = getAuth();
@@ -11,7 +10,6 @@ export const fetchUserDataAsString = async () => {
     return 'No user logged in';
   }
 
-  // Fetch user's income and expenses
   const userDocRef = doc(FIREBASE_DB, 'users', userId);
   const userDocSnap = await getDoc(userDocRef);
 
@@ -20,19 +18,38 @@ export const fetchUserDataAsString = async () => {
   }
 
   const { income = 0, expenses = 0 } = userDocSnap.data();
-  const balance = income - expenses;
+  let balance = income - expenses;
 
-  // Fetch individual expenses
   const expensesCollectionRef = collection(FIREBASE_DB, 'users', userId, 'expenses');
   const expensesSnapshot = await getDocs(expensesCollectionRef);
-  const individualExpenses = expensesSnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
 
-  // Format the data as a string
-  let expensesDetails = individualExpenses.map(expense => `ID: ${expense.id}, Amount: ${expense.amount}, Category: ${expense.category}`).join('; ');
-  let userDataString = `Income: ${income}, Expenses: ${expenses}, Balance: ${balance}, Individual Expenses: [${expensesDetails}]`;
+  const exchangeRates = {
+    'EUR:RON': 5, 'RON:EUR': 0.2,
+    'USD:RON': 4.57, 'RON:USD': 0.22,
+    'GBP:RON': 5.82, 'RON:GBP': 0.17,
+  };
+
+  let totalConvertedExpenses = 0;
+  const individualExpenses = expensesSnapshot.docs.map(doc => {
+    const expenseData = doc.data();
+    const exchangeRate = exchangeRates[`${expenseData.currency}:RON`] || 1;
+    const convertedAmount = expenseData.amount * exchangeRate;
+    totalConvertedExpenses += convertedAmount;
+    return {
+      id: doc.id,
+      amount: convertedAmount.toFixed(2), // rounding to 2 decimal places for currency
+      category: expenseData.category,
+      currency: 'RON', // Since we are converting everything to RON
+      date: expenseData.dateAndTime.toDate().toISOString().split('T')[0] // Adjusted for your database field
+    };
+  });
+
+  balance = income - totalConvertedExpenses;
+
+  let expensesDetails = individualExpenses.map(expense => 
+    `ID: ${expense.id}, Amount: ${expense.amount} RON, Category: ${expense.category}, Date: ${expense.date}`).join('; ');
+
+  let userDataString = `Income: ${income}, Converted Total Expenses: ${totalConvertedExpenses.toFixed(2)} RON, Balance: ${balance.toFixed(2)}, Individual Expenses: [${expensesDetails}]`;
 
   return userDataString;
 };

@@ -8,6 +8,7 @@ import Home from '../app/(tabs)/Home';
 import Settings from '../app/(tabs)/Settings';
 import AddMonthlyPaymentScreen from '../app/(hidden)/AddMonth';
 import MonthlyPaymentsScreen from '@/app/(hidden)/Month';
+import ChatBox from '@/app/(tabs)/Chat';
 
 const AccountsStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -47,6 +48,10 @@ function HomeStackNavigator() {
         name="AddExpenseHome"
         component={AddExpenseScreen}
       />
+      {/* <HomeStack.Screen
+      name="ChatHome"
+      component={ChatBox}
+      /> */}
     </HomeStack.Navigator>      
   );
 }
