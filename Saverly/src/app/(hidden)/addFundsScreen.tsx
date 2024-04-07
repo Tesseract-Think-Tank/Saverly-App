@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, TouchableOpacity, ImageBackground, Keyboard } from 'react-native';
 import updateAccountBalance from '../../services/addFunds';
 import { Picker } from '@react-native-picker/picker';
 import { StyleSheet } from 'react-native';
@@ -14,6 +14,23 @@ import FundsSVG from '@/assets/money-68.svg'
 const AddFundsScreen = ({ route, navigation }) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('RON'); // Default or user's preference
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const { selectedAccount } = route.params;
   const accountId = selectedAccount.id;
@@ -54,7 +71,10 @@ const AddFundsScreen = ({ route, navigation }) => {
         style={backgroundStyles.background}>
         <View style={styles.container}>
     {/* <View>   */}
+    {!isKeyboardVisible && (
+
       <FundsSVG height={230} width={230} /> 
+    )}
     {/* </View> */}
     <View style={styles.inputContainer}>
       <TextInput

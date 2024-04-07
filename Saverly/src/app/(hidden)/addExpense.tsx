@@ -7,7 +7,8 @@ import {
   Alert,
   TouchableOpacity,
   ActivityIndicator,
-  ImageBackground
+  ImageBackground,
+  Keyboard
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
@@ -28,6 +29,23 @@ const AddExpenseScreen = ({ navigation }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const categories = [
     'Food',
@@ -115,7 +133,9 @@ const AddExpenseScreen = ({ navigation }) => {
         style={backgroundStyles.background}>
         <View style={styles.container}>
       {/* <Text style={styles.title}>Add New Expense</Text> */}
+      {!isKeyboardVisible && (
       <ExpenseSVG height={200} width={200}/>
+      )}
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ImageBackground,
+  Keyboard
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
@@ -29,6 +30,25 @@ const AddExpenseForAccScreen = ({route, navigation}) => {
   const [description, setDescription] = useState('');
   const [currency, setCurrency] = useState('RON');
   const [loading, setLoading] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+
   console.log(selectedAccount.id);
   const categories = [
     'Food',
@@ -88,7 +108,9 @@ const AddExpenseForAccScreen = ({route, navigation}) => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
+        {!isKeyboardVisible && (
         <ExpenseSVG height={180} width={200}/>
+        )}
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker
