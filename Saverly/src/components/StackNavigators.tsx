@@ -59,8 +59,12 @@ function MonthStackNavigator() {
         component={Settings}
       />
       <MonthStack.Screen
-        name="AddMonthExp"
+        name="MonthExp"
         component={MonthlyPaymentsScreen}
+      />
+      <MonthStack.Screen
+        name="AddMonthExp"
+        component={AddMonthlyPaymentScreen}
       />
     </MonthStack.Navigator>      
   );
