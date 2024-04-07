@@ -18,7 +18,7 @@ const cards_images = {
   'Revolut': require("../../assets/Revolut3_cleanup.png"),
   'Raiffeisen': require("../../assets/raiffeisen_cleanup.png"),
   'Raiffeisen Gold': require("../../assets/raiffeisen_gold_cleanup.png"),
-  'ING': require("../../assets/ING.jpg"),
+  'ING': require("../../assets/ING.png"),
   'Normal': require("../../assets/normal_card2.png")
 };
 const AccountCard = ({ account, onSelectAccount, navigation }) => {
