@@ -13,6 +13,8 @@
       "preview3": {
         "developmentClient": true
       },
-      "production": {}
+      "preview4": {
+        "distribution": "internal"
+      }
     }
   }

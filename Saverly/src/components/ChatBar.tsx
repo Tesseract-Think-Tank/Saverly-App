@@ -83,7 +83,7 @@ const ChatBar = () => {
         sendMessage(inputText);
         setInputText('');
 
-        const url = `http://192.168.1.131:5000/default-question`;
+        const url = `http://188.24.100.99:4587/default-question`;
 
         toggleLoading();
 
@@ -130,7 +130,7 @@ const ChatBar = () => {
   
 const handleCategoryOptionPress = async (category, optionIndex) => {
   const userInput = inputText; // This uses the inputText state from ChatBar
-  let url = `http://192.168.1.131:5000`;
+  let url = `http://188.24.100.99:4587`;
   // Define an array of options that require userInput
   const optionsRequiringInput = {
       food: [2, 4], // 0-indexed, corresponding to food-question-3 and food-question-5

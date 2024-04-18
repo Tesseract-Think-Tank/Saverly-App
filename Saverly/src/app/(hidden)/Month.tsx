@@ -44,7 +44,7 @@ const MonthlyPaymentCard = ({ monthlyPayment, removePayment }: { monthlyPayment:
   </View>
 </View>
 );
-const MonthlyPaymentsScreen = ({ }: any) => {
+const MonthlyPaymentsScreen = ({ navigation }: any) => {
   const [monthlyPayments, setMonthlyPayments] = useState<MonthlyPayment[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -98,7 +98,8 @@ const MonthlyPaymentsScreen = ({ }: any) => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Settings')} // Go back to the previous screen
+    // onPress={() => router.push('Settings')} // Go back to the previous screen
+    onPress={() => navigation.navigate('MonthMain')}
   >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
@@ -137,7 +138,8 @@ const MonthlyPaymentsScreen = ({ }: any) => {
       </ScrollView>
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => router.push('AddMonth')}
+        // onPress={() => router.push('AddMonth')}
+        onPress={() => navigation.navigate('AddMonthExp')}
         activeOpacity={0.7} // Optional: reduce the opacity on touch
       >
         <Ionicons name='add' size={24} color="white" />
@@ -152,7 +154,7 @@ const MonthlyPaymentsScreen = ({ }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 0,
     // backgroundColor:'#2B2D31'
   },
   container2: {
@@ -231,6 +233,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 },
 card2: {
+  // width: '100%',
   backgroundColor: '#ffffff',
   borderRadius: 10,
   padding: 16,
@@ -256,6 +259,7 @@ cardCategory: {
   color: '#33404F',
 },
 cardDescription: {
+  paddingTop: 5,
   fontSize: 14,
   color: '#999',
 },
@@ -269,7 +273,7 @@ cardAmount: {
   fontWeight: 'bold',
   color: '#333',
   position: 'absolute', // Position it absolutely to align it in the middle-right
-  left: 200, // Adjust this value to move the amount left or right
+  left: 210, // Adjust this value to move the amount left or right
   alignSelf: 'center',
 },
 cardCurrency:{
@@ -278,7 +282,7 @@ cardCurrency:{
   fontWeight:'500',
   color:'#333',
   alignSelf:'center',
-  right:65
+  right:55
 },
 image: {
   width: 30,

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ImageBackground,
+  Keyboard
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
@@ -21,7 +22,7 @@ import ExpenseSVG from '@/assets/online-payment-1-62.svg'
 
 
 
-const AddExpenseForAccScreen = ({route}) => {
+const AddExpenseForAccScreen = ({route, navigation}) => {
   
   const {selectedAccount} = route.params || {};
   const [category, setCategory] = useState('Food');
@@ -29,6 +30,25 @@ const AddExpenseForAccScreen = ({route}) => {
   const [description, setDescription] = useState('');
   const [currency, setCurrency] = useState('RON');
   const [loading, setLoading] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+
   console.log(selectedAccount.id);
   const categories = [
     'Food',
@@ -68,14 +88,17 @@ const AddExpenseForAccScreen = ({route}) => {
     } finally {
       setLoading(false);
     }
-    router.push('Accounts');
+    // router.push('Accounts');
+    navigation.navigate('AccountsMain')
+
   };
 
   return (
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.push('Accounts')} // Go back to the previous screen
+    // onPress={() => router.push('Accounts')} // Go back to the previous screen
+    onPress={() => navigation.navigate('AccountsMain')}
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity>
@@ -85,7 +108,9 @@ const AddExpenseForAccScreen = ({route}) => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
+        {!isKeyboardVisible && (
         <ExpenseSVG height={180} width={200}/>
+        )}
       <View style={styles.inputContainer}>
         <View style={styles.pickerView}>
         <Picker
@@ -121,7 +146,7 @@ const AddExpenseForAccScreen = ({route}) => {
         {loading ? (
           <ActivityIndicator size="large" color="#6AD4DD" />
         ) : (
-          <View className='justify-center items-center'>
+          <View style={styles.containerButon}>
           <TouchableOpacity
             onPress={handleAddExpense}
             style={styles.button}
@@ -145,6 +170,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: '#2B2D31',
+  },
+  containerButon: {
+    alignItems: 'center',   
   },
   title: {
     fontSize: 24,

@@ -54,7 +54,10 @@ const updateAccountBalance = async (accountId, amount, currency) => {
     await updateDoc(accountRef, {
     balance: newBalance
     });
-  
+    await addDoc(collection(FIREBASE_DB, 'users', userId, 'logs'), {
+      balance: parseFloat(amount),
+      currency,
+    });
     console.log(`Account ${accountId} updated with new balance: ${newBalance}`);
   };
 

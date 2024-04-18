@@ -19,7 +19,7 @@ import 'react-native-gesture-handler'
 import { MotiView } from 'moti'
 import { Skeleton } from 'moti/skeleton'
 import backgroundStyles from "@/services/background";
-
+import {filterExpensesByMonth} from "@/services/filterExpensesByMonth";
 
 
 const { width, height } = Dimensions.get('window');
@@ -37,7 +37,7 @@ const Home = ({ navigation }) => {
   const [showLogs, setShowLogs] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
-
+  const [selectedMonth,setSelectedMonth] = useState("April");
 
 
   const fetchUserData = async () => {
@@ -274,11 +274,30 @@ const fetchExpenses = async (userId) => {
     'Other',
   ];
 
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
   const category_items = categories.map(str => ({
     label: str,
     value: str,
   }));
 
+  const month_items = months.map(str =>({
+    label:str,
+    value:str,
+  }));
 
   const renderItem = ({ item }) => {
     const date = item.dateAndTime?.toDate().toLocaleDateString('en-US');
@@ -304,7 +323,7 @@ const fetchExpenses = async (userId) => {
       </View>
     );
   };
-  const customPickerStyles = StyleSheet.create({
+  const categoryPickerStyles = StyleSheet.create({
     inputIOS: {
       fontSize: 16,
       paddingVertical: 12,
@@ -318,7 +337,7 @@ const fetchExpenses = async (userId) => {
     },
     inputAndroid: {
       fontSize: 16,
-      paddingHorizontal: 10,
+      paddingHorizontal: 30,
       width: width * 0.45,
       paddingVertical: 8,
       // backgroundColor:'#2B2D31',
@@ -326,11 +345,41 @@ const fetchExpenses = async (userId) => {
       // top:10,
     },
     iconContainer: {
+
       top: 10,
-      left: 120,
+      left: 140,
       alignSelf:'center',
     },
   });
+
+  const monthPickerStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingLeft: 34, // Make room for the icon on the left
+        paddingRight: 10, // Existing padding
+        width: width * 0.1,
+        borderWidth: 1,
+        borderRadius: 10,
+        color: '#fff',
+    },
+    inputAndroid: {
+
+      fontSize: 16,
+      paddingVertical: 8,
+      paddingHorizontal: 10, // Adjust as necessary
+      width: width * 0.45,
+      color: '#fff',
+      textAlign: 'right', // Align text to the right
+  },
+    iconContainer: {
+
+      width: 40,
+      top: 10,
+      left: 32,
+      alignSelf:'center',
+    },
+});
   
 
   return (
@@ -347,7 +396,7 @@ const fetchExpenses = async (userId) => {
       {/* <Text> */}
       <View className='flex-row'>
   <Text>
-    <Text style={styles.currencyText}>BALANCE: </Text>
+    <Text style={styles.currencyText}>Balance: </Text>
     {isLoading ? (
       <Skeleton width={width * 0.4} height={30} />
     ) : (
@@ -377,9 +426,9 @@ const fetchExpenses = async (userId) => {
           </LinearGradient>
         )}
       </View>
-      <View>
+      <View className='flex-row'>
       <RNPickerSelect
-          style={customPickerStyles}
+          style={categoryPickerStyles}
           value={selectedCategory}
           onValueChange={(value) => {
           setSelectedCategory(value);
@@ -390,6 +439,19 @@ const fetchExpenses = async (userId) => {
         return <Ionicons name="chevron-down" size={24} color='#fff' />;
       }}
       />
+       <RNPickerSelect
+          style={monthPickerStyles}
+          value={selectedMonth}
+          onValueChange={(value) => {
+          setSelectedMonth(value);
+        }}
+      items={month_items}
+      useNativeAndroidPickerStyle={false}
+      Icon={() => {
+        return <Ionicons name="chevron-down" size={24} color='#fff' />;
+      }}
+      />
+
       </View>
       {isLoading ? (
       <>
@@ -405,38 +467,45 @@ const fetchExpenses = async (userId) => {
       </>
     ) : (
       <FlatList
-        data={filterExpensesByCategory(listData, selectedCategory)}
+        data={filterExpensesByMonth(filterExpensesByCategory(listData, selectedCategory), selectedMonth)}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         style={[styles.list, { height: listHeight }]}
-      />
+        ListEmptyComponent={() => (
+          <View style={styles.commonCardStyle}>
+          <View style={styles.cardRow}>
+            <View style={styles.circle_for_expenses}>
+              <Ionicons name="eye-off-outline" size={22} color="black" />
+            </View>
+            <View style={styles.cardMiddle}>
+              <Text style={styles.cardCategory}>No expenses found</Text>
+            </View>
+          </View>
+        </View>
+  )}
+/>
     )}
 
-      {showLogs && (
-        <FlatList
-          data={logData}
-            renderItem={({ item }) => (
-            <View style={styles.card}>
-              {/* Display message, amount, and currency */}
-              <Text style={styles.logItemText}>
-                {item.message} + {item.balance.toFixed(2)} {item.currency}
-              </Text>
-            </View>
-        )}
-        
-          keyExtractor={(item) => item.id.toString()}
-          style={styles.list}
-        />
-        
+{showLogs && (
+  <View style={styles.logsContainer}>
+    <FlatList
+      data={logData}
+      renderItem={({ item }) => (
+        <View style={styles.commonCardStyle}>
+          <Text style={styles.logItemText}>
+            {item.message} + {item.balance.toFixed(2)} {item.currency}
+          </Text>
+        </View>
       )}
-      
-      {/* <LinearGradient
-        colors={['transparent', '#33404F']}
-        // Add locations for the gradient colors to define where the transition begins
-        locations={[0, 1]}
-        style={styles.fadeOutContainer}
-      />
-       */}
+      keyExtractor={(item) => item.id.toString()}
+      scrollEnabled={true} // Ensure scrolling is enabled
+      nestedScrollEnabled={true} // If nested inside another scrollable component
+    />
+  </View>
+)}
+
+
+      {(!showLogs &&
       <TouchableOpacity
         style={styles.fab}
         // onPress={() => router.push('addExpense')}
@@ -445,24 +514,7 @@ const fetchExpenses = async (userId) => {
       >
         <Ionicons name="add" size={30} color="#FFF" />
       </TouchableOpacity>
-
-      {/* <TouchableOpacity
-        style={styles.fab}
-        onPress={() => router.push('TestSkel')}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="add" size={30} color="#FFF" />
-      </TouchableOpacity> */}
-    
-      {/* <AnimatedLoader
-            visible={isLoading} // Keep visible true because we are conditionally rendering this whole component
-            overlayColor="rgba(150,150,150,0.95)"
-            source={require("../../assets/white_dots.json")}
-            animationStyle={styles.lottie}
-            speed={1}
-          >
-            <Text>Loading...</Text>
-      </AnimatedLoader> */}
+      )}
     </SafeAreaView>
     </ImageBackground>
     </View>
@@ -495,24 +547,33 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     height: height / 20,
   },
+  logsContainer: {
+    height: 285,
+    // marginBottom: 300,
+    top: -250,
+    flexGrow: 1, // Allows the container to expand for its content, up to its maximum height
+    // maxHeight: '30%', // Adjust based on your layout; ensures the list doesn't take up the entire screen
+    margin: 10, // Gives some space around the container for better appearance
+    // padding: 10, // Padding inside the container for the FlatList
+    // backgroundColor: '#fff', // Background color for visibility
+    backgroundColor: 'transparent',
+    // borderColor: 'red',
+    // borderWidth: 10,
+    borderRadius: 10, // Rounded corners for aesthetics
+  },
   logItem: {
-    backgroundColor: '#000',
-    padding: 20,
-    marginVertical: 8,
-    borderRadius: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0,
-    shadowRadius: 2,
-    elevation: 0,
+    
+    backgroundColor: '#f2f2f2', // Light grey for items, adjust as needed
+    padding: 10, // Padding inside each log item
+    borderRadius: 5, // Rounded corners for log items
+    marginVertical: 5, // Margin between items
   },
-  logItemText: {
-    fontSize: 16,
-    color: '#333',
-  },
+logItemText: {
+  fontSize: 16,
+  color: '#333', // Dark text color for contrast
+},
   divider: {
+    
     borderBottomColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent black for a subtle look
     borderBottomWidth: 1, // Thickness of the divider line
     marginTop: height/50, // Spacing above the line
@@ -532,6 +593,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   card: {
+    
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 16,
@@ -542,6 +604,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardRow: {
+    
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -580,6 +643,7 @@ const styles = StyleSheet.create({
     right:70
   },
   cardSkeleton: {
+    
     // backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 16,
@@ -600,6 +664,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   boxGradient: {
+    
     borderRadius: 20,
     padding: 16,
     width: width * 0.45, // adjusted for better responsiveness
@@ -617,6 +682,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   boxValue: {
+    
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
@@ -644,6 +710,7 @@ const styles = StyleSheet.create({
     marginBottom: 250,
   },
   fab: {
+    
     position: 'absolute',
     right: (width-56) / 2, // Adjust this value based on your screen width and FAB width (56
     bottom: 110, // Adjust this value based on your tab bar height
@@ -660,6 +727,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 5, height: 5 },
   },
   expensesListContainer: {
+    
     paddingTop:10,
     top:280,
     position: 'absolute',
@@ -693,8 +761,20 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-  }
-  
+  },
+  commonCardStyle: {
+    
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 16,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginHorizontal: 16, // Add horizontal margin if needed
+    
+  },
 });
 
 export default Home;

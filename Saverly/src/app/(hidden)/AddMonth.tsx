@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ImageBackground } from 'react-native';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ImageBackground, Keyboard } from 'react-native';
 import { addMonthlyPayment, fetchUserMonthlyPayments } from '../../services/monthlyPaymentService';
 import { MonthlyPayment } from '../../services/monthlyPaymentService';
 import { router } from 'expo-router';
-import { scheduleMonthlyNotifications } from '../../services/Notifications';
+import { scheduleMonthlyNotifications,schedulePushNotificationAdd } from '../../services/Notifications';
 import DatePicker from '@react-native-community/datetimepicker';
 import PageHeader from '@/components/PageHeader';
 import { AntDesign } from '@expo/vector-icons';
@@ -14,7 +14,7 @@ import backgroundStyles from "@/services/background";
 import MonthPaySVG from '@/assets/calendar-31.svg'
 
 
-const AddMonthlyPaymentScreen = () => {
+const AddMonthlyPaymentScreen = ( { navigation }) => {
   const [businessName, setBusinessName] = useState('');
   const [cost, setCost] = useState('');
   const [currency, setCurrency] = useState('RON');
@@ -24,6 +24,25 @@ const AddMonthlyPaymentScreen = () => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false); // State to control date picker visibility
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+
   const currencies = [
     'RON',
     'USD',
@@ -73,14 +92,17 @@ const AddMonthlyPaymentScreen = () => {
       notificationDate.setSeconds(0);
       monthlyPayment.setDate(date.toDateString);
       scheduleMonthlyNotifications(notificationDate, monthlyPayment.getBusinessName());
+      schedulePushNotificationAdd(monthlyPayment.getBusinessName());
       await fetchUserMonthlyPayments();
-      router.back(); // Navigate back to the previous screen
+      // router.back(); // Navigate back to the previous screen
+      navigation.navigate('MonthExp')
     } catch (error) {
       console.error('Error adding monthly payment:', error);
       Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
-      router.push('Month');
+      // router.push('Month');
+      navigation.navigate('MonthExp')
     }
   };
 
@@ -88,7 +110,8 @@ const AddMonthlyPaymentScreen = () => {
     <>
     <TouchableOpacity
     style={styles.backButton}
-    onPress={() => router.back()} // Go back to the previous screen
+    // onPress={() => router.back()} // Go back to the previous screen
+    onPress={() => navigation.navigate('MonthExp')}
     >
     <AntDesign name="left" size={24} color="#6AD4DD" />
   </TouchableOpacity><PageHeader title="Add new Monthly Payment"></PageHeader>
@@ -97,7 +120,9 @@ const AddMonthlyPaymentScreen = () => {
         source={require('@/assets/backgroundWoodPattern.png')}
         style={backgroundStyles.background}>
         <View style={styles.container}>
-      <MonthPaySVG height={200} width={200} />
+        {!isKeyboardVisible && (
+          <MonthPaySVG height={200} width={200} />
+        )}
       <View style={styles.inputContainer}>
         <TextInput
           value={businessName}
