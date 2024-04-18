@@ -2,13 +2,12 @@ const {create_response} = require('./open-ai')
 
 async function question_travel_1(userInput, history){
     const prompt1 =  `What are the must-visit places in ${userInput}
-            1. a
-            2. c
-            3. e
-            4. g
-            5. i
-        where a,c,e,g,i are the places
-        if these places have an enter fee say how much 
+            1. 
+            2. 
+            3. 
+            4. 
+            5. 
+        if these places have an enter fee aporximate     how much 
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt1 }

@@ -21,7 +21,7 @@ async function question_rent_2(userInput, history){
             1. Lowest cost areas in the city.
             2. Medium cost areas in the city.
             3. Highest cost areas in the city.
-        use this format, specify the area type.
+        use this format, specify the area type and the name of the area.
     `
     const updatedHistory = history.concat([
         { role: "user", content: prompt2 }
