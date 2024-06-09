@@ -1,7 +1,7 @@
-import { addDoc, collection, doc, getDoc, updateDoc, query, queryEqual, querySnapshot, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, updateDoc, query, getDocs } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
 
-
+// Generate a unique ID of specified length
 function generateUniqueId(length = 8) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -12,6 +12,7 @@ function generateUniqueId(length = 8) {
   return result;
 }
 
+// Add a new account for the current user
 const addAccount = async (type, balance, currency) => {
   const userId = FIREBASE_AUTH.currentUser?.uid;
   if (!userId) throw new Error('No user is signed in.');
@@ -25,6 +26,7 @@ const addAccount = async (type, balance, currency) => {
   const userData = userSnap.data() || {};
   const currentIncome = userData.income || 0;
   const accountId = generateUniqueId();
+  
   const exchangeRates = {
     "EUR": 5,
     "USD": 4.57,
@@ -35,7 +37,7 @@ const addAccount = async (type, balance, currency) => {
   const exchangeRate = exchangeRates[currency];
 
   if (!exchangeRate) {
-    throw Error("Currency not supported");
+    throw new Error("Currency not supported");
   }
 
   const newIncome = currentIncome + (exchangeRate * parseFloat(balance));
@@ -50,6 +52,7 @@ const addAccount = async (type, balance, currency) => {
     balance: parseFloat(balance),
     currency,
   });
+
   await addDoc(collection(FIREBASE_DB, 'users', userId, 'logs'), {
     balance: parseFloat(balance),
     currency,
@@ -57,27 +60,28 @@ const addAccount = async (type, balance, currency) => {
 
   return true;
 };
-const fetchUserAccounts = async () => {
-    const userId = FIREBASE_AUTH.currentUser?.uid;
-    if (!userId) throw new Error('No user is signed in.');
-  
-    const q = query(collection(FIREBASE_DB, 'users', userId, 'accounts'));
-    const querySnapshot = await getDocs(q);
-    const accounts = [];
-    querySnapshot.forEach((doc) => {
-      accounts.push({ id: doc.id, ...doc.data() });
-    });
-  
-    return accounts;
-};
-  
 
+// Fetch all accounts of the current user
+const fetchUserAccounts = async () => {
+  const userId = FIREBASE_AUTH.currentUser?.uid;
+  if (!userId) throw new Error('No user is signed in.');
+
+  const q = query(collection(FIREBASE_DB, 'users', userId, 'accounts'));
+  const querySnapshot = await getDocs(q);
+  const accounts = [];
+  querySnapshot.forEach((doc) => {
+    accounts.push({ id: doc.id, ...doc.data() });
+  });
+
+  return accounts;
+};
+
+// Get the date and time of a specific expense
 const getExpenseDateAndTime = async (expenseId) => {
   const userId = FIREBASE_AUTH.currentUser?.uid;
   if (!userId) throw new Error('No user is signed in.');
   if (!expenseId) throw new Error('Expense ID is required.');
 
-  // Reference to the specific expense document
   const expenseRef = doc(FIREBASE_DB, 'users', userId, 'expenses', expenseId);
   const expenseSnap = await getDoc(expenseRef);
 
@@ -86,9 +90,6 @@ const getExpenseDateAndTime = async (expenseId) => {
   }
 
   const expenseData = expenseSnap.data();
-
-  // Assuming the date and time are stored in a field named 'dateAndTime'
-  // and it's a Firestore Timestamp object
   const dateAndTime = expenseData.dateAndTime || null;
 
   return dateAndTime;
