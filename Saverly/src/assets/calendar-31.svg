@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="_0015_calendar"
+   viewBox="0 0 500 500"
+   data-imageid="calendar-31"
+   imageName="Calendar"
+   class="illustrations_image"
+   style="width: 166px;"
+   version="1.1"
+   sodipodi:docname="calendar-31.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview31"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.554"
+     inkscape:cx="250"
+     inkscape:cy="250"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="_0015_calendar" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">.cls-1_calendar-31{opacity:.1;}.cls-1_calendar-31,.cls-2_calendar-31{fill:#e6e6e6;}.cls-3_calendar-31,.cls-4_calendar-31{fill:#fff;}.cls-5_calendar-31{fill:#f4a28c;}.cls-6_calendar-31{fill:#a5a5a5;}.cls-7_calendar-31{fill:#000001;opacity:.11;}.cls-4_calendar-31{opacity:.2;}.cls-8_calendar-31{fill:#24285b;}.cls-9_calendar-31{fill:#ffd200;}.cls-10_calendar-31{fill:#68e1fd;}</style>
+  </defs>
+  <ellipse
+     id="sd_calendar-31"
+     class="cls-1_calendar-31"
+     cx="236.29349"
+     cy="399.08652"
+     rx="214.78"
+     ry="30.879999" />
+  <g
+     id="calendar_person_calendar-31"
+     transform="translate(-25.096525,-0.64350067)">
+    <rect
+       class="cls-2_calendar-31"
+       x="130.13"
+       y="116.35"
+       width="254.91"
+       height="283.37"
+       id="rect3" />
+    <rect
+       class="cls-8_calendar-31"
+       x="317.47"
+       y="276.95999"
+       width="34.43"
+       height="31.809999"
+       id="rect4" />
+    <rect
+       class="cls-6_calendar-31"
+       x="317.47"
+       y="324.01001"
+       width="34.43"
+       height="31.809999"
+       id="rect5" />
+    <rect
+       class="cls-10_calendar-31 targetColor"
+       x="130.13"
+       y="95.75"
+       width="254.91"
+       height="70.980003"
+       id="rect6" />
+    <rect
+       class="cls-9_calendar-31"
+       x="179.38"
+       y="69.389999"
+       width="20.440001"
+       height="61.849998"
+       id="rect7" />
+    <rect
+       class="cls-7_calendar-31"
+       x="199.82001"
+       y="95.279999"
+       width="13.5"
+       height="35.959999"
+       id="rect8" />
+    <rect
+       class="cls-7_calendar-31"
+       x="334.69"
+       y="95.279999"
+       width="13.5"
+       height="35.959999"
+       id="rect9" />
+    <rect
+       class="cls-9_calendar-31"
+       x="314.23999"
+       y="69.389999"
+       width="20.440001"
+       height="61.849998"
+       id="rect10" />
+    <rect
+       class="cls-8_calendar-31"
+       x="167.75999"
+       y="195"
+       width="55.950001"
+       height="16.92"
+       id="rect11" />
+    <rect
+       class="cls-3_calendar-31"
+       x="169.44"
+       y="230.2"
+       width="34.43"
+       height="31.809999"
+       id="rect12" />
+    <rect
+       class="cls-7_calendar-31"
+       x="219.41"
+       y="230.2"
+       width="34.43"
+       height="31.809999"
+       id="rect13" />
+    <rect
+       class="cls-9_calendar-31"
+       x="268.88"
+       y="230.2"
+       width="34.43"
+       height="31.809999"
+       id="rect14" />
+    <rect
+       class="cls-8_calendar-31"
+       x="317.47"
+       y="230.2"
+       width="34.43"
+       height="31.809999"
+       id="rect15" />
+    <rect
+       class="cls-3_calendar-31"
+       x="169.44"
+       y="276.95999"
+       width="34.43"
+       height="31.809999"
+       id="rect16" />
+    <rect
+       class="cls-7_calendar-31"
+       x="219.41"
+       y="276.95999"
+       width="34.43"
+       height="31.809999"
+       id="rect17" />
+    <rect
+       class="cls-7_calendar-31"
+       x="268.88"
+       y="276.95999"
+       width="34.43"
+       height="31.809999"
+       id="rect18" />
+    <rect
+       class="cls-3_calendar-31"
+       x="169.44"
+       y="324.01001"
+       width="34.43"
+       height="31.809999"
+       id="rect19" />
+    <rect
+       class="cls-7_calendar-31"
+       x="219.41"
+       y="324.01001"
+       width="34.43"
+       height="31.809999"
+       id="rect20" />
+    <rect
+       class="cls-7_calendar-31"
+       x="268.88"
+       y="324.01001"
+       width="34.43"
+       height="31.809999"
+       id="rect21" />
+    <rect
+       class="cls-7_calendar-31"
+       x="130.13"
+       y="166.73"
+       width="254.91"
+       height="14.72"
+       id="rect25" />
+  </g>
+  <g
+     id="pencil_calendar-31"
+     transform="translate(-25.096525,-0.64350067)">
+    <rect
+       class="cls-9_calendar-31"
+       x="388.51999"
+       y="146.53"
+       width="33.810001"
+       height="214.13"
+       transform="rotate(-148.33,405.43159,253.58509)"
+       id="rect29" />
+    <polygon
+       class="cls-5_calendar-31"
+       points="334.83,335.85 363.6,353.6 323.26,386.81 "
+       id="polygon29" />
+    <polygon
+       class="cls-8_calendar-31"
+       points="323.26,386.81 341.59,371.71 328.51,363.65 "
+       id="polygon30" />
+    <rect
+       class="cls-7_calendar-31"
+       x="403.54999"
+       y="150.77"
+       width="17.49"
+       height="214.13"
+       transform="rotate(-148.33,412.3118,257.8246)"
+       id="rect30" />
+    <polygon
+       class="cls-8_calendar-31"
+       points="475.95,171.3 447.24,153.59 425,189.66 454.25,206.49 "
+       id="polygon31" />
+  </g>
+</svg>
