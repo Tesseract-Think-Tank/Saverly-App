@@ -9,7 +9,7 @@ const backgroundStyles = StyleSheet.create({
     },
     background: {
         flex: 1,
-        resizeMode: 'cover', // 'cover' or 'stretch' or 'contain' as per your requirement
+        resizeMode: 'cover', 
         width: '100%',
     },
 });

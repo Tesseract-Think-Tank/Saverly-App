@@ -1,36 +1,27 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-
-import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, ImageBackground } from 'react-native';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { router } from 'expo-router';
 import Logo from "../assets/saverly.svg";
 import backgroundStyles from "@/services/background";
 
-
-const Login = ({navigation}: any) => {
+const Login = ({ navigation }) => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const auth = FIREBASE_AUTH;
 
+    // Handles user sign-in with Firebase Authentication
     const signIn = async () => {
         setLoading(true);
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
             console.log('Logging in' + response);
-
             console.log(FIREBASE_AUTH.currentUser?.uid);
 
             router.replace('/Home');
-
-            // navigation.reset({
-            //     index: 0,
-            //     routes: [{ name: 'MainAppTabs' }],
-            // });
-  
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error logging in', error);
             alert('Sign in failed: ' + error.message);
         } finally {
@@ -40,45 +31,46 @@ const Login = ({navigation}: any) => {
 
     return (
         <View style={backgroundStyles.containerWithBGColor}>
-        <ImageBackground
-        source={require('@/assets/backgroundWoodPattern.png')}
-        style={backgroundStyles.background}>
-        <View style={styles.container}>
-            {/* <Image source={require('../assets/login.png')} style={styles.logo} /> */}
-            {/* <Logo width={1000} height={400}/> */}
-            <View style={styles.logoView}><Logo /></View>
-            <Text style={styles.title}>Welcome!</Text>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    value={email}
-                    style={styles.input}
-                    placeholder='Email'
-                    autoCapitalize='none'
-                    onChangeText={(text) => setEmail(text)}
-                />
-                <TextInput
-                    secureTextEntry={true}
-                    value={password}
-                    style={styles.input}
-                    placeholder='Password'
-                    autoCapitalize='none'
-                    onChangeText={(text) => setPassword(text)}
-                />
-            </View>
-            {loading ? (
-                <ActivityIndicator size="large" color="#6AD4DD" />
-            ) : (
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={signIn} style={styles.button}>
-                        <Text style={styles.buttonText}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push('signUp')}>
-                        <Text style={styles.signUpText}>Don't have an account? Sign Up</Text>
-                    </TouchableOpacity>
+            <ImageBackground
+                source={require('@/assets/backgroundWoodPattern.png')}
+                style={backgroundStyles.background}
+            >
+                <View style={styles.container}>
+                    <View style={styles.logoView}>
+                        <Logo />
+                    </View>
+                    <Text style={styles.title}>Welcome!</Text>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            value={email}
+                            style={styles.input}
+                            placeholder='Email'
+                            autoCapitalize='none'
+                            onChangeText={(text) => setEmail(text)}
+                        />
+                        <TextInput
+                            secureTextEntry={true}
+                            value={password}
+                            style={styles.input}
+                            placeholder='Password'
+                            autoCapitalize='none'
+                            onChangeText={(text) => setPassword(text)}
+                        />
+                    </View>
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#6AD4DD" />
+                    ) : (
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity onPress={signIn} style={styles.button}>
+                                <Text style={styles.buttonText}>Login</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => router.push('signUp')}>
+                                <Text style={styles.signUpText}>Don't have an account? Sign Up</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 </View>
-            )}
-        </View>
-        </ImageBackground>
+            </ImageBackground>
         </View>
     );
 };
@@ -88,21 +80,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: '#2B2D31',
     },
     logoView: {
         marginBottom: 70,
     },
-    // logo: {
-    //     width: 170,
-    //     height: 170,
-    //     marginBottom: 20,
-    // },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
-        color:'#6AD4DD'
+        color: '#6AD4DD'
     },
     inputContainer: {
         width: '80%',
@@ -129,16 +115,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontWeight: 'bold',
-    },
-    buttonOutline: {
-        backgroundColor: '#FFF',
-        marginTop: 15,
-        borderColor: '##6AD4DD',
-        borderWidth: 2,
-    },
-    buttonOutlineText: {
-        color: '##6AD4DD',
         fontWeight: 'bold',
     },
     signUpText: {

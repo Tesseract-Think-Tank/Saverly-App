@@ -1,14 +1,14 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import AccountsScreen from '../app/(tabs)/Accounts';
-import AddExpenseForAccScreen from '../app/(hidden)/addExpenseForAcc'; // make sure to import the screen
+import AddExpenseForAccScreen from '../app/(hidden)/addExpenseForAcc';
 import AddFundsScreen from '../app/(hidden)/addFundsScreen';
 import AddAccountScreen from '../app/(hidden)/AddAccount';
 import AddExpenseScreen from '../app/(hidden)/addExpense';
 import Home from '../app/(tabs)/Home';
 import Settings from '../app/(tabs)/Settings';
 import AddMonthlyPaymentScreen from '../app/(hidden)/AddMonth';
-import MonthlyPaymentsScreen from '@/app/(hidden)/Month';
-import ChatBox from '@/app/(tabs)/Chat';
+import MonthlyPaymentsScreen from '../app/(hidden)/Month';
+import ChatBox from '../app/(tabs)/Chat';
 
 const AccountsStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -16,7 +16,7 @@ const MonthStack = createStackNavigator();
 
 function AccountsStackNavigator() {
   return (
-    <AccountsStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false, }}>
+    <AccountsStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
       <AccountsStack.Screen
         name="AccountsMain"
         component={AccountsScreen}
@@ -26,20 +26,20 @@ function AccountsStackNavigator() {
         component={AddExpenseForAccScreen}
       />
       <AccountsStack.Screen
-        name = "addFundsScreen"
+        name="addFundsScreen"
         component={AddFundsScreen}
       />
       <AccountsStack.Screen
-        name = "AddAcc"
+        name="AddAcc"
         component={AddAccountScreen}
       />
-    </AccountsStack.Navigator>      
+    </AccountsStack.Navigator>
   );
 }
 
 function HomeStackNavigator() {
   return (
-    <HomeStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false, }}>
+    <HomeStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
       <HomeStack.Screen
         name="HomeMain"
         component={Home}
@@ -48,17 +48,18 @@ function HomeStackNavigator() {
         name="AddExpenseHome"
         component={AddExpenseScreen}
       />
-      {/* <HomeStack.Screen
-      name="ChatHome"
-      component={ChatBox}
+      {/* Uncomment if needed
+      <HomeStack.Screen
+        name="ChatHome"
+        component={ChatBox}
       /> */}
-    </HomeStack.Navigator>      
+    </HomeStack.Navigator>
   );
 }
 
 function MonthStackNavigator() {
   return (
-    <MonthStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false, }}>
+    <MonthStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
       <MonthStack.Screen
         name="MonthMain"
         component={Settings}
@@ -71,8 +72,8 @@ function MonthStackNavigator() {
         name="AddMonthExp"
         component={AddMonthlyPaymentScreen}
       />
-    </MonthStack.Navigator>      
+    </MonthStack.Navigator>
   );
 }
 
-export {AccountsStackNavigator, HomeStackNavigator, MonthStackNavigator}
+export { AccountsStackNavigator, HomeStackNavigator, MonthStackNavigator };
