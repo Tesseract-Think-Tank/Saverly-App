@@ -109,7 +109,7 @@ const ChatBar = () => {
     }
   };
 
-  // Handles pressing category options
+  // Handles pressing the category options
   const handleCategoryOptionPress = async (category, optionIndex) => {
     const userInput = inputText;
     let url = `http://188.24.100.99:4587`;
